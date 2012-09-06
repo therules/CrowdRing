@@ -1,51 +1,49 @@
 require 'rubygems'
-require 'twilio-ruby'
+require 'twilio-rb'
 require 'sinatra'
 
-def account
-  @client ||= begin
-    sid = ENV["TWILIO_ACCOUNT_SID"]
-    token = ENV["TWILIO_AUTH_TOKEN"]
-    Twilio::REST::Client.new(sid, token)
-  end
-
-  @client.account
+configure do
+  Twilio::Config.setup \
+    :account_sid => ENV["TWILIO_ACCOUNT_SID"],
+    :auth_token  => ENV["TWILIO_AUTH_TOKEN"]
 end
 
 get '/' do
-  names = account.outgoing_caller_ids.list({}).map do |outgoing_caller_id|
-    outgoing_caller_id.friendly_name
-  end
+  count = Twilio::SMS.count :to => ENV["REC_NUMBER"]
+  pages = (count/1000.0).ceil 
   
-  names.join("<br>")
+  received = (0..pages-1).map do |page|
+    Twilio::SMS.all :to => ENV["REC_NUMBER"], :page_size => 1000, :page => page
+  end.flatten
+  numbers = received.map {|m| m.from }.uniq
+  
+  numbers.join("<br>")
 end
 
 post '/smsresponse' do
   @phone_number = params[:From]
   
-  account.sms.messages.create(
-    :from => '+18143894106', 
-    :to => @phone_number, 
+  Twilio::SMS.create :from => '+18143894106', :to => @phone_number, 
     :body => 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
-  )
-  
-  "Sent message to " + @phone_number
+  ""
 end
 
 post '/smsresponsetwiml' do
   @phone_number = params[:From]
   
-  response = Twilio::TwiML::Response.new do |r|
-    r.Sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-      :from => '+18143894106', :to => @phone_number
+  Twilio::TwiML.build do |r|
+    r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
+          :from => ENV["REC_NUMBER"], 
+          :to => @phone_number
   end
-  response.text
 end
 
 post '/voiceresponse' do
-  response = Twilio::TwiML::Response.new do |r|
-    r.Reject :reason => 'busy'
+  Twilio::TwiML.build do |r|
+    r.reject :reason => 'busy'
+    r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
+          :from => ENV["REC_NUMBER"], 
+          :to => @phone_number
   end
-  response.text
 end
 
