@@ -40,10 +40,11 @@ end
 
 post '/voiceresponse' do
   Twilio::TwiML.build do |r|
-    r.reject :reason => 'busy'
     r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-          :from => ENV["REC_NUMBER"], 
-          :to => @phone_number
+      :from => ENV["REC_NUMBER"], 
+      :to => @phone_number
+    r.reject :reason => 'busy'
+
   end
 end
 
