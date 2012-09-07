@@ -1,0 +1,23 @@
+<h2>Numbers</h2>
+<form action="/" method="get">
+	<select name="number">
+		<% for @number in @numbers %>
+		  <option><%= @number %></option>
+		<% end %>
+	</select>
+	<input type="submit" value="Get Subscribers" />
+</form>
+
+<h2>Subscribers</h2>
+<ul>
+	<% for @subscriber in @subscribers %>
+	  <li><%= @subscriber %></li>
+	<% end %>
+</ul>
+
+<h2>Broadcast</h2>
+<form action="/broadcast" method="post">
+	<textarea name="message" rows="4" cols="20">Hello subscribers!</textarea>
+	<input type="hidden" name="number" value="<%= params[:number] %>" />
+	<input type="submit" value="Broadcast!" />
+</form>

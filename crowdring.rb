@@ -8,43 +8,49 @@ configure do
     :auth_token  => ENV["TWILIO_AUTH_TOKEN"]
 end
 
-get '/' do
-  count = Twilio::SMS.count :to => ENV["REC_NUMBER"]
+def subscribers(number)
+  count = Twilio::SMS.count :to => number
   pages = (count/1000.0).ceil 
   
   received = (0..pages-1).map do |page|
-    Twilio::SMS.all :to => ENV["REC_NUMBER"], :page_size => 1000, :page => page
+    Twilio::SMS.all :to => number, :page_size => 1000, :page => page
   end.flatten
   numbers = received.map {|m| m.from }.uniq
-  
-  numbers.join("<br>")
 end
 
-post '/smsresponse' do
-  @phone_number = params[:From]
-  
-  Twilio::SMS.create :from => '+18143894106', :to => @phone_number, 
-    :body => 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
-  ""
-end
-
-post '/smsresponsetwiml' do
-  @phone_number = params[:From]
-  
+post '/smsresponse' do  
   Twilio::TwiML.build do |r|
     r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-          :from => ENV["REC_NUMBER"], 
-          :to => @phone_number
+          :from => params[:To], 
+          :to => params[:From]
   end
 end
 
 post '/voiceresponse' do
   Twilio::TwiML.build do |r|
     r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-      :from => ENV["REC_NUMBER"], 
+      :from => params[:To], 
       :to => @phone_number
     r.reject :reason => 'busy'
-
   end
+end
+
+get '/' do  
+  @numbers = Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number}
+
+  @subscribers = params[:number].nil? ? [] : subscribers(params[:number])
+
+  erb :subscribers
+end
+
+post '/broadcast' do
+  from = params[:number]
+  message = params[:message]
+
+  subscribers(from).each do |to|
+    Twilio::SMS.create :to => to, :from => from,
+                       :body => message
+  end
+  redirect to('/')
 end
 
