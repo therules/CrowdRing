@@ -1,0 +1,20 @@
+<div id="supporters">
+  <h2>Supporters</h2>
+  <% if @supporters.empty? %>
+    <div class="message">[No supporters]</div>
+    <ul class="supporters"></ul>
+  <% else %>
+    <ul class="supporters">
+      <% for @supporter in @supporters %>
+        <li><%= @supporter %></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
+
+<h2>Broadcast</h2>
+<form action="/broadcast" method="post">
+  <textarea name="message" rows="4" cols="20">Hello supporters!</textarea>
+  <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
+  <input type="submit" value="Broadcast!" />
+</form>

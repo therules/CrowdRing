@@ -1,17 +1,17 @@
 $ ->
   $("select.number").change (evt) ->
-    $("ul.subscribers").empty()
+    $("#campaign").empty()
     if $(this).val() != ""
-      $.getJSON(
-          "/subscribers/#{$(this).val()}",
-          (data) -> 
-            items = []
-            $.each(data, (key, val) -> items.push("<li>#{val}</li>"))
-            $("ul.subscribers").append(items.join(''))
-      )
-
-      pusher = new Pusher('f7c247ce97e5bc97930c')
+      $.get("/campaign/#{$(this).val()}",
+        (data) ->
+          $("#campaign").hide()
+          $("#campaign").append(data)
+          $("#campaign").slideToggle(200)
+      )  
+      pusher = new Pusher('7d1fec0e2c3c41c94f4b')
       channel = pusher.subscribe($(this).val().replace('+',''))
-      channel.bind 'new', (data) -> $("ul.subscribers").append("<li>#{data.number}</li>")
+      channel.bind 'new', (data) -> 
+        $("#supporters .message").empty()
+        $("<li>#{data.number}</li>").hide().appendTo("ul.supporters").slideDown()
 
 

@@ -53,9 +53,15 @@ module Crowdring
       erb :index
     end
 
-    get '/subscribers/:number' do 
-      subscribers = params[:number].nil? ? [] : Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
-      json subscribers
+    get '/supporters/:number' do 
+      supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
+      json supporters
+    end
+
+    get '/campaign/:number' do
+      @supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
+
+      erb :campaign
     end
 
     get '/campaign/new' do
