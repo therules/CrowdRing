@@ -1,2 +1,2 @@
-require './crowdring'
-run Sinatra::Application
+require 'crowdring'
+run Crowdring::Server

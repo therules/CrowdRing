@@ -1,1 +1,1 @@
-web: rackup -p $PORT config.ru
+web: rackup -I lib -p $PORT config.ru

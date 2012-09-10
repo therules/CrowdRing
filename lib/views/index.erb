@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <link rel="stylesheet/less" type="text/css" href="stylesheets/application.less">
+    <script type="text/coffeescript" src='javascript/application.coffee'></script>
+
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js'></script>
+    <script src="javascript/less-1.3.0.min.js" type="text/javascript"></script>
+    <script src="javascript/coffee-script-1.3.1.min.js" type="text/javascript"></script>
+    <script src="http://js.pusher.com/1.12/pusher.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="content">
+      <h1>Crowdring</h1>
+      <h2>Campaigns</h2>
+      <select name="number" class="number">
+        <option value="">Select a number to see subscribers</option>
+        <% for @campaign in @campaigns %>
+          <option value=<%= @campaign.phone_number %>><%= @campaign.title %>(<%= @campaign.phone_number %>)</option>
+        <% end %>
+      </select>
+
+      <h2>Subscribers</h2>
+      <ul class="subscribers">
+      </ul>
+
+      <h2>Broadcast</h2>
+      <form action="/broadcast" method="post">
+        <textarea name="message" rows="4" cols="20">Hello subscribers!</textarea>
+        <input type="hidden" name="number" value="<%= params[:number] %>" />
+        <input type="submit" value="Broadcast!" />
+      </form>
+    </div>
+  </body>
+
+</html>

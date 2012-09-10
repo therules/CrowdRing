@@ -1,0 +1,9 @@
+<form action="/campaign/create" method="post">
+	Phone Number: <select name="phone_number">
+		<% for @number in @numbers %>
+	  		<option><%= @number %></option>
+		<% end %>
+	</select><br />
+	Title: <input type="text" name="title" />
+	<input type="submit" value="Create" />
+</form>
