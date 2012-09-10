@@ -3,7 +3,6 @@ require 'twilio-rb'
 require 'sinatra/base'
 require 'sinatra/json'
 require 'data_mapper'
-require 'em-websocket'
 require 'pusher'
 require 'json'
 
@@ -13,7 +12,7 @@ require 'crowdring/supporter'
 module Crowdring
   class Server < Sinatra::Base
     helpers Sinatra::JSON
-    
+
     configure do
       Twilio::Config.setup \
         account_sid: ENV["TWILIO_ACCOUNT_SID"],
@@ -81,16 +80,6 @@ module Crowdring
                            body: message)
       end
       redirect to('/')
-    end
-
-    get '/test' do
-      erb :test
-    end
-
-    get '/ping' do
-      client = WebSocket.new("ws://localhost:8080")
-      client.send("Hello")
-      client.receive()
     end
 
     run! if app_file == $0

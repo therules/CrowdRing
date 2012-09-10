@@ -3,7 +3,7 @@ $ ->
     $("ul.subscribers").empty()
     if $(this).val() != ""
       $.getJSON(
-          "http://localhost:5000/subscribers/#{$(this).val()}",
+          "/subscribers/#{$(this).val()}",
           (data) -> 
             items = []
             $.each(data, (key, val) -> items.push("<li>#{val}</li>"))
