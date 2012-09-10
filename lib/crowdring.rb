@@ -22,7 +22,8 @@ module Crowdring
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
         
-      DataMapper.setup(:default, 'sqlite::memory:')
+      DataMapper.setup(:default, ENV["DATABASE_URL"])
+
       DataMapper.finalize
       DataMapper.auto_migrate!
       Crowdring::Campaign.create(phone_number: '+18143894106', title:'Test')
