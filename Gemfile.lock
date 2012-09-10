@@ -107,6 +107,7 @@ PLATFORMS
 DEPENDENCIES
   datamapper
   dm-sqlite-adapter
+  do_sqlite3
   foreman
   json
   pusher
