@@ -6,8 +6,8 @@ require 'data_mapper'
 require 'pusher'
 require 'json'
 
-require 'crowdring/campaign'
-require 'crowdring/supporter'
+require_relative 'crowdring/campaign'
+require_relative 'crowdring/supporter'
 
 module Crowdring
   class Server < Sinatra::Base
