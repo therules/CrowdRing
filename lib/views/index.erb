@@ -10,12 +10,16 @@
   </head>
   <body>
     <div class="content">
-      <h1>Crowdring</h1>
+      <header>
+        <img class="logo" src="crowdringlogo.png" width="40" />
+        <h1>Crowdring</h1>
+      </header>
+
       <h2>Campaigns</h2>
       <select name="number" class="number">
         <option value="">Select a number to see subscribers</option>
         <% for @campaign in @campaigns %>
-          <option value=<%= @campaign.phone_number %>><%= @campaign.title %>(<%= @campaign.phone_number %>)</option>
+          <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.phone_number %>)</option>
         <% end %>
       </select>
 

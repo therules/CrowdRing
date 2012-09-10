@@ -1,4 +1,4 @@
-require 'rubygems'
+require 'bundler'
 require 'twilio-rb'
 require 'sinatra/base'
 require 'sinatra/json'
@@ -6,8 +6,8 @@ require 'data_mapper'
 require 'pusher'
 require 'json'
 
-require_relative 'crowdring/campaign'
-require_relative 'crowdring/supporter'
+require 'crowdring/campaign'
+require 'crowdring/supporter'
 
 module Crowdring
   class Server < Sinatra::Base
