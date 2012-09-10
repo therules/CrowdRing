@@ -1,2 +1,3 @@
-require 'crowdring'
+require './lib/crowdring'
+
 run Crowdring::Server
