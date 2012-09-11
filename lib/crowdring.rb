@@ -5,12 +5,15 @@ require 'sinatra/json'
 require 'data_mapper'
 require 'pusher'
 require 'json'
+require 'rack-flash'
 
 require 'crowdring/campaign'
 require 'crowdring/supporter'
 
 module Crowdring
   class Server < Sinatra::Base
+    enable :sessions
+    use Rack::Flash
     helpers Sinatra::JSON
 
     configure do
@@ -70,12 +73,14 @@ module Crowdring
       Campaign.create(phone_number: params[:phone_number],
                       title: params[:title])
       
+      flash[:notice] = "created campaign"
       redirect to("/##{params[:phone_number]}")
     end
 
     post '/campaign/destroy' do
       Campaign.get(params[:number]).destroy
 
+      flash[:notice] = "campaign destroyed"
       redirect to('/')
     end
 
@@ -92,6 +97,8 @@ module Crowdring
         Twilio::SMS.create(to: to.phone_number, from: from,
                            body: message)
       end
+
+      flash[:notice] = "message broadcast"
       redirect to("/##{from}")
     end
 
