@@ -8,7 +8,7 @@ module Crowdring
     belongs_to :campaign
 
     after :save do |s|
-      Pusher[s.campaign.phone_number[1..-1]].trigger('new', number: s.phone_number)
+      Pusher[s.campaign.phone_number[1..-1]].trigger('new', { number: s.phone_number, count: s.campaign.supporters.size })
     end
   end
 end

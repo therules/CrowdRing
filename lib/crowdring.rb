@@ -61,7 +61,7 @@ module Crowdring
 
     get '/campaign/:number' do
       @supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
-
+      @num_supporters = @supporters.size
       erb :campaign
     end
 

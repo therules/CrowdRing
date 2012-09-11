@@ -1,7 +1,6 @@
 <div id="supporters">
-  <h2>Supporters</h2>
+  <h2><div class="count"><%= @num_supporters %> Supporter<% if @num_supporters != 1 %>s<% end %></div></h2>
   <% if @supporters.empty? %>
-    <div class="message">[No supporters]</div>
     <ul class="supporters"></ul>
   <% else %>
     <ul class="supporters">
