@@ -70,7 +70,7 @@ module Crowdring
       Campaign.create(phone_number: params[:phone_number],
                       title: params[:title])
       
-      redirect to('/')
+      redirect to("/##{params[:phone_number]}")
     end
 
     post '/campaign/destroy' do
@@ -92,7 +92,7 @@ module Crowdring
         Twilio::SMS.create(to: to.phone_number, from: from,
                            body: message)
       end
-      redirect to('/')
+      redirect to("/##{from}")
     end
 
     run! if app_file == $0
