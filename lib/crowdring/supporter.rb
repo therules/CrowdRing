@@ -4,6 +4,7 @@ module Crowdring
 
     property :id,           Serial
     property :phone_number, String
+    property :created_at,   DateTime
 
     belongs_to :campaign
 

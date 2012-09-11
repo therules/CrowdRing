@@ -1,11 +1,11 @@
 <div id="supporters">
-  <h2><div class="count"><%= @num_supporters %> Supporter<% if @num_supporters != 1 %>s<% end %></div></h2>
+  <h2><div class="count"><%= @num_supporters %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
   <% if @supporters.empty? %>
     <ul class="supporters"></ul>
   <% else %>
     <ul class="supporters">
       <% for @supporter in @supporters %>
-        <li><%= @supporter %></li>
+        <li><%= @supporter.phone_number %></li>
       <% end %>
     </ul>
   <% end %>
@@ -15,5 +15,10 @@
 <form action="/broadcast" method="post">
   <textarea name="message" rows="4" cols="20">Hello supporters!</textarea>
   <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
-  <input type="submit" value="Broadcast!" />
+  <input type="submit" value="Broadcast" />
+</form>
+
+<form action="/campaign/destroy" method="post">
+  <input type="hidden" name="number" value="<%= params[:number] %>" />
+  <input type="submit" value="Destroy" />
 </form>

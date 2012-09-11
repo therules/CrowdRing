@@ -59,12 +59,6 @@ module Crowdring
       json supporters
     end
 
-    get '/campaign/:number' do
-      @supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
-      @num_supporters = @supporters.size
-      erb :campaign
-    end
-
     get '/campaign/new' do
       @numbers = Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number}
 
@@ -76,6 +70,17 @@ module Crowdring
                       title: params[:title])
       
       redirect to('/')
+    end
+
+    post '/campaign/destroy' do
+      Campaign.get(params[:number]).destroy
+
+      redirect to('/')
+    end
+
+    get '/campaign/:number' do
+      @supporters =  Campaign.get(params[:number]).supporters
+      erb :campaign
     end
 
     post '/broadcast' do
