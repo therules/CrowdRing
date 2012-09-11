@@ -1,5 +1,5 @@
 <div id="supporters">
-  <h2><div class="count"><%= @num_supporters %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
+  <h2><div class="count"><%= @supporters.size %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
   <% if @supporters.empty? %>
     <ul class="supporters"></ul>
   <% else %>

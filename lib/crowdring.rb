@@ -55,12 +55,14 @@ module Crowdring
     end
 
     get '/supporters/:number' do 
-      supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number}
+      supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number }
       json supporters
     end
 
     get '/campaign/new' do
-      @numbers = Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number}
+      all_numbers = Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number }
+      used_numbers = Campaign.all.map {|n| n.phone_number }
+      @numbers = all_numbers - used_numbers
 
       erb :campaign_new
     end
