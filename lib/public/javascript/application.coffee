@@ -15,7 +15,7 @@ loadCampaign = (campaign) ->
                       .html(data)
                       .slideDown(200)
     )  
-    pusher = new Pusher('7d1fec0e2c3c41c94f4b')
+    pusher = new Pusher(window.pusher_key)
     channel = pusher.subscribe(campaign.replace('+',''))
     channel.bind 'new', new_supporter
 
