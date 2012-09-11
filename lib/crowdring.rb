@@ -26,7 +26,6 @@ module Crowdring
 
       DataMapper.finalize
       DataMapper.auto_migrate!
-      Crowdring::Campaign.create(phone_number: '+18143894106', title:'Test')
     end
 
     post '/smsresponse' do
