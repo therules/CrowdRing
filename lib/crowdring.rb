@@ -1,10 +1,8 @@
 require 'bundler'
 require 'twilio-rb'
 require 'sinatra/base'
-require 'sinatra/json'
 require 'data_mapper'
 require 'pusher'
-require 'json'
 require 'rack-flash'
 
 require 'crowdring/campaign'
@@ -14,7 +12,6 @@ module Crowdring
   class Server < Sinatra::Base
     enable :sessions
     use Rack::Flash
-    helpers Sinatra::JSON
 
     configure do
       Twilio::Config.setup \
@@ -54,11 +51,6 @@ module Crowdring
       @campaigns = Campaign.all
 
       erb :index
-    end
-
-    get '/supporters/:number' do 
-      supporters =  Campaign.get(params[:number]).supporters.map {|s| s.phone_number }
-      json supporters
     end
 
     get '/campaign/new' do

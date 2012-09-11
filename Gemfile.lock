@@ -116,7 +116,6 @@ DEPENDENCIES
   datamapper
   dm-postgres-adapter
   foreman
-  json
   pusher
   rack-flash3
   sinatra

@@ -18,6 +18,7 @@
         <img class="logo" src="crowdringlogo.png" width="40" />
         <h1>Crowdring</h1>
       </header>
+
       <% if flash.has?(:notice) %>
         <div class="notice"><%= flash[:notice] %></div>
       <% end %>
@@ -32,10 +33,9 @@
 
       <div id="campaign"></div>
 
-    <footer>
-      <a href="/campaign/new">new campaign</a>
-    </footer>
+      <footer>
+        <a href="/campaign/new">new campaign</a>
+      </footer>
     </div>
   </body>
-
 </html>
