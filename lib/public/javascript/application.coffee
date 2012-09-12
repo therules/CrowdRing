@@ -5,9 +5,15 @@ new_supporter = (data) ->
                               .appendTo("ul.supporters")
                               .slideDown('fast', -> $(this).css("display", "list-item"))
 
-loadCampaign = (campaign) ->
+
+loadCampaign = (pusher, campaign, prev_channel) ->
+  if prev_channel?
+    pusher.unsubscribe(prev_channel)
+
   $("#campaign").empty()
   $("select.number").val(campaign)
+
+  channel_name = null
   if campaign != ""
     $.get("/campaign/#{campaign}",
       (data) ->
@@ -15,15 +21,17 @@ loadCampaign = (campaign) ->
                       .html(data)
                       .slideDown(200)
     )  
-    pusher = new Pusher(window.pusher_key)
-    channel = pusher.subscribe(campaign.replace('+',''))
+    channel_name = campaign.replace('+','')
+    channel = pusher.subscribe(channel_name)
     channel.bind 'new', new_supporter
+  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], channel_name)
+
 
 $ ->
+  pusher = new Pusher(window.pusher_key)
   $("#campaign").empty()
-  window.onhashchange = -> loadCampaign(document.location.hash[1..-1])
-  if document.location.hash != ""
-    loadCampaign(document.location.hash[1..-1])
+  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], null)
+  window.onhashchange()
   $("select.number").change (evt) ->
     document.location.hash = $(this).val()
 
