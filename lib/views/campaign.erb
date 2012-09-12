@@ -7,7 +7,7 @@
   <% else %>
     <ul class="supporters">
       <% for @supporter in @supporters %>
-        <li><%= @supporter.pretty_phone_number %></li>
+        <li><%= @supporter.phone_number %></li>
       <% end %>
     </ul>
   <% end %>

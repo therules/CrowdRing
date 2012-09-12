@@ -1,0 +1,40 @@
+require 'builder'
+require 'net/http'
+
+module Crowdring
+  class KooKooService 
+    def initialize
+      @api_key = ENV["KOOKOO_API_KEY"]
+    end
+
+    def params(params)
+      {to: numbers.first, from: params[:cid]}
+    end
+
+    def build_response(from, *commands)
+      builder = Builder::XmlMarkup.new(indent: 2)
+      builder.response do |r|
+        commands.each do |c|
+          case c[:cmd]
+          when :sendsms
+            r.sendsms c[:msg], to: c[:to]
+          when :reject
+            r.hangup
+          end
+        end
+      end
+    end
+
+    def numbers
+      ['+9104039411020']
+    end
+
+    def send_sms(params)
+      uri = URI('http://www.kookoo.in/outbound/outbound_sms.php')
+      params = { message: params[:msg], phone_no: params[:to], api_key: @api_key }
+      uri.query = URI.encode_www_form(params)
+      puts uri.request_uri
+      # res = Net::HTTP.get_response(uri)
+    end
+  end
+end

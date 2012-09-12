@@ -1,11 +1,14 @@
 require 'bundler'
-require 'twilio-rb'
 require 'sinatra/base'
 require 'data_mapper'
 require 'pusher'
 require 'rack-flash'
 require 'facets/module/mattr'
 require 'phone'
+
+require 'crowdring/twilio_service'
+require 'crowdring/kookoo_service'
+require 'crowdring/composite_service'
 
 require 'crowdring/campaign'
 require 'crowdring/supporter'
@@ -15,10 +18,12 @@ module Crowdring
     enable :sessions
     use Rack::Flash
 
+
+    def service
+      CompositeService.instance
+    end
+
     configure do
-      Twilio::Config.setup \
-        account_sid: ENV["TWILIO_ACCOUNT_SID"],
-        auth_token: ENV["TWILIO_AUTH_TOKEN"]
 
       Pusher.app_id = ENV["PUSHER_APP_ID"]
       Pusher.key = ENV["PUSHER_KEY"]
@@ -28,25 +33,46 @@ module Crowdring
 
       DataMapper.finalize
       DataMapper.auto_migrate!
+
+      CompositeService.instance.add(:twilio, TwilioService.new)
+      #CompositeService.instance.add(:kookoo, KooKooService.new)
+      # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
-    post '/smsresponse' do
-      Campaign.get(params[:To]).supporters.first_or_create(phone_number: params[:From])
-      Twilio::TwiML.build do |r|
-        r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-              from: params[:To], 
-              to: params[:From]
-      end
+    def sms_response(service_name, params)
+      new_params = service.params(service_name, params)
+
+      Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
+      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
+      service.build_response(new_params[:to], {cmd: :sendsms, to: new_params[:from], msg: msg})
     end
 
-    post '/voiceresponse' do
-      Campaign.get(params[:To]).supporters.first_or_create(phone_number: params[:From])
-      Twilio::TwiML.build do |r|
-        r.sms 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.', 
-              from: params[:To], 
-              to: @phone_number
-        r.reject reason: 'busy'
-      end
+    def voice_response(service_name, params)
+      new_params = service.params(service_name, params)
+
+      Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
+      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
+      service.build_response(new_params[:to],
+        {cmd: :sendsms, to: new_params[:from], msg: msg},
+        {cmd: :reject}
+      )
+    end
+
+    post '/smsresponse/:service' do
+      sms_response(params[:service].to_sym, params)
+    end
+
+    get '/smsresponse/:service/' do
+      sms_response(params[:service].to_sym, params)
+    end
+
+    post '/voiceresponse/:service' do
+      voice_response(params[:service].to_sym, params)
+    end
+
+    get '/voiceresponse/:service' do 
+      puts "cid: " + params[:service]
+      voice_response(params[:service].to_sym, params)
     end
 
     get '/' do  
@@ -56,7 +82,7 @@ module Crowdring
     end
 
     get '/campaign/new' do
-      all_numbers = Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number }
+      all_numbers = service.numbers
       used_numbers = Campaign.all.map {|n| n.phone_number }
       @numbers = all_numbers - used_numbers
 
@@ -89,8 +115,7 @@ module Crowdring
       message = params[:message]
 
       Campaign.get(from).supporters.each do |to|
-        Twilio::SMS.create(to: to.phone_number, from: from,
-                           body: message)
+        service.send_sms(from: from, to:to.phone_number, msg: message)
       end
 
       flash[:notice] = "message broadcast"
