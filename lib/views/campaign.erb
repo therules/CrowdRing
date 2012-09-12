@@ -1,11 +1,13 @@
+<h1><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</h1>
+
 <div id="supporters">
-  <h2><div class="count"><%= @num_supporters %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
+  <h2><div class="count"><%= @supporters.size %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
   <% if @supporters.empty? %>
     <ul class="supporters"></ul>
   <% else %>
     <ul class="supporters">
       <% for @supporter in @supporters %>
-        <li><%= @supporter.phone_number %></li>
+        <li><%= @supporter.pretty_phone_number %></li>
       <% end %>
     </ul>
   <% end %>

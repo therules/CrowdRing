@@ -4,6 +4,8 @@ require 'sinatra/base'
 require 'data_mapper'
 require 'pusher'
 require 'rack-flash'
+require 'facets/module/mattr'
+require 'phone'
 
 require 'crowdring/campaign'
 require 'crowdring/supporter'
@@ -77,7 +79,8 @@ module Crowdring
     end
 
     get '/campaign/:number' do
-      @supporters =  Campaign.get(params[:number]).supporters
+      @campaign = Campaign.get(params[:number])
+      @supporters =  @campaign.supporters
       erb :campaign
     end
 
