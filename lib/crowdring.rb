@@ -34,8 +34,8 @@ module Crowdring
       DataMapper.finalize
       DataMapper.auto_migrate!
 
-      CompositeService.instance.add(:twilio, TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
-      CompositeService.instance.add(:kookoo, KooKooService.new(ENV["KOOKOO_API_KEY"]))
+      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
+      CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"]))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
@@ -59,20 +59,19 @@ module Crowdring
     end
 
     post '/smsresponse/:service' do
-      sms_response(params[:service].to_sym, params)
+      sms_response(params[:service], params)
     end
 
     get '/smsresponse/:service/' do
-      sms_response(params[:service].to_sym, params)
+      sms_response(params[:service], params)
     end
 
     post '/voiceresponse/:service' do
-      voice_response(params[:service].to_sym, params)
+      voice_response(params[:service], params)
     end
 
     get '/voiceresponse/:service' do 
-      puts "cid: " + params[:service]
-      voice_response(params[:service].to_sym, params)
+      voice_response(params[:service], params)
     end
 
     get '/' do  
