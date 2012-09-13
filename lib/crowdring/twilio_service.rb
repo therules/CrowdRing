@@ -6,11 +6,12 @@ class TwilioService
     @client = Twilio::REST::Client.new account_sid, auth_token
   end
 
-  def params(params)
-    {from: params[:From], to: params[:To]}
+  def extract_params(request)
+    params = request.POST
+    {from: params['From'], to: params['To']}
   end
 
-  def build_response(from, *commands)
+  def build_response(from, commands)
     response = Twilio::TwiML::Response.new do |r|
       commands.each do |c|
         case c[:cmd]

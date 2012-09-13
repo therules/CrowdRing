@@ -12,16 +12,16 @@ module Crowdring
       @services[name] = service
     end
 
-    def params(name, params)
+    def extract_params(name, request)
       if @services.has_key? name
-        @services[name].params(params)
+        @services[name].extract_params(request)
       else
         raise "No service handler installed at #{name}"
       end
     end
 
-    def build_response(from, *commands)
-      supporting_service(from).build_response(from, *commands)
+    def build_response(from, commands)
+      supporting_service(from).build_response(from, commands)
     end
 
     def numbers

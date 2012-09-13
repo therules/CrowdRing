@@ -8,11 +8,11 @@ module Crowdring
       @number = number
     end
 
-    def params(params)
-      {to: @number, from: params[:cid]}
+    def extract_params(request)
+      {to: @number, from: request.GET['cid']}
     end
 
-    def build_response(from, *commands)
+    def build_response(from, commands)
       builder = Builder::XmlMarkup.new(indent: 2)
       builder.response do |r|
         commands.each do |c|
@@ -34,7 +34,6 @@ module Crowdring
       uri = URI('http://www.kookoo.in/outbound/outbound_sms.php')
       params = { message: params[:msg], phone_no: params[:to], api_key: @api_key }
       uri.query = URI.encode_www_form(params)
-      puts uri.request_uri
       # res = Net::HTTP.get_response(uri)
     end
   end

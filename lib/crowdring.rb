@@ -24,7 +24,6 @@ module Crowdring
     end
 
     configure do
-
       Pusher.app_id = ENV["PUSHER_APP_ID"]
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
@@ -32,46 +31,49 @@ module Crowdring
       DataMapper.setup(:default, ENV["DATABASE_URL"])
 
       DataMapper.finalize
-      DataMapper.auto_migrate!
+      DataMapper.auto_upgrade!
 
       CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], '+9104039411020'))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
-    def sms_response(service_name, params)
-      new_params = service.params(service_name, params)
-
-      Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
-      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
-      service.build_response(new_params[:to], {cmd: :sendsms, to: new_params[:from], msg: msg})
+    def sms_response
+      ->(params) {
+        [{cmd: :sendsms, to: params[:from], msg: params[:msg]}]
+      }
     end
 
-    def voice_response(service_name, params)
-      new_params = service.params(service_name, params)
+    def voice_response
+      ->(params) {
+        [{cmd: :sendsms, to: params[:from], msg: params[:msg]},
+         {cmd: :reject}
+        ]
+      }
+    end
+
+    def respond(service_name, request, commands)
+      new_params = service.extract_params(service_name, request)
+      new_params[:msg] = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
       Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
-      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
-      service.build_response(new_params[:to],
-        {cmd: :sendsms, to: new_params[:from], msg: msg},
-        {cmd: :reject}
-      )
+      service.build_response(new_params[:to], commands.(new_params))
     end
 
     post '/smsresponse/:service' do
-      sms_response(params[:service], params)
+      respond(params[:service], request, sms_response)
     end
 
-    get '/smsresponse/:service/' do
-      sms_response(params[:service], params)
+    get '/smsresponse/:service' do
+      respond(params[:service], request, sms_response)
     end
 
     post '/voiceresponse/:service' do
-      voice_response(params[:service], params)
+      respond(params[:service], request, voice_response)
     end
 
     get '/voiceresponse/:service' do 
-      voice_response(params[:service], params)
+      respond(params[:service], request, voice_response)
     end
 
     get '/' do  
