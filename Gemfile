@@ -4,7 +4,7 @@ ruby '1.9.3'
 
 gem 'sinatra'
 gem 'sinatra-contrib'
-gem 'twilio-rb'
+gem 'twilio-ruby'
 gem 'foreman'
 gem 'datamapper'
 gem 'dm-postgres-adapter'

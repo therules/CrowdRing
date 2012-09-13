@@ -34,8 +34,8 @@ module Crowdring
       DataMapper.finalize
       DataMapper.auto_migrate!
 
-      CompositeService.instance.add(:twilio, TwilioService.new)
-      #CompositeService.instance.add(:kookoo, KooKooService.new)
+      CompositeService.instance.add(:twilio, TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
+      CompositeService.instance.add(:kookoo, KooKooService.new(ENV["KOOKOO_API_KEY"]))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 

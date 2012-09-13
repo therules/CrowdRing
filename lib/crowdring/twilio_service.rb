@@ -1,11 +1,9 @@
-require 'twilio-rb'
+require 'twilio-ruby'
 
 class TwilioService 
 
-  def initialize
-    Twilio::Config.setup \
-      account_sid: ENV["TWILIO_ACCOUNT_SID"],
-      auth_token: ENV["TWILIO_AUTH_TOKEN"]
+  def initialize(account_sid, auth_token)
+    @client = Twilio::REST::Client.new account_sid, auth_token
   end
 
   def params(params)
@@ -13,24 +11,28 @@ class TwilioService
   end
 
   def build_response(from, *commands)
-    Twilio::TwiML.build do |r|
+    response = Twilio::TwiML::Response.new do |r|
       commands.each do |c|
         case c[:cmd]
         when :sendsms
-          r.sms c[:msg], from: from, to: c[:to]
+          r.Sms c[:msg], from: from, to: c[:to]
         when :reject
-          r.reject reason: 'busy'
+          r.Reject reason: 'busy'
         end
       end
     end
+    response.text
   end
 
   def numbers
-    Twilio::IncomingPhoneNumber.all.map {|n| n.phone_number }
+    @client.account.incoming_phone_numbers.list.map {|n| n.phone_number }
   end
 
   def send_sms(params)
-    Twilio::SMS.create(to: params[:to], from: params[:from],
-                       body: params[:msg])
+    @client.account.sms.messages.create(
+      to: params[:to], 
+      from: params[:from],
+      body: params[:msg]
+    )
   end
 end

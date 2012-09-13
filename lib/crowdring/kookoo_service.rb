@@ -3,8 +3,8 @@ require 'net/http'
 
 module Crowdring
   class KooKooService 
-    def initialize
-      @api_key = ENV["KOOKOO_API_KEY"]
+    def initialize(api_key)
+      @api_key = api_key
     end
 
     def params(params)
