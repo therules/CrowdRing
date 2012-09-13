@@ -3,12 +3,13 @@ require 'net/http'
 
 module Crowdring
   class KooKooService 
-    def initialize(api_key)
+    def initialize(api_key, number)
       @api_key = api_key
+      @number = number
     end
 
     def params(params)
-      {to: numbers.first, from: params[:cid]}
+      {to: @number, from: params[:cid]}
     end
 
     def build_response(from, *commands)
@@ -26,7 +27,7 @@ module Crowdring
     end
 
     def numbers
-      ['+9104039411020']
+      [@number]
     end
 
     def send_sms(params)
