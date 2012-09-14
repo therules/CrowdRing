@@ -10,16 +10,19 @@ module Crowdring
 
     def is_callback?(request)
       params = Tropo::Generator.parse request.body.read
+      request.body.rewind 
       params.session.exists? :parameters
     end
 
     def process_callback(request)
       params = Tropo::Generator.parse(request.body.read).session.parameters
+      request.body.rewind 
       build_response(params[:from], to: params[:to], msg: params[:msg])
     end
 
     def extract_params(request)
       params = Tropo::Generator.parse request.body.read
+      request.body.rewind 
       {from: params.session.from.name, to: params.session.to.name}
     end
 
