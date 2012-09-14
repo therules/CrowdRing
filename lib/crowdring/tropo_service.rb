@@ -11,7 +11,7 @@ module Crowdring
     def is_callback?(request)
       params = Tropo::Generator.parse request.body.read
       request.body.rewind 
-      params.session.exists? :parameters
+      params.session.parameters?
     end
 
     def process_callback(request)
