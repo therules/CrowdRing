@@ -8,6 +8,7 @@ require 'phone'
 
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'
+require 'crowdring/tropo_service'
 require 'crowdring/composite_service'
 
 require 'crowdring/campaign'
@@ -35,6 +36,7 @@ module Crowdring
 
       CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], '+9104039411020'))
+      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ['+18143257247']))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
@@ -52,28 +54,37 @@ module Crowdring
       }
     end
 
-    def respond(service_name, request, commands)
-      new_params = service.extract_params(service_name, request)
+    def respond(cur_service, request, commands)
+      new_params = cur_service.extract_params(request)
       new_params[:msg] = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
       Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
-      service.build_response(new_params[:to], commands.(new_params))
+      cur_service.build_response(new_params[:to], commands.(new_params))
+    end
+
+    def process_request(service_name, request, response)
+      cur_service = service.get(service_name)
+      if cur_service.is_callback?(request)
+        cur_service.process_callback(request)
+      else
+        respond(cur_service, request, response)
+      end
     end
 
     post '/smsresponse/:service' do
-      respond(params[:service], request, sms_response)
+      process_request(params[:service], request, sms_response)
     end
 
     get '/smsresponse/:service' do
-      respond(params[:service], request, sms_response)
+      process_request(params[:service], request, sms_response)
     end
 
     post '/voiceresponse/:service' do
-      respond(params[:service], request, voice_response)
+      process_request(params[:service], request, voice_response)
     end
 
     get '/voiceresponse/:service' do 
-      respond(params[:service], request, voice_response)
+      process_request(params[:service], request, voice_response)
     end
 
     get '/' do  
@@ -108,6 +119,7 @@ module Crowdring
     get '/campaign/:number' do
       @campaign = Campaign.get(params[:number])
       @supporters =  @campaign.supporters
+      
       erb :campaign
     end
 

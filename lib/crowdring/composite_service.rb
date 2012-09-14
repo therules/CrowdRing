@@ -12,6 +12,10 @@ module Crowdring
       @services[name] = service
     end
 
+    def get(name)
+      @services[name]
+    end
+
     def extract_params(name, request)
       if @services.has_key? name
         @services[name].extract_params(request)

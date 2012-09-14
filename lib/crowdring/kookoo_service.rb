@@ -3,6 +3,7 @@ require 'net/http'
 
 module Crowdring
   class KooKooService 
+
     def initialize(api_key, number)
       @api_key = api_key
       @number = number
@@ -10,6 +11,10 @@ module Crowdring
 
     def extract_params(request)
       {to: @number, from: request.GET['cid']}
+    end
+
+    def is_callback?(request)
+      false
     end
 
     def build_response(from, commands)
