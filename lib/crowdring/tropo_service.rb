@@ -15,9 +15,10 @@ module Crowdring
     end
 
     def process_callback(request)
+      p "PROCESSING CALLBACK"
       params = Tropo::Generator.parse(request.body.read).session.parameters
       request.body.rewind 
-      build_response(params[:from], to: params[:to], msg: params[:msg])
+      build_response(params[:from], [{cmd: :sendsms, to: params[:to], msg: params[:msg]}])
     end
 
     def extract_params(request)
