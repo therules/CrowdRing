@@ -36,7 +36,7 @@ module Crowdring
 
       CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], '+9104039411020'))
-      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ['+18143257247']))
+      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"]))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
@@ -95,7 +95,7 @@ module Crowdring
 
     get '/campaign/new' do
       all_numbers = service.numbers
-      used_numbers = Campaign.all.map {|n| n.phone_number }
+      used_numbers = Campaign.all.map(&:phone_number)
       @numbers = all_numbers - used_numbers
 
       erb :campaign_new
@@ -119,7 +119,7 @@ module Crowdring
     get '/campaign/:number' do
       @campaign = Campaign.get(params[:number])
       @supporters =  @campaign.supporters
-      
+
       erb :campaign
     end
 

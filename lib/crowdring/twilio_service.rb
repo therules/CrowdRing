@@ -31,7 +31,7 @@ module Crowdring
     end
 
     def numbers
-      @client.account.incoming_phone_numbers.list.map {|n| n.phone_number }
+      @client.account.incoming_phone_numbers.list.map(&:phone_number)
     end
 
     def send_sms(params)

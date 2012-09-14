@@ -1,11 +1,13 @@
 require 'tropo-webapi-ruby'
+require 'net/http'
+require 'tropo-provisioning'
 
 module Crowdring
   class TropoService 
 
-    def initialize(msg_token, numbers)
+    def initialize(msg_token, app_id)
       @msg_token = msg_token
-      @numbers = numbers
+      @app_id = app_id
     end
 
     def is_callback?(request)
@@ -44,7 +46,9 @@ module Crowdring
     end
 
     def numbers
-      @numbers
+      provisioning = TropoProvisioning.new('nherzing', 'patterns')
+      numbers = provisioning.addresses(@app_id).select {|a| a.type == 'number' && a.smsEnabled }
+      numbers.map(&:number)
     end
 
     def send_sms(params)
