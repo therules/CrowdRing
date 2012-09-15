@@ -94,9 +94,8 @@ module Crowdring
     end
 
     get '/campaign/new' do
-      all_numbers = service.numbers
       used_numbers = Campaign.all.map(&:phone_number)
-      @numbers = all_numbers - used_numbers
+      @numbers = service.numbers - used_numbers
 
       erb :campaign_new
     end
