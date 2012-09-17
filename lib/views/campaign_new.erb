@@ -6,15 +6,22 @@
         Sorry, all numbers are currently in use
       <% else %>
         <form action="/campaign/create" method="post">
-      	Phone Number: <select name="phone_number">
+     <div id="phone_number" >
+      	Phone Number: 
+        <select name="phone_number">
           <% for @number in @numbers %>
       	   <option><%= @number %></option>
       	  <% end %>
       	</select><br />
+      </div>
+        <div id="campaign_title">
       	Title: <input type="text" name="title" />
       	<input type="submit" value="Create" />
+      </div>
         </form>
       <% end %>
+    
+      <a href="/">back to home</a>
     </div>
   </body>
 </html>
