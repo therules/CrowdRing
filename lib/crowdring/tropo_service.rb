@@ -3,29 +3,39 @@ require 'net/http'
 require 'tropo-provisioning'
 
 module Crowdring
-  class TropoService 
+  class TropoRequest
+    attr_reader :from, :to, :msg
 
+    def initialize(request)
+      session = Tropo::Generator.parse(request.body.read).session
+      @is_callback = session.parameters?
+      if @is_callback
+        @from = session.parameters.from
+        @to = session.parameters.to
+        @msg = session.parameters.msg
+      else
+        @from = session.from.name
+        @to = session.to.name
+      end
+    end
+
+    def callback?
+      @is_callback
+    end
+  end
+
+  class TropoService 
     def initialize(msg_token, app_id)
       @msg_token = msg_token
       @app_id = app_id
     end
 
-    def is_callback?(request)
-      params = Tropo::Generator.parse request.body.read
-      request.body.rewind 
-      params.session.parameters?
+    def transform_request(request)
+      TropoRequest.new(request)
     end
 
     def process_callback(request)
-      params = Tropo::Generator.parse(request.body.read).session.parameters
-      request.body.rewind 
-      build_response(params[:from], [{cmd: :sendsms, to: params[:to], msg: params[:msg]}])
-    end
-
-    def extract_params(request)
-      params = Tropo::Generator.parse request.body.read
-      request.body.rewind 
-      {from: params.session.from.name, to: params.session.to.name}
+      build_response(request.from, [{cmd: :sendsms, to: request.to, msg: request.msg}])
     end
 
     def build_response(from, commands)

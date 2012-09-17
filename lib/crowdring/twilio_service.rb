@@ -1,19 +1,28 @@
 require 'twilio-ruby'
 
 module Crowdring
+  class TwilioRequest
+    attr_reader :from, :to
+
+    def initialize(request)
+      params = request.POST
+      @from = params['From']
+      @to = params['To']
+    end
+
+    def callback?
+      false
+    end
+  end
+
   class TwilioService 
 
     def initialize(account_sid, auth_token)
       @client = Twilio::REST::Client.new account_sid, auth_token
     end
 
-    def extract_params(request)
-      params = request.POST
-      {from: params['From'], to: params['To']}
-    end
-
-    def is_callback?(request)
-      false
+    def transform_request(request)
+      TwilioRequest.new(request)
     end
 
     def build_response(from, commands)

@@ -1,14 +1,33 @@
 require 'crowdring/kookoo_service'
 require 'fakeweb'
 
-describe Crowdring::KooKooService do
-  it 'should extract :to and :from from the request' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
+describe Crowdring::KooKooRequest do
+  it 'should extract the from parameter' do
     request = double("request")
     request.stub(:GET) { {'cid' => 'from'}}
-    extracted = s.extract_params(request)
-    extracted[:to].should eq('number')
-    extracted[:from].should eq('from')
+    r = Crowdring::KooKooRequest.new(request, 'to')
+    r.from.should eq('from')
+  end
+
+  it 'should extract the to parameter' do
+    request = double("request")
+    request.stub(:GET) { {'cid' => 'from'}}
+    r = Crowdring::KooKooRequest.new(request, 'to')
+    r.to.should eq('to')
+  end
+
+  it 'should not be a callback' do
+    request = double("request")
+    request.stub(:GET) { {'cid' => 'from'}}
+    r = Crowdring::KooKooRequest.new(request, 'to')
+    r.callback?.should eq(false)
+  end
+end
+
+describe Crowdring::KooKooService do
+  it 'should transform a http request' do
+    service = Crowdring::KooKooService.new('someSid', 'someToken')
+    service.should respond_to(:transform_request)
   end
 
   it 'should build a reject response' do

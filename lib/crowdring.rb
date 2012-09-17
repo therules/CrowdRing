@@ -41,33 +41,34 @@ module Crowdring
     end
 
     def sms_response
-      proc {|params| 
-        [{cmd: :sendsms, to: params[:from], msg: params[:msg]}]
+      proc {|to, msg| 
+        [{cmd: :sendsms, to: to, msg: msg}]
       }
     end
 
     def voice_response
-      proc {|params|
-        [{cmd: :sendsms, to: params[:from], msg: params[:msg]},
+      proc {|to, msg|
+        [{cmd: :sendsms, to: to, msg: msg},
          {cmd: :reject}
         ]
       }
     end
 
     def respond(cur_service, request, commands)
-      new_params = cur_service.extract_params(request)
-      new_params[:msg] = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
+      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
-      Campaign.get(new_params[:to]).supporters.first_or_create(phone_number: new_params[:from])
-      cur_service.build_response(new_params[:to], commands.(new_params))
+      Campaign.get(request.to).supporters.first_or_create(phone_number: request.from)
+      cur_service.build_response(request.to, commands.(request.from, msg))
     end
 
     def process_request(service_name, request, response)
       cur_service = service.get(service_name)
-      if cur_service.is_callback?(request)
-        cur_service.process_callback(request)
+      cur_request = cur_service.transform_request(request)
+
+      if cur_request.callback?
+        cur_service.process_callback(cur_request)
       else
-        respond(cur_service, request, response)
+        respond(cur_service, cur_request, response)
       end
     end
 

@@ -2,6 +2,19 @@ require 'builder'
 require 'net/http'
 
 module Crowdring
+  class KooKooRequest
+    attr_reader :from, :to
+
+    def initialize(request, to)
+      @to = to
+      @from = request.GET['cid']
+    end
+
+    def callback?
+      false
+    end
+  end
+
   class KooKooService 
 
     def initialize(api_key, number)
@@ -9,12 +22,8 @@ module Crowdring
       @number = number
     end
 
-    def extract_params(request)
-      {to: @number, from: request.GET['cid']}
-    end
-
-    def is_callback?(request)
-      false
+    def transform_request(request)
+      KooKooRequest.new(request, @number)
     end
 
     def build_response(from, commands)

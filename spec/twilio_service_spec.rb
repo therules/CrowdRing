@@ -1,13 +1,34 @@
 require 'crowdring/twilio_service'
 
+describe Crowdring::TwilioRequest do
+  it 'should extract the from parameter' do
+    request = double("request")
+    request.stub(:POST) { { 'From' => 'from', 'To' => 'to' } }
+    r = Crowdring::TwilioRequest.new(request)
+    r.from.should eq('from')
+  end
+
+  it 'should extract the to parameter' do
+    request = double("request")
+    request.stub(:POST) { { 'From' => 'from', 'To' => 'to' } }
+    r = Crowdring::TwilioRequest.new(request)
+    r.to.should eq('to')
+  end
+
+  it 'should not be a callback' do
+    request = double("request")
+    request.stub(:POST) { { 'From' => 'from', 'To' => 'to' } }
+    r = Crowdring::TwilioRequest.new(request)
+    r.callback?.should eq(false)
+  end
+
+end
+
+
 describe Crowdring::TwilioService do
-  it 'should extract :to and :from request.POST' do
+  it 'should transform a http request' do
     service = Crowdring::TwilioService.new('someSid', 'someToken')
-    response = double("response")
-    response.stub(:POST) { { 'From' => 'from', 'To' => 'to' } }
-    extracted = service.extract_params(response)
-    extracted[:from].should eq('from')
-    extracted[:to].should eq('to')
+    service.should respond_to(:transform_request)
   end
 
   it 'should build a reject response with reason busy' do
