@@ -105,7 +105,7 @@ module Crowdring
       Campaign.create(phone_number: params[:phone_number],
                       title: params[:title])
       
-      flash[:notice] = "created campaign"
+      flash[:notice] = "campaign created"
       redirect to("/##{params[:phone_number]}")
     end
 
