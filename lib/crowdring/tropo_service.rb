@@ -25,9 +25,11 @@ module Crowdring
   end
 
   class TropoService 
-    def initialize(msg_token, app_id)
+    def initialize(msg_token, app_id, username, password)
       @msg_token = msg_token
       @app_id = app_id
+      @username = username
+      @password = password
     end
 
     def transform_request(request)
@@ -55,7 +57,7 @@ module Crowdring
     end
 
     def numbers
-      provisioning = TropoProvisioning.new('nherzing', 'patterns')
+      provisioning = TropoProvisioning.new(@username, @password)
       numbers = provisioning.addresses(@app_id).select {|a| a.type == 'number' && a.smsEnabled }
       numbers.map(&:number)
     end

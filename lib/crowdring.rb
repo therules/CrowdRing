@@ -35,8 +35,9 @@ module Crowdring
       DataMapper.auto_upgrade!
 
       CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
-      CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], '+9104039411020'))
-      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"]))
+      CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
+        ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
@@ -54,11 +55,11 @@ module Crowdring
       }
     end
 
-    def respond(cur_service, request, commands)
+    def respond(cur_service, request, response)
       msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
       Campaign.get(request.to).supporters.first_or_create(phone_number: request.from)
-      cur_service.build_response(request.to, commands.(request.from, msg))
+      cur_service.build_response(request.to, response.(request.from, msg))
     end
 
     def process_request(service_name, request, response)
