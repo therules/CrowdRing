@@ -39,7 +39,7 @@ module Crowdring
       uri = URI('http://www.kookoo.in/outbound/outbound_sms.php')
       params = { message: params[:msg], phone_no: params[:to], api_key: @api_key }
       uri.query = URI.encode_www_form(params)
-      # res = Net::HTTP.get_response(uri)
+      res = Net::HTTP.get_response(uri)
     end
   end
 end

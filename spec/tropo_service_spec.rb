@@ -3,21 +3,21 @@ require 'crowdring/tropo_service'
 describe Crowdring::TropoService do
   it 'should extract :to and :from from the request body' do
     service = Crowdring::TropoService.new('msg_token', 'app_id')
-    response = double("response")
+    request = double("request")
     body = StringIO.new('{"session":{"from":{"name":"from"}, "to":{"name":"to"}}}')
-    response.stub(:body) { body }
-    extracted = service.extract_params(response)
+    request.stub(:body) { body }
+    extracted = service.extract_params(request)
     extracted[:to].should eq('to')
     extracted[:from].should eq('from')
   end
 
   it 'should restore the request after extracting params' do
     service = Crowdring::TropoService.new('msg_token', 'app_id')
-    response = double("response")
+    request = double("request")
     body_str = '{"session":{"from":{"name":"from"}, "to":{"name":"to"}}}'
     body = StringIO.new(body_str)
-    response.stub(:body) { body }
-    extracted = service.extract_params(response)
+    request.stub(:body) { body }
+    extracted = service.extract_params(request)
     body.read.should eq(body_str)
   end
 

@@ -41,13 +41,13 @@ module Crowdring
     end
 
     def sms_response
-      ->(params) {
+      proc {|params| 
         [{cmd: :sendsms, to: params[:from], msg: params[:msg]}]
       }
     end
 
     def voice_response
-      ->(params) {
+      proc {|params|
         [{cmd: :sendsms, to: params[:from], msg: params[:msg]},
          {cmd: :reject}
         ]
@@ -127,7 +127,7 @@ module Crowdring
       message = params[:message]
 
       Campaign.get(from).supporters.each do |to|
-        service.send_sms(from: from, to:to.phone_number, msg: message)
+        service.send_sms(from: from, to: to.phone_number, msg: message)
       end
 
       flash[:notice] = "message broadcast"
