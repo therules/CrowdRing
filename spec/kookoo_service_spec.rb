@@ -58,7 +58,7 @@ describe Crowdring::KooKooService do
     s.numbers.should eq(['number'])
   end
 
-  it 'should GET the right uri on a sendmsg request' do
+  it 'should GET the right uri on send_msg' do
     s = Crowdring::KooKooService.new('api_key', 'number')
     path = '/outbound/outbound_sms.php?message=msg&phone_no=to&api_key=api_key'
     FakeWeb.register_uri(:get, 'http://www.kookoo.in' + path, body: '')

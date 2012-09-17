@@ -1,4 +1,5 @@
 require 'crowdring/tropo_service'
+require 'fakeweb'
 
 describe Crowdring::TropoRequest do
   it 'should extract the from parameter' do
@@ -72,6 +73,25 @@ describe Crowdring::TropoService do
       message(to: 'to', network: 'SMS', channel: 'TEXT') { say 'msg' }
       reject
     end.response)
+  end
+
+  it 'should process a callback by sending an sms' do
+    service = Crowdring::TropoService.new('msg_token', 'app_id')
+    request = double("request")
+    request.stub(:from){'from'}
+    request.stub(:to){'to'}
+    request.stub(:msg){'msg'}
+    request.stub(:callback?){true}
+    response = service.process_callback(request)
+    response.should eq(Tropo::Generator.new { message(to: 'to', network: 'SMS', channel: 'TEXT') { say 'msg' }}.response)
+  end
+
+  it 'should GET the right uri on send_msg' do
+    service = Crowdring::TropoService.new('msg_token', 'app_id')
+    path = '/1.0/sessions?action=create&token=msg_token&from=from&to=to&msg=msg'
+    FakeWeb.register_uri(:get, 'http://api.tropo.com' + path, body: '')
+    service.send_sms(from: 'from', to: 'to', msg: 'msg')
+    FakeWeb.last_request.path.should eq(path)
   end
 
 
