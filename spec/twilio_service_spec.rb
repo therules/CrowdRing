@@ -26,6 +26,11 @@ end
 
 
 describe Crowdring::TwilioService do
+  it 'should support outgoing' do
+    service = Crowdring::TwilioService.new('someSid', 'someToken')
+    service.supports_outgoing?.should be_true
+  end
+
   it 'should transform a http request' do
     service = Crowdring::TwilioService.new('someSid', 'someToken')
     service.should respond_to(:transform_request)

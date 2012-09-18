@@ -47,6 +47,11 @@ end
 
 
 describe Crowdring::TropoService do
+  it 'should support outgoing' do
+    service = Crowdring::TropoService.new('msg_token', 'app_id', 'uname', 'pword')
+    service.supports_outgoing?.should be_true
+  end
+
   it 'should transform a http requst' do
     service = Crowdring::TropoService.new('msg_token', 'app_id', 'uname', 'pword')
     service.should respond_to(:transform_request)

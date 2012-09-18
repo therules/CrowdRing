@@ -25,6 +25,11 @@ describe Crowdring::KooKooRequest do
 end
 
 describe Crowdring::KooKooService do
+  it 'should not support outgoing' do
+    service = Crowdring::KooKooService.new('someSid', 'someToken')
+    service.supports_outgoing?.should be_false
+  end
+  
   it 'should transform a http request' do
     service = Crowdring::KooKooService.new('someSid', 'someToken')
     service.should respond_to(:transform_request)

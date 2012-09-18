@@ -8,7 +8,8 @@ module Crowdring
       @services = {}
     end
 
-    def add(name, service)
+    def add(name, service, is_default=false)
+      @default_service = service if is_default
       @services[name] = service
     end
 
@@ -33,7 +34,13 @@ module Crowdring
     end
 
     def send_sms(params)
-      supporting_service(params[:from]).send_sms(params)
+      service = supporting_service(params[:from])
+      if service.supports_outgoing?
+        service.send_sms(params)
+      else
+        @default_service.send_sms(from: @default_service.numbers.first,
+          to: params[:to], msg: params[:msg])
+      end
     end
 
     private
@@ -41,7 +48,7 @@ module Crowdring
     def supporting_service(number)
       service = @services.values.find {|s| supports_number(s, number)}
       if service.nil?
-        raise "No service handler can handle #{from}"
+        raise "No service handler can handle #{number}"
       end
       service
     end

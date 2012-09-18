@@ -21,6 +21,10 @@ module Crowdring
       @client = Twilio::REST::Client.new account_sid, auth_token
     end
 
+    def supports_outgoing?
+      true
+    end
+
     def transform_request(request)
       TwilioRequest.new(request)
     end

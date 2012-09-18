@@ -14,7 +14,7 @@
         </form>
       </div>
 
-      <select name="number" class="number" data-placeholder="Choose a campaign" >
+      <select name="number" class="number" data-placeholder="Choose a campaign">
         <option value=""></option>
         <% for @campaign in @campaigns %>
           <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</option>

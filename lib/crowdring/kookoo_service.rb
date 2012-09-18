@@ -22,6 +22,10 @@ module Crowdring
       @number = number
     end
 
+    def supports_outgoing?
+      false
+    end
+
     def transform_request(request)
       KooKooRequest.new(request, @number)
     end

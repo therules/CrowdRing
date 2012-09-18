@@ -32,6 +32,10 @@ module Crowdring
       @password = password
     end
 
+    def supports_outgoing?
+      true
+    end
+
     def transform_request(request)
       TropoRequest.new(request)
     end

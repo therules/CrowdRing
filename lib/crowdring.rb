@@ -34,24 +34,22 @@ module Crowdring
       DataMapper.finalize
       DataMapper.auto_upgrade!
 
-      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
+      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), :default)
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
-      # CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
-        # ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
+      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
+        ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
       # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
     def sms_response
       proc {|to, msg| 
-        [{cmd: :sendsms, to: to, msg: msg}]
+        []
       }
     end
 
     def voice_response
       proc {|to, msg|
-        [{cmd: :sendsms, to: to, msg: msg},
-         {cmd: :reject}
-        ]
+        [{cmd: :reject}]
       }
     end
 
@@ -59,6 +57,8 @@ module Crowdring
       msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
       Campaign.get(request.to).supporters.first_or_create(phone_number: request.from)
+
+      service.send_sms(to: request.from, from: request.to, msg: msg)
       cur_service.build_response(request.to, response.(request.from, msg))
     end
 
