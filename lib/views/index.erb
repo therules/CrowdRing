@@ -8,21 +8,20 @@
       <% end %>
 
       <h2>Campaigns</h2>
-     <div id="new_campaign">
-      <form action="/campaign/new" method="get">
-        <button>New Campaign</button>
-      </form>
-     </div>
-     
+      <div id="new_campaign">
+        <form action="/campaign/new" method="get">
+          <button>New Campaign</button>
+        </form>
+      </div>
 
-      <select name="number" class="number">
-        <option value="">Select a number to see subscribers</option>
+      <select name="number" class="number" data-placeholder="Choose a campaign" >
+        <option value=""></option>
         <% for @campaign in @campaigns %>
           <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</option>
         <% end %>
       </select>
 
       <div id="campaign"></div>
-   </div>
+    </div>
   </body>
 </html>
