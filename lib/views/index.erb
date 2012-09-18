@@ -1,20 +1,21 @@
 <html>
   <body>
+    <%= erb :logoHeader %>
     <div class="content">
-      <%= erb :logoHeader %>
-
+      
       <% if flash.has?(:notice) %>
         <div class="notice"><%= flash[:notice] %></div>
       <% end %>
 
       <h2>Campaigns</h2>
-      <div id="new_campaign">
-        <form action="/campaign/new" method="get">
+      <div class="new_campaign">
+
+        <form action="/campaign/new" method="get" >
           <button>New Campaign</button>
         </form>
       </div>
 
-      <select name="number" class="number" data-placeholder="Choose a campaign">
+      <select class="campaign-select" data-placeholder="Choose a campaign">
         <option value=""></option>
         <% for @campaign in @campaigns %>
           <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</option>
@@ -22,6 +23,6 @@
       </select>
 
       <div id="campaign"></div>
-    </div>
+     </div>
   </body>
 </html>

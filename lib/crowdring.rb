@@ -36,9 +36,9 @@ module Crowdring
 
       CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), :default)
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
-      CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
-        ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
-      # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
+      # CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
+      #   ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
+      # # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
     def sms_response

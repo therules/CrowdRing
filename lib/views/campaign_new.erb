@@ -1,28 +1,32 @@
 <html>
+  
+
   <body>
+
+    <%= erb :logoHeader %>
+    
     <div class="content">
-      <%= erb :logoHeader %>
+      <h2>New Campaign</h2>
       <% if @numbers.empty? %>
-        Sorry, all numbers are currently in use
+       <h3> Sorry, all numbers are currently in use </h3>
       <% else %>
         <form action="/campaign/create" method="post">
-     <div id="phone_number" >
-      	Phone Number: 
-        <select name="phone_number">
-          <% for @number in @numbers %>
-      	   <option><%= @number %></option>
-      	  <% end %>
-      	</select><br />
-      </div>
-        <div id="campaign_title">
-      	Title: <input type="text" name="title" />
-      	<input type="submit" value="Create" />
-      </div>
+          <label>Title:</label>
+            <input type="text" name="title" />
+          
+          <label>Phone Number:</label>
+            <select name="phone_number">
+              <% for @number in @numbers %>
+          	   <option><%= @number %></option>
+          	  <% end %>
+          	</select>
+          <button type="submit">Create</button>
         </form>
       <% end %>
-    
+    <br/>
       <a href="/">back to home</a>
     </div>
+
   </body>
 </html>
 

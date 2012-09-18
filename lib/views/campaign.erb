@@ -1,26 +1,35 @@
-<h1><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</h1>
+<h2>Campaign Details</h2>
 
-<div id="supporters">
-  <h2><div class="count"><%= @supporters.size %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h2>
-  <% if @supporters.empty? %>
-    <ul class="supporters"></ul>
-  <% else %>
-    <ul class="supporters">
-      <% for @supporter in @supporters %>
-        <li><%= @supporter.pretty_phone_number %></li>
+<div id="campaign-information">
+  <div id="campaign-details">
+    <h3><%= @campaign.title %> </h3>
+    <h3>(<%= @campaign.pretty_phone_number %>)</h3>
+
+    <div id="supporters">
+      <h3><div class="count"><%= @supporters.size %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h3>
+      <% if @supporters.empty? %>
+        <ul class="supporters"></ul>
+      <% else %>
+        <ul class="supporters">
+          <% for @supporter in @supporters %>
+            <li><%= @supporter.pretty_phone_number %></li>
+          <% end %>
+        </ul>
       <% end %>
-    </ul>
-  <% end %>
+    <form action="/campaign/destroy" method="post">
+      <input type="hidden" name="number" value="<%= params[:number] %>" />
+      <button type="submit">Destroy Campaign</button>
+    </form>
+    </div>
+  </div>
+
+
+  <div id="broadcast">
+    <h3>Broadcast</h3>
+    <form action="/broadcast" method="post">
+      <textarea name="message" rows="4" cols="20">Hello supporters!</textarea>
+      <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
+      <button type="submit">Broadcast</button>
+    </form>
+  </div>
 </div>
-
-<h2>Broadcast</h2>
-<form action="/broadcast" method="post">
-  <textarea name="message" rows="4" cols="20">Hello supporters!</textarea>
-  <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
-  <input type="submit" value="Broadcast" />
-</form>
-
-<form action="/campaign/destroy" method="post">
-  <input type="hidden" name="number" value="<%= params[:number] %>" />
-  <input type="submit" value="Destroy" />
-</form>

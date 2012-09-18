@@ -11,7 +11,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
     pusher.unsubscribe(prev_channel)
 
   $("#campaign").empty()
-  $("select.number").val(campaign)
+  $("select.campaign-select").val(campaign)
   $("select").trigger("liszt:updated")
 
   channel_name = null
@@ -34,6 +34,6 @@ $ ->
   $("#campaign").empty()
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], null)
   window.onhashchange()
-  $("select.number").change (evt) ->
+  $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
 

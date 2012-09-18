@@ -1,7 +1,6 @@
 @body-font: Helvetica, Arial, sans-serif;
 
 @h1-color: #FFCC66;
-@h2-color: #FFCC66;
 @background-dark: #285F74;
 @base-unit: 3px;
 
@@ -14,31 +13,57 @@
 body {
   font-family: @body-font;
   background: @background-dark;
-
-  .content {
-    margin-left: auto;
-    margin-right: auto;
-    width: 960px;
-    color: #FFCC66;
-  }
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  width: 960px;
+    
 
   header {
     padding: 4px;
     font-family: @body-font;
     border-bottom: 1px solid #eee;
+    height: 100px;
 
     img {
       display: inline-block;
+      height: 100%;
       vertical-align: bottom;
+
     }
 
     h1 {
       display: inline-block;
       margin: 0 0 0 8px;
-      vertical-align: bottom;
+      vertical-align: middle;
+      font-size: 70px;
       color: @h1-color;
     }
   }
+
+
+  .content {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    width: 960px;
+    // color: @h1-color;
+  }
+
+  select{
+    min-width: 200px;
+  }
+  
+
+  h2 {
+    color: @h1-color;
+  }
+
+  h3 {
+    color: #F90;
+
+  }
+  
 
   footer {
     padding: 4px;
@@ -48,25 +73,25 @@ body {
   }
 
   @color-button: #CC3333;
-  #new_campaign {
-    button {
-      color: #;
-      background: @color-button;
-      border: 1px solid @color-button - #222;
-      padding: 5px 12px;
-      .rounded-corners;
+  
+  button {
+    color: #;
+    background: @color-button;
+    border: 1px solid @color-button - #222;
+    padding: 5px 12px;
+    .rounded-corners;
 
-      &:active {
-        position: relative;
-        top: 1px;
-      }
+    &:active {
+      position: relative;
+      top: 1px;
     }
-  }
 
-  h2 {
-    color: @h2-color;
-  }
 
+  a {
+    font-size: 50px;
+  }
+  
+}
   .count {
     display: inline;
   }
@@ -83,5 +108,32 @@ body {
     border: thin solid #79C2D9;
     background: #A1DBED;
   }
+
+  label {
+    display: inline;
+    color: @h1-color;
+  }
+
+  input {
+    display: inline-block;
+  }
+#campaign-information{  
+  
+  #campaign-details {
+    float: left;
+    width: 350px;
+    }
+  #broadcast {
+    float: right;
+    width: 550px;
+  }  
+}
+#campaign {
+  h1 {
+  color: @h1-color;
+  }
+}
+
+
 
 }
