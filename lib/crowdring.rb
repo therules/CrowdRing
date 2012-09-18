@@ -129,6 +129,7 @@ module Crowdring
       message = params[:message]
 
       Campaign.get(from).supporters.each do |to|
+        puts "[%s] %s" % [ Time.now, "/broadcast: Sending SMS to #{to.phone_number}"]
         service.send_sms(from: from, to: to.phone_number, msg: message)
       end
 

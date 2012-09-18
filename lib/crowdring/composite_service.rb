@@ -35,9 +35,12 @@ module Crowdring
 
     def send_sms(params)
       service = supporting_service(params[:from])
+
       if service.supports_outgoing?
+        puts "[%s] %s: %s (%s)" % [ Time.now, service.class.name, "Sending SMS", params.inspect ]
         service.send_sms(params)
       else
+        puts "[%s] %s: %s (%s)" % [ Time.now, @default_service.class.name, "Sending SMS", params.inspect ]
         @default_service.send_sms(from: @default_service.numbers.first,
           to: params[:to], msg: params[:msg])
       end
