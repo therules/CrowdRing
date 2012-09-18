@@ -58,10 +58,11 @@ module Crowdring
     def respond(cur_service, request, response)
       msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
 
-      Campaign.get(request.to).supporters.first_or_create(phone_number: request.from)
+      from = Phoner::Phone.normalize request.from
+      Campaign.get(request.to).supporters.first_or_create(phone_number: from)
 
-      service.send_sms(to: request.from, from: request.to, msg: msg)
-      cur_service.build_response(request.to, response.(request.from, msg))
+      service.send_sms(to: from, from: request.to, msg: msg)
+      cur_service.build_response(request.to, response.(from, msg))
     end
 
     def process_request(service_name, request, response)
