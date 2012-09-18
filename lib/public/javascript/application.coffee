@@ -30,6 +30,8 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
 $ ->
   $('select').chosen()
+  setTimeout((->$('.notice').fadeOut('medium')), 3000)
+
   pusher = new Pusher(window.pusher_key)
   $("#campaign").empty()
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], null)
