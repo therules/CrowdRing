@@ -17,15 +17,16 @@ require 'crowdring/supporter'
 
 module Crowdring
   class Server < Sinatra::Base
-    configure :development do
-      register Sinatra::Reloader
-    end
     enable :sessions
     use Rack::Flash
     set :logging, true
 
     def service
       CompositeService.instance
+    end
+
+    configure :development do
+      register Sinatra::Reloader
     end
 
     configure do
@@ -35,13 +36,14 @@ module Crowdring
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
       
-      DataMapper.setup(:default, ENV["DATABASE_URL"])
+      database_url = ENV["DATABASE_URL"] || 'postgres://localhost/crowdring'
+      DataMapper.setup(:default, database_url)
 
       DataMapper.finalize
       DataMapper.auto_upgrade!
 
-      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
-      CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+      # CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
+      # CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
       # CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
       #   ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
       # # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
@@ -112,25 +114,30 @@ module Crowdring
     post '/campaign/create' do
       campaign = Campaign.new(params)
       if campaign.save
-        flash[:notice] = "campaign created"
+        flash[:notice] = "Campaign created"
         redirect to("/##{params[:phone_number]}")
       else
+        flash[:errors] = campaign.errors.full_messages.join('<br />')
         redirect to('/campaign/new')
       end
     end
 
     post '/campaign/destroy' do
-      Campaign.get(params[:number]).destroy
+      Campaign.get(params[:phone_number]).destroy
 
-      flash[:notice] = "campaign destroyed"
+      flash[:notice] = "Campaign destroyed"
       redirect to('/')
     end
 
-    get '/campaign/:number' do
-      @campaign = Campaign.get(params[:number])
-      @supporters =  @campaign.supporters
-
-      erb :campaign
+    get '/campaign/:phone_number' do
+      @campaign = Campaign.get(params[:phone_number])
+      if @campaign
+        @supporters =  @campaign.supporters
+        erb :campaign
+      else
+        flash[:notice] = "No campaign with number #{params[:phone_number]}"
+        404
+      end
     end
 
     post '/broadcast' do
@@ -145,6 +152,7 @@ module Crowdring
       flash[:notice] = "message broadcast"
       redirect to("/##{from}")
     end
+
 
     run! if app_file == $0
   end

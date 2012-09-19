@@ -21,7 +21,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
-    )  
+    ).error(-> window.location.replace '/')
     channel_name = campaign.replace('+','')
     channel = pusher.subscribe(channel_name)
     channel.bind 'new', new_supporter

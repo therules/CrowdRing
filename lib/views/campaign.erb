@@ -17,7 +17,7 @@
         </ul>
       <% end %>
     <form action="/campaign/destroy" method="post">
-      <input type="hidden" name="number" value="<%= params[:number] %>" />
+      <input type="hidden" name="phone_number" value="<%= params[:phone_number] %>" />
       <button type="submit">Destroy Campaign</button>
     </form>
     </div>
@@ -28,7 +28,7 @@
     <h3>Broadcast</h3>
     <form action="/broadcast" method="post">
       <textarea name="message" placeholder="Hello supporters..." id="broadcast-text-area"></textarea>
-      <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
+      <input type="hidden" name="number" value="<%= params[:phone_number] %>" /><br />
       <button type="submit">Broadcast</button>
     </form>
   </div>
