@@ -1,5 +1,6 @@
 require 'bundler'
 require 'sinatra/base'
+require 'sinatra/reloader'
 require 'data_mapper'
 require 'pusher'
 require 'rack-flash'
@@ -16,6 +17,9 @@ require 'crowdring/supporter'
 
 module Crowdring
   class Server < Sinatra::Base
+    configure :development do
+      register Sinatra::Reloader
+    end
     enable :sessions
     use Rack::Flash
     set :logging, true
