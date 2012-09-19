@@ -30,7 +30,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
 $ ->
   $('select').chosen()
-  setTimeout((->$('.notice').fadeOut('medium')), 3000)
+  setTimeout((->$('.notice').slideUp('medium')), 3000)
 
   pusher = new Pusher(window.pusher_key)
   $("#campaign").empty()
