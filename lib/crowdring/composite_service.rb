@@ -1,10 +1,14 @@
 require 'singleton'
 
 module Crowdring
+
+  class NoServiceError < StandardError; end
+
   class CompositeService 
     include Singleton
 
     def initialize
+      @default_service = nil
       @services = {}
     end
 
@@ -17,16 +21,9 @@ module Crowdring
       @services[name]
     end
 
-    def extract_params(name, request)
-      if @services.has_key? name
-        @services[name].extract_params(request)
-      else
-        raise "No service handler installed at #{name}"
-      end
-    end
-
-    def build_response(from, commands)
-      supporting_service(from).build_response(from, commands)
+    def reset
+      @services = {}
+      @default_service = nil
     end
 
     def numbers
@@ -37,12 +34,12 @@ module Crowdring
       service = supporting_service(params[:from])
 
       if service.supports_outgoing?
-        puts "[%s] %s: %s (%s)" % [ Time.now, service.class.name, "Sending SMS", params.inspect ]
         service.send_sms(params)
-      else
-        puts "[%s] %s: %s (%s)" % [ Time.now, @default_service.class.name, "Sending SMS", params.inspect ]
+      elsif @default_service
         @default_service.send_sms(from: @default_service.numbers.first,
           to: params[:to], msg: params[:msg])
+      else
+        raise NoServiceError, "No outgoing service handler for #{params[:from]}"
       end
     end
 
@@ -51,7 +48,7 @@ module Crowdring
     def supporting_service(number)
       service = @services.values.find {|s| supports_number(s, number)}
       if service.nil?
-        raise "No service handler can handle #{number}"
+        raise NoServiceError, "No service handler for #{number}"
       end
       service
     end
