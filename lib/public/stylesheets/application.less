@@ -51,6 +51,7 @@ body {
       margin-right: 10px;
     }
     float:left;
+    margin: 0 10px 0 10px;
   }
 
   #new-campaign {
@@ -65,7 +66,7 @@ body {
   }
 
   select{
-    min-width: 250px;
+    min-width: 400px;
   }
   
 
@@ -74,8 +75,9 @@ body {
   }
 
   h3 {
-    color: #FFA849;
-
+    color: #04394D;
+    margin-top: 0px;
+    margin-bottom: 10px;
   }
 
   footer {
@@ -93,6 +95,7 @@ body {
     border: 1px solid @color-button - #222;
     padding: 5px 12px;
     .rounded-corners;
+    font-size: 14px;
 
     &:active {
       position: relative;
@@ -139,12 +142,37 @@ body {
   
   #campaign-details {
     float: left;
-    width: 350px;
+    width: 30%;
+    padding: 20px;
+    background-color: white;
+    overflow: hidden;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
     }
   #broadcast {
     float: right;
-    width: 550px;
-  }  
+    width: 60%;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    #broadcast-text-area {
+      width: 100%;
+      min-height: 100px;
+      font-size: 14px;
+      color: #404040;
+      resize:none;
+      padding: 10px;
+      border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+      margin-bottom: 10px;
+      background-color: #F0F0F0;
+      box-shadow: 0px 0px 5px #888888 inset;
+    }
+  }
 }
 #campaign {
   h1 {
@@ -152,6 +180,29 @@ body {
   }
 }
 
+#new-campaign-box {
+    h1, h2, h3, label { color: #04394D; }
+    margin-top: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+    width:70%;
 
+    input {
+      width: 540px;
+      margin-left: 10px;
+      font-size: 14px;
+      color: #404040;
+      padding: 5px;
+      border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius:5px;
+      margin-bottom: 10px;
+      background-color: #F0F0F0;
+      box-shadow: 0px 0px 5px #888888 inset;
+    }
+}
 
 }

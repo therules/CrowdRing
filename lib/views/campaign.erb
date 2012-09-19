@@ -27,7 +27,7 @@
   <div id="broadcast">
     <h3>Broadcast</h3>
     <form action="/broadcast" method="post">
-      <textarea name="message" placeholder="Hello supporters..." rows="4" cols="20"></textarea>
+      <textarea name="message" placeholder="Hello supporters..." id="broadcast-text-area"></textarea>
       <input type="hidden" name="number" value="<%= params[:number] %>" /><br />
       <button type="submit">Broadcast</button>
     </form>
