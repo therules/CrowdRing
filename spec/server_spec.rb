@@ -6,6 +6,7 @@ ENV['RACK_ENV'] ||= 'test'
 ENV['PUSHER_APP_ID'] = 'app_id'
 ENV['PUSHER_KEY'] = 'key'
 ENV['PUSHER_SECRET'] = 'secret'
+
 require 'crowdring'
 
 
@@ -36,6 +37,10 @@ module Crowdring
     before(:each) do
       DataMapper.auto_migrate!
       @number = '+11231231234'
+    end
+
+    after(:all) do
+      PusherFake::Channel.reset
     end
 
     it 'should return a valid response for /' do

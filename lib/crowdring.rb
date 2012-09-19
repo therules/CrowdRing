@@ -117,7 +117,7 @@ module Crowdring
         flash[:notice] = "Campaign created"
         redirect to("/##{params[:phone_number]}")
       else
-        flash[:errors] = campaign.errors.full_messages.join('<br />')
+        flash[:errors] = campaign.errors.full_messages.join('|')
         redirect to('/campaign/new')
       end
     end

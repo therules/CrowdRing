@@ -7,7 +7,7 @@
     
     <div class="content">
       <% if flash.has?(:errors) %>
-        <div class="errors"><%= flash[:errors] %></div>
+        <div class="errors"><%= flash[:errors].sub('|','<br />') %></div>
       <% end %>
 
       <div id='new-campaign-box'>
