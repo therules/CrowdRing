@@ -34,13 +34,13 @@ module Crowdring
       Pusher.app_id = ENV["PUSHER_APP_ID"]
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
-        
+      
       DataMapper.setup(:default, ENV["DATABASE_URL"])
 
       DataMapper.finalize
       DataMapper.auto_upgrade!
 
-      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), :default)
+      CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
       CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
       # CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
       #   ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
@@ -110,11 +110,13 @@ module Crowdring
     end
 
     post '/campaign/create' do
-      Campaign.create(phone_number: params[:phone_number],
-                      title: params[:title])
-      
-      flash[:notice] = "campaign created"
-      redirect to("/##{params[:phone_number]}")
+      campaign = Campaign.new(params)
+      if campaign.save
+        flash[:notice] = "campaign created"
+        redirect to("/##{params[:phone_number]}")
+      else
+        redirect to('/campaign/new')
+      end
     end
 
     post '/campaign/destroy' do

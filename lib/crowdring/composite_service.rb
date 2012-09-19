@@ -8,8 +8,8 @@ module Crowdring
       @services = {}
     end
 
-    def add(name, service, is_default=false)
-      @default_service = service if is_default
+    def add(name, service, opts={})
+      @default_service = service if opts[:default]
       @services[name] = service
     end
 

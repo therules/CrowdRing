@@ -1,0 +1,1 @@
+job: rspec spec/server_spec.rb
