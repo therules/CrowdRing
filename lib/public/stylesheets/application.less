@@ -1,8 +1,11 @@
 @body-font: Helvetica, Arial, sans-serif;
 
 @h1-color: #FFCC66;
+@dark-blue:#04394D;
 @background-dark: #285F74;
 @base-unit: 3px;
+@color-button: #99DCF5;
+  
 
 .rounded-corners(@radius: 5px){
   border-radius: @radius;
@@ -41,7 +44,7 @@ body {
     }
   }
   #menu {
-    background-color: #04394D;
+    background-color: @dark-blue ;
     height: 30px;
     padding:10px;
   }
@@ -75,7 +78,7 @@ body {
   }
 
   h3 {
-    color: #04394D;
+    color: @dark-blue;
     margin-top: 0px;
     margin-bottom: 10px;
   }
@@ -87,16 +90,15 @@ body {
     font-size: 12px;
   }
 
-  @color-button: #99DCF5;
   
   button {
     color: #;
     background: @color-button;
     border: 1px solid @color-button - #222;
     padding: 5px 12px;
+    font-size: 14px;  
     .rounded-corners;
-    font-size: 14px;
-
+    
     &:active {
       position: relative;
       top: 1px;
@@ -146,18 +148,16 @@ body {
     padding: 20px;
     background-color: white;
     overflow: hidden;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
+    .rounded-corners;
+
     }
   #broadcast {
     float: right;
     width: 60%;
     background-color: white;
     padding: 20px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
+     .rounded-corners;
+ 
     #broadcast-text-area {
       width: 100%;
       min-height: 100px;
@@ -165,12 +165,10 @@ body {
       color: #404040;
       resize:none;
       padding: 10px;
-      border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
       margin-bottom: 10px;
       background-color: #F0F0F0;
       box-shadow: 0px 0px 5px #888888 inset;
+      .rounded-corners;
     }
   }
 }
@@ -181,14 +179,12 @@ body {
 }
 
 #new-campaign-box {
-    h1, h2, h3, label { color: #04394D; }
+    h1, h2, h3, label { color: @dark-blue; }
+
     margin-top: 20px;
     background-color: white;
     padding: 20px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
-    width:70%;
+    .rounded-corners;
 
     input {
       width: 540px;
@@ -196,9 +192,7 @@ body {
       font-size: 14px;
       color: #404040;
       padding: 5px;
-      border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius:5px;
+      .rounded-corners;
       margin-bottom: 10px;
       background-color: #F0F0F0;
       box-shadow: 0px 0px 5px #888888 inset;
