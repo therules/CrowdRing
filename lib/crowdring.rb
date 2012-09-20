@@ -156,7 +156,7 @@ module Crowdring
         Server.service_handler.send_sms(from: from, to: to.phone_number, msg: message)
       end
 
-      flash[:notice] = "message broadcast"
+      flash[:notice] = "Message broadcast"
       redirect to("/##{from}")
     end
 
