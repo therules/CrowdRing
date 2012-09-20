@@ -2,13 +2,8 @@
   <body>
     <%= erb :logoHeader %>
     <div class="content">
-      
-      <% if flash.has?(:notice) %>
-        <div class="notice"><%= flash[:notice] %></div>
-      <% end %>
       <div id="menu">
         <div id="campaign-selector">
-
           <select class="campaign-select" data-placeholder="Choose a campaign">
             <option value=""></option>
             <% for @campaign in @campaigns %>

@@ -6,10 +6,6 @@
     <%= erb :logoHeader %>
     
     <div class="content">
-      <% if flash.has?(:errors) %>
-        <div class="errors"><%= flash[:errors].sub('|','<br />') %></div>
-      <% end %>
-
       <div id='new-campaign-box'>
         <h2>New Campaign</h2>
         <% if @numbers.empty? %>

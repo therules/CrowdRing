@@ -34,12 +34,17 @@ module Crowdring
     end
 
     before(:each) do
+      Server.service_handler.reset
       DataMapper.auto_migrate!
       @number = '+11231231234'
+      @number2 = '+22222222222'
+      @number3 = '+33333333333'
     end
 
     after(:all) do
       PusherFake::Channel.reset
+      Server.service_handler.reset
+      DataMapper.auto_migrate!
     end
 
     it 'should return a valid response for /' do
@@ -112,7 +117,134 @@ module Crowdring
         get "/campaign/badnumber"
         last_response.status.should eq(404)
       end
+    end
 
+    describe 'voice/sms response forwarding' do
+      before(:each) do
+        @campaign = Campaign.new(phone_number: @number, title: @number)
+        @campaign.save
+        @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
+        @fooservice = double('fooservice', build_response: 'fooResponse',
+            supports_outgoing?: true,
+            transform_request: @fooresponse,
+            numbers: [@number],
+            send_sms: nil)
+        @barservice = double('barservice', build_response: 'barResponse',
+            supports_outgoing?: false,
+            transform_request: @fooresponse,
+            numbers: [@number3],
+            send_sms: nil)
+      end
+
+      it 'should forward a POST voice request to the registered service' do
+        @fooservice.should_receive(:build_response).once
+        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: @campaign.introductory_message)
+
+        Server.service_handler.add('foo', @fooservice)
+        post '/voiceresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('fooResponse')
+      end
+
+      it 'should forward an POST sms request to the registered service' do
+        @fooservice.should_receive(:build_response).once
+        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: @campaign.introductory_message)
+
+        Server.service_handler.add('foo', @fooservice)
+        post '/smsresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('fooResponse')
+      end
+
+      it 'should forward a GET voice request to the registered service' do
+        @fooservice.should_receive(:build_response).once
+        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: @campaign.introductory_message)
+
+        Server.service_handler.add('foo', @fooservice)
+        get '/voiceresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('fooResponse')
+      end
+
+      it 'should forward an GET sms request to the registered service' do
+        @fooservice.should_receive(:build_response).once
+        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: @campaign.introductory_message)
+
+        Server.service_handler.add('foo', @fooservice)
+        get '/smsresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('fooResponse')
+      end
+
+      it 'should respond on the sending service and reply on the default service if the sending service doesnt support outgoing' do
+        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: @campaign.introductory_message)
+        @fooservice.should_not_receive(:build_response)
+        @barservice.should_receive(:build_response).once
+        @barservice.should_not_receive(:send_sms)
+
+        Server.service_handler.add('foo', @fooservice, default: true)
+        Server.service_handler.add('bar', @barservice)
+        get '/smsresponse/bar'
+        last_response.should be_ok
+        last_response.body.should eq('barResponse')
+      end
+
+      it 'should respond without error to a number not currently associated with a campaign' do
+        @fooresponse.stub(to: @number3)
+        @fooservice.should_receive(:build_response).once
+        @fooservice.should_not_receive(:send_sms)
+
+        Server.service_handler.add('foo', @fooservice)
+        get '/voiceresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('fooResponse')
+      end
+
+      it 'should handle a callback by informing the corresponding service' do
+        @fooresponse.stub(callback?: true)
+        @fooservice.stub(process_callback: 'foocallback')
+        @fooservice.should_receive(:process_callback).once
+        @fooservice.should_not_receive(:build_response)
+        @fooservice.should_not_receive(:send_sms)
+
+        Server.service_handler.add('foo', @fooservice)
+        get '/voiceresponse/foo'
+        last_response.should be_ok
+        last_response.body.should eq('foocallback')
+      end
+    end
+
+    describe 'message broadcasting' do
+      it 'should broadcast a message to all supporters of a campaign' do
+        sent_to = []
+        campaign = Campaign.new(phone_number: @number, title: @number)
+        campaign.save
+        fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
+        fooservice = double('fooservice', build_response: 'fooResponse',
+            supports_outgoing?: true,
+            transform_request: fooresponse,
+            numbers: [@number])
+        fooservice.stub!(:send_sms) {|params| sent_to << params[:to]}
+        fooservice.should_receive(:send_sms).twice
+
+        campaign.supporters.create(phone_number: @number2)
+        campaign.supporters.create(phone_number: @number3)
+        Server.service_handler.add('foo', fooservice)
+        post '/broadcast', {phone_number: @number, message: 'message'}
+        sent_to.should include(@number2)
+        sent_to.should include(@number3)
+      end
+
+      it 'should redirect to the campaign page after broadcasting' do
+        campaign = Campaign.new(phone_number: @number, title: @number)
+        campaign.save
+        fooservice = double('fooservice')
+
+        Server.service_handler.add('foo', fooservice)
+        post '/broadcast', {phone_number: @number, message: 'message'}
+        last_response.should be_redirect
+        last_response.location.should match("/##{Regexp.quote(@number)}$")
+      end
     end
   end
 end

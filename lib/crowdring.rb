@@ -56,25 +56,27 @@ module Crowdring
     end
 
     def sms_response
-      proc {|to, msg| 
+      proc {|to| 
         []
       }
     end
 
     def voice_response
-      proc {|to, msg|
+      proc {|to|
         [{cmd: :reject}]
       }
     end
 
     def respond(cur_service, request, response)
-      msg = 'Free Msg: Thanks for trying out @Crowdring, my global missed call campaigning tool.'
-
       from = Phoner::Phone.normalize request.from
-      Campaign.get(request.to).supporters.first_or_create(phone_number: from)
+      campaign = Campaign.get(request.to)
 
-      Server.service_handler.send_sms(to: from, from: request.to, msg: msg)
-      cur_service.build_response(request.to, response.(from, msg))
+      if campaign
+        campaign.supporters.first_or_create(phone_number: from)
+        Server.service_handler.send_sms(to: from, from: request.to, msg: campaign.introductory_message)
+      end
+
+      cur_service.build_response(request.to, response.(from))
     end
 
     def process_request(service_name, request, response)
@@ -141,17 +143,16 @@ module Crowdring
         @supporters =  @campaign.supporters
         erb :campaign
       else
-        flash[:notice] = "No campaign with number #{params[:phone_number]}"
+        flash[:errors] = "No campaign with number #{params[:phone_number]}"
         404
       end
     end
 
     post '/broadcast' do
-      from = params[:number]
+      from = params[:phone_number]
       message = params[:message]
 
       Campaign.get(from).supporters.each do |to|
-        puts "[%s] %s" % [ Time.now, "/broadcast: Sending SMS to #{to.phone_number}"]
         Server.service_handler.send_sms(from: from, to: to.phone_number, msg: message)
       end
 

@@ -15,8 +15,15 @@
         
   </head>    
 
-      <header>
-        <title>CROWDRING</title>
-        <img class="logo" src="/crowdringlogo.png"  />
-        <h1>CROWDRING</h1>
-      </header>
+<header>
+  <title>CROWDRING</title>
+  <img class="logo" src="/crowdringlogo.png"  />
+  <h1>CROWDRING</h1>
+</header>
+
+<% if flash.has?(:notice) %>
+  <div class="notice"><%= flash[:notice] %></div>
+<% end %>
+<% if flash.has?(:errors) %>
+  <div class="errors"><%= flash[:errors].sub('|','<br />') %></div>
+<% end %>

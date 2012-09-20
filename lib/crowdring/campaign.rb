@@ -16,6 +16,10 @@ module Crowdring
       number.format("+%c (%a) %n") + " [" + Phoner::Country.find_by_country_code(number.country_code).char_3_code + "]"
     end
 
+    def introductory_message
+      "Thanks for supporting #{title}! Have a lovely day!"
+    end
+
     private
 
     def valid_phone_number?
