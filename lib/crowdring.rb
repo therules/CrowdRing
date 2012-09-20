@@ -21,12 +21,22 @@ module Crowdring
     use Rack::Flash
     set :logging, true
 
-    def service
+    def self.service_handler
       CompositeService.instance
     end
 
     configure :development do
       register Sinatra::Reloader
+
+      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
+      service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+    end
+
+    configure :production do
+      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
+      service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+      service_handler.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
+        ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
     end
 
     configure do
@@ -42,10 +52,6 @@ module Crowdring
       DataMapper.finalize
       DataMapper.auto_upgrade!
 
-      # CompositeService.instance.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
-      # CompositeService.instance.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
-      # CompositeService.instance.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
-      #   ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
       # # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
     end
 
@@ -67,12 +73,12 @@ module Crowdring
       from = Phoner::Phone.normalize request.from
       Campaign.get(request.to).supporters.first_or_create(phone_number: from)
 
-      service.send_sms(to: from, from: request.to, msg: msg)
+      Server.service_handler.send_sms(to: from, from: request.to, msg: msg)
       cur_service.build_response(request.to, response.(from, msg))
     end
 
     def process_request(service_name, request, response)
-      cur_service = service.get(service_name)
+      cur_service = Server.service_handler.get(service_name)
       cur_request = cur_service.transform_request(request)
 
       if cur_request.callback?
@@ -106,7 +112,7 @@ module Crowdring
 
     get '/campaign/new' do
       used_numbers = Campaign.all.map(&:phone_number)
-      @numbers = service.numbers - used_numbers
+      @numbers = Server.service_handler.numbers - used_numbers
 
       erb :campaign_new
     end
@@ -146,7 +152,7 @@ module Crowdring
 
       Campaign.get(from).supporters.each do |to|
         puts "[%s] %s" % [ Time.now, "/broadcast: Sending SMS to #{to.phone_number}"]
-        service.send_sms(from: from, to: to.phone_number, msg: message)
+        Server.service_handler.send_sms(from: from, to: to.phone_number, msg: message)
       end
 
       flash[:notice] = "message broadcast"

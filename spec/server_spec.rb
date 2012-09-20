@@ -28,7 +28,6 @@ module Crowdring
       Pusher.host = PusherFake.configuration.web_host
       Pusher.port = PusherFake.configuration.web_port
 
-      # Start the fake web server.
       fork { PusherFake::Server.start }.tap do |id|
         at_exit { Process.kill("KILL", id) }
       end

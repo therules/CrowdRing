@@ -6,7 +6,7 @@ describe Crowdring::CompositeService do
 		@service = Crowdring::CompositeService.instance
 	end
 
-	after(:each) do
+	before(:each) do
 		@service.reset
 	end
 
