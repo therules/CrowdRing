@@ -6,11 +6,13 @@ require 'pusher'
 require 'rack-flash'
 require 'facets/module/mattr'
 require 'phone'
+require 'resque'
 
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'
 require 'crowdring/tropo_service'
 require 'crowdring/composite_service'
+require 'crowdring/batch_send_sms'
 
 require 'crowdring/campaign'
 require 'crowdring/supporter'
@@ -30,6 +32,7 @@ module Crowdring
 
       service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
       service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+      
     end
 
     configure :production do
@@ -49,10 +52,9 @@ module Crowdring
       database_url = ENV["DATABASE_URL"] || 'postgres://localhost/crowdring'
       DataMapper.setup(:default, database_url)
 
-      DataMapper.finalize
-      DataMapper.auto_upgrade!
-
-      # # Campaign.create(phone_number: '+18143894106', title: 'Test Campaign')
+      redis_url = ENV["REDISTOGO_URL"] || 'redis://localhost:6379'
+      uri = URI.parse(redis_url)
+      Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :thread_safe => true)
     end
 
     def sms_response
@@ -152,9 +154,7 @@ module Crowdring
       from = params[:phone_number]
       message = params[:message]
 
-      Campaign.get(from).supporters.each do |to|
-        Server.service_handler.send_sms(from: from, to: to.phone_number, msg: message)
-      end
+      Server.service_handler.broadcast(from, message, Campaign.get(from).supporters.map(&:phone_number))
 
       flash[:notice] = "Message broadcast"
       redirect to("/##{from}")

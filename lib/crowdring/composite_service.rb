@@ -31,25 +31,27 @@ module Crowdring
     end
 
     def send_sms(params)
-      service = supporting_service(params[:from])
+      service = outgoing_service_for(params[:from])
+      params[:from] = service.numbers.first if service == @default_service
+      service.send_sms(params)
+    end
 
-      if service.supports_outgoing?
-        service.send_sms(params)
-      elsif @default_service
-        @default_service.send_sms(from: @default_service.numbers.first,
-          to: params[:to], msg: params[:msg])
-      else
-        raise NoServiceError, "No outgoing service handler for #{params[:from]}"
+    def broadcast(from, msg, to_numbers)
+      return if to_numbers.empty?
+      
+      service = outgoing_service_for(from)
+      from = service.numbers.first if service == @default_service
+
+      to_numbers.each_slice(10) do |numbers|
+        service.broadcast(from, msg, numbers)
       end
     end
 
     private
 
-    def supporting_service(number)
-      service = @services.values.find {|s| supports_number(s, number)}
-      if service.nil?
-        raise NoServiceError, "No service handler for #{number}"
-      end
+    def outgoing_service_for(number)
+      service = @services.values.find {|s| supports_number(s, number) && s.supports_outgoing? } || @default_service
+      raise NoServiceError, "No service handler for #{number}" if service.nil?
       service
     end
 

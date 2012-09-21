@@ -18,6 +18,8 @@ module Crowdring
   class TwilioService 
 
     def initialize(account_sid, auth_token)
+      @account_sid = account_sid
+      @auth_token = auth_token
       @client = Twilio::REST::Client.new account_sid, auth_token
     end
 
@@ -54,5 +56,11 @@ module Crowdring
         body: params[:msg]
       )
     end
+
+    def broadcast(from, msg, to_numbers)
+      params = {account_sid: @account_sid, auth_token: @auth_token}
+      Resque.enqueue(TwilioBatchSendSms, params, from, msg, to_numbers)
+    end
+
   end
 end

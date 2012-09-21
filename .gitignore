@@ -1,3 +1,4 @@
 .env
 logfile
 .DS_Store
+dump.rdb

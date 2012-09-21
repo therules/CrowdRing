@@ -224,8 +224,7 @@ module Crowdring
             supports_outgoing?: true,
             transform_request: fooresponse,
             numbers: [@number])
-        fooservice.stub!(:send_sms) {|params| sent_to << params[:to]}
-        fooservice.should_receive(:send_sms).twice
+        fooservice.stub(:broadcast) {|_,_,to_nums| sent_to.concat to_nums}
 
         campaign.supporters.create(phone_number: @number2)
         campaign.supporters.create(phone_number: @number3)

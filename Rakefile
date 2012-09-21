@@ -1,6 +1,9 @@
+$LOAD_PATH.unshift 'lib'
+require 'crowdring'
+require 'resque/tasks'
+
 namespace :db do 
   task :reset do
-    $LOAD_PATH.unshift 'lib'
     require 'data_mapper'
     require 'crowdring/campaign'
     require 'crowdring/supporter'

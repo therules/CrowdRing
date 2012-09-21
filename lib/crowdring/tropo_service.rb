@@ -72,5 +72,11 @@ module Crowdring
       uri.query = URI.encode_www_form(params)
       res = Net::HTTP.get_response(uri)
     end
+
+    def broadcast(from, msg, to_numbers)
+      params = {msg_token: @msg_token, app_id: @app_id,
+                username: @username, password: @password}
+      Resque.enqueue(TropoBatchSendSms, params, from, msg, to_numbers)
+    end
   end
 end
