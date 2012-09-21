@@ -21,7 +21,13 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
+      $('#broadcast-text-area').bind('input', -> 
+          if $.trim($(this).val()) == ""
+            $('#broadcastbutton').attr('disabled', 'disabled')
+          else
+            $('#broadcastbutton').removeAttr('disabled'))
     ).error(-> window.location.replace '/')
+
     channel_name = campaign.replace('+','')
     channel = pusher.subscribe(channel_name)
     channel.bind 'new', new_supporter
@@ -38,4 +44,5 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
+
 
