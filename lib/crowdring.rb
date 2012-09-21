@@ -51,6 +51,7 @@ module Crowdring
       
       database_url = ENV["DATABASE_URL"] || 'postgres://localhost/crowdring'
       DataMapper.setup(:default, database_url)
+      DataMapper.finalize
 
       redis_url = ENV["REDISTOGO_URL"] || 'redis://localhost:6379'
       uri = URI.parse(redis_url)
