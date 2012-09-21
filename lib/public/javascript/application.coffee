@@ -21,7 +21,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
-      $('#broadcast-text-area').bind('input', -> 
+        $('#broadcast-text-area').bind('input', -> 
           if $.trim($(this).val()) == ""
             $('#broadcastbutton').attr('disabled', 'disabled')
           else
