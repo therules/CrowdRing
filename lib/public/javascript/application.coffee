@@ -18,14 +18,19 @@ loadCampaign = (pusher, campaign, prev_channel) ->
   if campaign != ""
     $.get("/campaign/#{campaign}",
       (data) ->
+        character_limit = 160
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
         $('#broadcast-text-area').bind('input', -> 
-          if $.trim($(this).val()) == ""
+          if $.trim($(this).val()) == "" || $(this).val().length > character_limit
             $('#broadcastbutton').attr('disabled', 'disabled')
           else
             $('#broadcastbutton').removeAttr('disabled'))
+        $('#broadcast-text-area').charCount({
+          allowed: character_limit,
+          warning: 20,
+        })
     ).error(-> window.location.replace '/')
 
     channel_name = campaign.replace('+','')
