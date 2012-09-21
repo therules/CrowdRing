@@ -7,7 +7,15 @@ module Crowdring
 
     def self.perform(params, from, msg, to_numbers)
       service = TwilioService.new(params['account_sid'], params['auth_token'])
-      to_numbers.each {|to| service.send_sms from: from, to: to, msg: msg }
+      to_numbers.each do |to|
+        begin
+          service.send_sms from: from, to: to, msg: msg 
+        rescue Twilio::REST::RequestError => e
+          p "Send sms failed with RequestError: #{e.message}"
+        rescue Twilio::REST::ServerError => e
+          p "Send sms failed with ServerError: #{e.message}"
+        end
+      end
     end
   end
 
