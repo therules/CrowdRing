@@ -59,4 +59,14 @@ module Crowdring
       service.numbers.include? number
     end
   end
+
+  class FakeCompositeService < CompositeService
+    def send_sms(params)
+      p "Sending sms from #{params[:from]} to #{params[:to]} of '#{params[:msg]}'"
+    end
+
+    def broadcast(from, msg, to_numbers)
+      p "Broadcasting from #{from} to #{to_numbers} of '#{msg}'"
+    end
+  end
 end

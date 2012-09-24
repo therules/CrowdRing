@@ -160,6 +160,26 @@ body {
     .rounded-corners;
 
     }
+  #supporters-numbers  {
+    height: 235px;
+    width: 85%;
+    overflow: hidden;
+    margin-bottom: 10px;
+    position: relative;
+
+    .number-fade-out{
+      background: -webkit-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+      background-image: -webkit-gradient(linear,left top,left bottom,rgba(255,255,255,0), rgba(255,255,255, 1));
+      background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+      background-image: -ms-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+      background-image: -o-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+      position: absolute; 
+      bottom: -10px; left: 0;
+      width:  205px;
+      height: 40px;
+    }
+  }
+
   #broadcast {
     float: right;
     width: 60%;
@@ -198,31 +218,39 @@ body {
 }
 #campaign {
   h1 {
-  color: @h1-color;
+    color: @h1-color;
   }
+
+  li {
+    list-style-type: none;
+    margin-bottom: 5px;
+  }
+
   float: left;
   width: 100%;
+
 }
 
 #new-campaign-box {
-    h1, h2, h3, label { color: @dark-blue; }
+    
+  margin-top: 5px;
+  background-color: white;
+  padding: 20px;
+  .rounded-corners;
+  
+  h1, h2, h3, label { color: @dark-blue; }
 
-    margin-top: 5px;
-    background-color: white;
-    padding: 20px;
+  input {
+    width: 540px;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #404040;
+    padding: 5px;
     .rounded-corners;
-
-    input {
-      width: 540px;
-      margin-left: 10px;
-      font-size: 14px;
-      color: #404040;
-      padding: 5px;
-      .rounded-corners;
-      margin-bottom: 10px;
-      background-color: #F0F0F0;
-      box-shadow: 0px 0px 5px #888888 inset;
-    }
+    margin-bottom: 10px;
+    background-color: #F0F0F0;
+    box-shadow: 0px 0px 5px #888888 inset;
+  }
 }
 
 }

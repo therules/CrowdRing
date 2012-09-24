@@ -1,9 +1,17 @@
 new_supporter = (data) ->
-  $("#supporters .count").text(data.count + " Supporter" + (if data.count != 1 then "s" else ""))
+  $("#campaign-supporters .count").text(data.count + " Supporter" + (if data.count != 1 then "s" else ""))
                          .effect("highlight", {color: '#63DB00'}, 500)
+  
+  delete_last = -> 
+    if $('#supporters-numbers li').length > 10
+      $('#supporters-numbers li').last().remove()
+  
   $("<li>#{data.number}</li>").hide()
-                              .appendTo("ul.supporters")
-                              .slideDown('fast', -> $(this).css("display", "list-item"))
+                              .css('opacity', 0.0)
+                              .prependTo("ul.supporters")
+                              .slideDown(250)
+                              .animate({opacity: 1.0}, 250, delete_last)
+
 
 
 loadCampaign = (pusher, campaign, prev_channel) ->

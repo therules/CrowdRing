@@ -24,7 +24,11 @@ module Crowdring
     set :logging, true
 
     def self.service_handler
-      CompositeService.instance
+      if :development
+        FakeCompositeService.instance
+      else
+        CompositeService.instance
+      end
     end
 
     configure :development do
@@ -143,7 +147,8 @@ module Crowdring
     get '/campaign/:phone_number' do
       @campaign = Campaign.get(params[:phone_number])
       if @campaign
-        @supporters =  @campaign.supporters
+        @supporters =  @campaign.supporters.all(order: [:created_at.desc], limit: 10)
+        @supporter_count = @campaign.supporters.count
         erb :campaign
       else
         flash[:errors] = "No campaign with number #{params[:phone_number]}"

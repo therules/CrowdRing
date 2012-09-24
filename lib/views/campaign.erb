@@ -3,26 +3,27 @@
 <div id="campaign-information">
   <div id="campaign-details">
     <h3><%= @campaign.title %> </h3>
-    <h3>(<%= @campaign.pretty_phone_number %>)</h3>
+    <h3><%= @campaign.pretty_phone_number %></h3>
 
-    <div id="supporters">
-      <h3><div class="count"><%= @supporters.size %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h3>
-      <% if @supporters.empty? %>
-        <ul class="supporters"></ul>
-      <% else %>
+    <div id="campaign-supporters">
+      <h3><div class="count"><%= @supporter_count %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h3>
+    
+      <div id="supporters-numbers">
         <ul class="supporters">
           <% for @supporter in @supporters %>
             <li><%= @supporter.pretty_phone_number %></li>
           <% end %>
         </ul>
-      <% end %>
+        <div class="number-fade-out"></div>
+      </div>
+    </div>
+  
     <form action="/campaign/destroy" method="post">
       <input type="hidden" name="phone_number" value="<%= params[:phone_number] %>" />
       <button type="submit">Destroy Campaign</button>
     </form>
-    </div>
   </div>
-
+  
 
   <div id="broadcast">
     <h3>Broadcast</h3>
