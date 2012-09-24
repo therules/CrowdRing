@@ -207,34 +207,52 @@ module Crowdring
       end
 
       describe 'message broadcasting' do
-        it 'should broadcast a message to all supporters of a campaign' do
-          sent_to = []
-          campaign = Campaign.new(phone_number: @number, title: @number)
-          campaign.save
+        before(:each) do
+          @sent_to = []
+          @campaign = Campaign.new(phone_number: @number, title: @number)
+          @campaign.save
           fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
           fooservice = double('fooservice', build_response: 'fooResponse',
               supports_outgoing?: true,
               transform_request: fooresponse,
               numbers: [@number])
-          fooservice.stub(:broadcast) {|_,_,to_nums| sent_to.concat to_nums}
-
-          campaign.supporters.create(phone_number: @number2)
-          campaign.supporters.create(phone_number: @number3)
+          fooservice.stub(:broadcast) {|_,_,to_nums| @sent_to.concat to_nums}
           Server.service_handler.add('foo', fooservice)
+        end
+
+
+        it 'should broadcast a message to all supporters of a campaign' do
+          @campaign.supporters.create(phone_number: @number2)
+          @campaign.supporters.create(phone_number: @number3)
           post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
-          sent_to.should include(@number2)
-          sent_to.should include(@number3)
+          @sent_to.should include(@number2)
+          @sent_to.should include(@number3)
         end
 
         it 'should redirect to the campaign page after broadcasting' do
-          campaign = Campaign.new(phone_number: @number, title: @number)
-          campaign.save
-          fooservice = double('fooservice')
-
-          Server.service_handler.add('foo', fooservice)
           post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
           last_response.should be_redirect
           last_response.location.should match("/##{Regexp.quote(@number)}$")
+        end
+
+        it 'should broadcast only to the new supporters of a campaign' do
+          @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
+          @campaign.most_recent_broadcast = DateTime.now - 1
+          @campaign.save
+          @campaign.supporters.create(phone_number: @number3)
+
+          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}
+          @sent_to.should eq([@number3])
+        end
+
+        it 'should not have any new supporters after a broadcast' do
+          @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
+          @campaign.most_recent_broadcast = DateTime.now - 1
+          @campaign.save
+          @campaign.supporters.create(phone_number: @number3)
+
+          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}
+          Campaign.get(@number).new_supporters.should be_empty
         end
       end
     end
