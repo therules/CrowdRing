@@ -39,6 +39,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
           allowed: character_limit,
           warning: 20,
         })
+        $('#receivers').buttonset()
     ).error(-> window.location.replace '/')
 
     channel_name = campaign.replace('+','')
@@ -57,5 +58,6 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
+
 
 

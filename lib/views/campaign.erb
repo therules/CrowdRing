@@ -6,7 +6,7 @@
     <h3><%= @campaign.pretty_phone_number %></h3>
 
     <div id="campaign-supporters">
-      <h3><div class="count"><%= @supporter_count %> Supporter<% if @supporters.size != 1 %>s<% end %></div></h3>
+      <h3><div class="count"><%= @supporter_count %> Supporter<% if @supporters.length != 1 %>s<% end %></div></h3>
     
       <div id="supporters-numbers">
         <ul class="supporters">
@@ -28,6 +28,12 @@
   <div id="broadcast">
     <h3>Broadcast</h3>
     <form action="/broadcast" method="post">
+      <div id="receivers">
+        <input type="radio" name="receivers" value="all" id="all" checked="checked" />
+        <label for="all">All <%= @supporters.length %></label>
+        <input type="radio" name="receivers" value="new" id="new" />
+        <label for="new"><%= @campaign.new_supporters.count %> New</label>
+      </div>
       <textarea name="message" placeholder="Hello supporters..." id="broadcast-text-area"></textarea>
       <input type="hidden" name="phone_number" value="<%= params[:phone_number] %>" /><br />
       <button type="submit" id='broadcastbutton' disabled='disabled'>Broadcast</button>

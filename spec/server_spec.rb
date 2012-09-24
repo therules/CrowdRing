@@ -1,15 +1,4 @@
-require 'rspec'
-require 'rack/test'
-require 'pusher-fake'
-
-ENV['RACK_ENV'] ||= 'test'
-ENV['PUSHER_APP_ID'] = 'app_id'
-ENV['PUSHER_KEY'] = 'key'
-ENV['PUSHER_SECRET'] = 'secret'
-ENV['USERNAME'] = 'admin'
-ENV['PASSWORD'] = 'admin'
-
-require 'crowdring'
+require File.dirname(__FILE__) + '/spec_helper'
 
 
 module Crowdring
@@ -18,21 +7,6 @@ module Crowdring
 
     def app
       Crowdring::Server
-    end
-
-    before(:all) do
-      PusherFake.configure do |configuration|
-        configuration.app_id = Pusher.app_id
-        configuration.key    = Pusher.key
-        configuration.secret = Pusher.secret
-      end
-      
-      Pusher.host = PusherFake.configuration.web_host
-      Pusher.port = PusherFake.configuration.web_port
-
-      fork { PusherFake::Server.start }.tap do |id|
-        at_exit { Process.kill("KILL", id) }
-      end
     end
 
     before(:each) do
@@ -44,7 +18,6 @@ module Crowdring
     end
 
     after(:all) do
-      PusherFake::Channel.reset
       Server.service_handler.reset
       DataMapper.auto_migrate!
     end
@@ -248,7 +221,7 @@ module Crowdring
           campaign.supporters.create(phone_number: @number2)
           campaign.supporters.create(phone_number: @number3)
           Server.service_handler.add('foo', fooservice)
-          post '/broadcast', {phone_number: @number, message: 'message'}
+          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
           sent_to.should include(@number2)
           sent_to.should include(@number3)
         end
@@ -259,7 +232,7 @@ module Crowdring
           fooservice = double('fooservice')
 
           Server.service_handler.add('foo', fooservice)
-          post '/broadcast', {phone_number: @number, message: 'message'}
+          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
           last_response.should be_redirect
           last_response.location.should match("/##{Regexp.quote(@number)}$")
         end

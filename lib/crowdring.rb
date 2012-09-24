@@ -175,9 +175,19 @@ module Crowdring
 
     post '/broadcast' do
       from = params[:phone_number]
+      campaign = Campaign.get(from)
       message = params[:message]
+      to = case params[:receivers]
+        when "all"
+          campaign.supporters
+        when "new"
+          campaign.new_supporters
+      end
+      to = to.map(&:phone_number)
 
-      Server.service_handler.broadcast(from, message, Campaign.get(from).supporters.map(&:phone_number))
+      Server.service_handler.broadcast(from, message, to)
+      campaign.most_recent_broadcast = DateTime.now
+      campaign.save
 
       flash[:notice] = "Message broadcast"
       redirect to("/##{from}")
