@@ -24,7 +24,7 @@ module Crowdring
     set :logging, true
 
     def self.service_handler
-      if :development
+      if settings.environment == :development
         FakeCompositeService.instance
       else
         CompositeService.instance
@@ -61,6 +61,23 @@ module Crowdring
       uri = URI.parse(redis_url)
       Resque.redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password, :thread_safe => true)
     end
+
+
+    helpers do
+      def protected!
+        unless authorized?
+          response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+          throw(:halt, [401, "Not authorized\n"])
+        end
+      end
+
+      def authorized?
+        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['USERNAME'], ENV['PASSWORD']]
+      end
+    end
+
+    before { protected! }
 
     def sms_response
       proc {|to| 
