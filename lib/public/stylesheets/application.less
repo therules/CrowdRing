@@ -32,7 +32,6 @@ body {
       display: inline-block;
       height: 100%;
       vertical-align: bottom;
-
     }
 
     h1 {
@@ -105,12 +104,11 @@ body {
       top: 1px;
     }
 
-
-  a {
-    font-size: 50px;
+    a {
+      font-size: 50px;
+    }
   }
-  
-}
+
   .count {
     display: inline;
   }
@@ -120,11 +118,11 @@ body {
     padding-left: 3px;
     margin-top: 3px;
 
-   li {
-    color: #FFA849;
-   }
-  
+    li {
+      color: #FFA849;
+    }
   }
+
   .notice {
     margin: 0.3em 0;
     padding: 5px 7px;
@@ -149,117 +147,114 @@ body {
   input {
     display: inline-block;
   }
-#campaign-information{  
-  
-  #campaign-details {
-    float: left;
-    width: 30%;
-    padding: 20px;
-    background-color: white;
-    overflow: hidden;
-    .rounded-corners;
 
-    }
-  #supporters-numbers  {
-    height: 235px;
-    width: 85%;
-    overflow: hidden;
-    margin-bottom: 10px;
-    position: relative;
-
-    .number-fade-out{
-      background: -webkit-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-      background-image: -webkit-gradient(linear,left top,left bottom,rgba(255,255,255,0), rgba(255,255,255, 1));
-      background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-      background-image: -ms-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-      background-image: -o-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-      position: absolute; 
-      bottom: -10px; left: 0;
-      width:  205px;
-      height: 40px;
-    }
-  }
-
-  .form-box {
-    margin-bottom: 8px;
-    float: right;
-    width: 60%;
-    background-color: white;
-    padding: 20px;
-    .rounded-corners;
-
-    button {
-      float: right;
-    }
-
-    form {
-      margin-left: 8px;
-    }
-  }
-
-  #broadcast {
-    #broadcast-text-area {
-      margin-top: 5px;
-      width: 100%;
-      min-height: 100px;
-      font-size: 14px;
-      color: #404040;
-      resize:none;
-      padding: 10px;
-      margin-bottom: 10px;
-      background-color: #F0F0F0;
-      box-shadow: 0px 0px 5px #888888 inset;
+  #campaign-information {  
+    #campaign-details {
+      float: left;
+      width: 30%;
+      padding: 20px;
+      background-color: white;
+      overflow: hidden;
       .rounded-corners;
     }
 
-    .counter{
-      position:relative;
-      float: left;
-      font-size: 20px;
-      font-weight: bold;
-      color: #ccc;
+    #supporters-numbers  {
+      height: 235px;
+      width: 85%;
+      overflow: hidden;
+      margin-bottom: 10px;
+      position: relative;
+
+      .number-fade-out{
+        background: -webkit-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+        background-image: -webkit-gradient(linear,left top,left bottom,rgba(255,255,255,0), rgba(255,255,255, 1));
+        background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+        background-image: -ms-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+        background-image: -o-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+        position: absolute; 
+        bottom: -10px; left: 0;
+        width:  205px;
+        height: 40px;
+      }
     }
 
-    .warning{color:#600;}  
-    .exceeded{color:#e00;} 
+    .form-box {
+      margin-bottom: 8px;
+      float: right;
+      width: 60%;
+      background-color: white;
+      padding: 20px;
+      .rounded-corners;
+
+      button {
+        float: right;
+      }
+
+      form {
+        margin-left: 8px;
+      }
+    }
+
+    #broadcast {
+      #broadcast-text-area {
+        margin-top: 5px;
+        width: 100%;
+        min-height: 100px;
+        font-size: 14px;
+        color: #404040;
+        resize:none;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #F0F0F0;
+        box-shadow: 0px 0px 5px #888888 inset;
+        .rounded-corners;
+      }
+
+      .counter{
+        position:relative;
+        float: left;
+        font-size: 20px;
+        font-weight: bold;
+        color: #ccc;
+      }
+
+      .warning{color:#600;}  
+      .exceeded{color:#e00;} 
+    }
   }
-}
 
-#campaign {
-  h1 {
-    color: @h1-color;
+  #campaign {
+    float: left;
+    width: 100%;
+
+    h1 {
+      color: @h1-color;
+    }
+
+    li {
+      list-style-type: none;
+      margin-bottom: 5px;
+    }
   }
 
-  li {
-    list-style-type: none;
-    margin-bottom: 5px;
-  }
-
-  float: left;
-  width: 100%;
-
-}
-
-#new-campaign-box {
-    
-  margin-top: 5px;
-  background-color: white;
-  padding: 20px;
-  .rounded-corners;
-  
-  h1, h2, h3, label { color: @dark-blue; }
-
-  input {
-    width: 540px;
-    margin-left: 10px;
-    font-size: 14px;
-    color: #404040;
-    padding: 5px;
+  #new-campaign-box {
+    margin-top: 5px;
+    background-color: white;
+    padding: 20px;
     .rounded-corners;
-    margin-bottom: 10px;
-    background-color: #F0F0F0;
-    box-shadow: 0px 0px 5px #888888 inset;
-  }
-}
+    
+    h1, h2, h3, label { color: @dark-blue; }
 
+    input {
+      width: 540px;
+      margin-left: 10px;
+      font-size: 14px;
+      color: #404040;
+      padding: 5px;
+      .rounded-corners;
+      margin-bottom: 10px;
+      background-color: #F0F0F0;
+      box-shadow: 0px 0px 5px #888888 inset;
+    }
+  }
 }
