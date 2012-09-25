@@ -15,6 +15,16 @@ new_supporter = (data) ->
                               .animate({opacity: 1.0}, 250, delete_last)
 
 
+setupBroadcastTextArea = ->
+  $('#broadcast-text-area').bind('input', -> 
+    if $.trim($(this).val()) == "" || $(this).val().length > character_limit
+      $('#broadcastbutton').attr('disabled', 'disabled')
+    else
+      $('#broadcastbutton').removeAttr('disabled'))
+  $('#broadcast-text-area').charCount({
+    allowed: character_limit,
+    warning: 20,
+  })
 
 loadCampaign = (pusher, campaign, prev_channel) ->
   if prev_channel?
@@ -32,15 +42,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
-        $('#broadcast-text-area').bind('input', -> 
-          if $.trim($(this).val()) == "" || $(this).val().length > character_limit
-            $('#broadcastbutton').attr('disabled', 'disabled')
-          else
-            $('#broadcastbutton').removeAttr('disabled'))
-        $('#broadcast-text-area').charCount({
-          allowed: character_limit,
-          warning: 20,
-        })
+        setupBroadcastTextArea
         $('#receivers1').buttonset()
         $('#receivers2').buttonset()
     ).error(-> window.location.replace '/')
