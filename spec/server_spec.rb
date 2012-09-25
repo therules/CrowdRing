@@ -113,8 +113,7 @@ module Crowdring
 
       describe 'voice/sms response forwarding' do
         before(:each) do
-          @campaign = Campaign.new(phone_number: @number, title: @number)
-          @campaign.save
+          @campaign = Campaign.create(phone_number: @number, title: @number)
           @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
           @fooservice = double('fooservice', build_response: 'fooResponse',
               supports_outgoing?: true,
@@ -238,7 +237,6 @@ module Crowdring
         it 'should broadcast only to the new supporters of a campaign' do
           @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
           @campaign.most_recent_broadcast = DateTime.now - 1
-          @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
           post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}
@@ -248,7 +246,6 @@ module Crowdring
         it 'should not have any new supporters after a broadcast' do
           @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
           @campaign.most_recent_broadcast = DateTime.now - 1
-          @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
           post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}

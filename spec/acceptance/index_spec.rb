@@ -23,12 +23,9 @@ describe 'Filtering supporters', type: :request, js: true do
 
   it 'Filtering supporters based on who has joined since the most recent broadcast' do
     origSupporter = @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
-    origSupporter.save
     @campaign.most_recent_broadcast = DateTime.now - 1
-    @campaign.save
     newSupporter = @campaign.supporters.create(phone_number: @number3)
-    newSupporter.save
-
+   
     visit "/campaign/#{@number}"
     page.find("input[value='new'] + label").text.should match('1')
 
