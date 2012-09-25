@@ -18,7 +18,7 @@
       </div>
     </div>
   
-    <form action="/campaign/<%= @campaign.phone_number %>/destroy" method="post">
+    <form action="/campaign/<%= @campaign.phone_number %>/destroy" method="post" onsubmit="return confirm('Really destroy <%= @campaign.title %>?');">
       <button type="submit">Destroy Campaign</button>
     </form>
   </div>
