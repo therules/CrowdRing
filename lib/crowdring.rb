@@ -154,7 +154,7 @@ module Crowdring
       end
     end
 
-    post '/campaign/destroy' do
+    post '/campaign/:phone_number/destroy' do
       Campaign.get(params[:phone_number]).destroy
 
       flash[:notice] = "Campaign destroyed"
@@ -188,7 +188,7 @@ module Crowdring
     end
 
 
-    post '/broadcast' do
+    post '/campaign/:phone_number/broadcast' do
       from = params[:phone_number]
       campaign = Campaign.get(from)
       message = params[:message]

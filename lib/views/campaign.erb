@@ -18,8 +18,7 @@
       </div>
     </div>
   
-    <form action="/campaign/destroy" method="post">
-      <input type="hidden" name="phone_number" value="<%= params[:phone_number] %>" />
+    <form action="/campaign/<%= @campaign.phone_number %>/destroy" method="post">
       <button type="submit">Destroy Campaign</button>
     </form>
   </div>
@@ -27,7 +26,7 @@
 
   <div id="broadcast" class="form-box">
     <h3>Broadcast</h3>
-    <form name="broadcast" action="/broadcast" method="post">
+    <form name="broadcast" action="/campaign/<%= @campaign.phone_number %>/broadcast" method="post">
       <div id="receivers1">
         <input type="radio" name="filter" value="all" id="all1" checked="checked" />
         <label class="all-label" for="all1">All <%= @supporter_count %></label>

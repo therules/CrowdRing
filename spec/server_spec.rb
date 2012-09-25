@@ -79,20 +79,20 @@ module Crowdring
 
         it 'should be able to destroy a campaign' do
           Campaign.create(title: 'title', phone_number: @number)
-          post '/campaign/destroy', {'phone_number' => @number}
+          post "/campaign/#{@number}/destroy"
           Campaign.get(@number).should be_nil
         end
 
         it 'should destroy supporters when destroying a campaign' do
           Campaign.create(title: 'title', phone_number: @number)
           Campaign.first.supporters.create(phone_number: @number)
-          post '/campaign/destroy', {'phone_number' => @number}
+          post "/campaign/#{@number}/destroy"
           Supporter.first.should be_nil
         end
 
         it 'should redirect back to / after destroying a campaign' do
           Campaign.create(title: 'title', phone_number: @number)
-          post '/campaign/destroy', {'phone_number' => @number}
+          post "/campaign/#{@number}/destroy"
           last_response.should be_redirect
           last_response.location.should match('/$')
         end
@@ -223,13 +223,13 @@ module Crowdring
         it 'should broadcast a message to all supporters of a campaign' do
           @campaign.supporters.create(phone_number: @number2)
           @campaign.supporters.create(phone_number: @number3)
-          post '/broadcast', {phone_number: @number, message: 'message', filter: 'all'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'all'}
           @sent_to.should include(@number2)
           @sent_to.should include(@number3)
         end
 
         it 'should redirect to the campaign page after broadcasting' do
-          post '/broadcast', {phone_number: @number, message: 'message', filter: 'all'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'all'}
           last_response.should be_redirect
           last_response.location.should match("/##{Regexp.quote(@number)}$")
         end
@@ -240,7 +240,7 @@ module Crowdring
           @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post '/broadcast', {phone_number: @number, message: 'message', filter: 'new'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'new'}
           @sent_to.should eq([@number3])
         end
 
@@ -250,7 +250,7 @@ module Crowdring
           @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post '/broadcast', {phone_number: @number, message: 'message', filter: 'new'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'new'}
           Campaign.get(@number).new_supporters.should be_empty
         end
       end
