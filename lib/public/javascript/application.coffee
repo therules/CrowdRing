@@ -1,5 +1,5 @@
 new_supporter = (data) ->
-  $("#campaign-supporters .count").text(data.count + " Supporter" + (if data.supporter_count != 1 then "s" else ""))
+  $("#campaign-supporters .count").text(data.supporter_count + " Supporter" + (if data.supporter_count != 1 then "s" else ""))
                          .effect("highlight", {color: '#63DB00'}, 500)
   $(".all-label .ui-button-text").text('All ' + data.supporter_count)
   $(".new-label .ui-button-text").text(data.new_supporter_count + ' New')
