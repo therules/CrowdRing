@@ -22,7 +22,11 @@ module Crowdring
     end
 
     def new_supporters
-      supporters.select { |s| s.created_at > most_recent_broadcast }
+      if most_recent_broadcast.nil?
+        supporters
+      else
+        supporters.select { |s| s.created_at > most_recent_broadcast }
+      end
     end
 
     private

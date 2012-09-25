@@ -25,18 +25,31 @@
   </div>
   
 
-  <div id="broadcast">
+  <div id="broadcast" class="form-box">
     <h3>Broadcast</h3>
-    <form action="/broadcast" method="post">
-      <div id="receivers">
-        <input type="radio" name="receivers" value="all" id="all" checked="checked" />
-        <label for="all">All <%= @supporters.length %></label>
-        <input type="radio" name="receivers" value="new" id="new" />
-        <label for="new"><%= @campaign.new_supporters.count %> New</label>
+    <form name="form1" action="/broadcast" method="post">
+      <div id="receivers1">
+        <input type="radio" name="receivers" value="all" id="all1" checked="checked" />
+        <label class="all-label" for="all1">All <%= @supporter_count %></label>
+        <input type="radio" name="receivers" value="new" id="new1" />
+        <label class="new-label" for="new1"><%= @campaign.new_supporters.count %> New</label>
       </div>
       <textarea name="message" placeholder="Hello supporters..." id="broadcast-text-area"></textarea>
       <input type="hidden" name="phone_number" value="<%= params[:phone_number] %>" /><br />
       <button type="submit" id='broadcastbutton' disabled='disabled'>Broadcast</button>
+    </form>
+  </div>
+
+  <div id="export" class="form-box">
+    <h3>Export to CSV</h3>
+    <form name="form2" action="/campaign/<%= @campaign.phone_number %>/csv" method="get">
+      <div id="receivers2">
+        <input type="radio" name="receivers" value="all" id="all2" checked="checked" />
+        <label class="all-label" for="all2">All <%= @supporter_count %></label>
+        <input type="radio" name="receivers" value="new" id="new2" />
+        <label class="new-label" for="new2"><%= @campaign.new_supporters.count %> New</label>
+      </div>
+      <button type="submit" id='exportbutton'>Export</button>
     </form>
   </div>
 </div>

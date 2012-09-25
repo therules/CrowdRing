@@ -1,6 +1,8 @@
 new_supporter = (data) ->
-  $("#campaign-supporters .count").text(data.count + " Supporter" + (if data.count != 1 then "s" else ""))
+  $("#campaign-supporters .count").text(data.count + " Supporter" + (if data.supporter_count != 1 then "s" else ""))
                          .effect("highlight", {color: '#63DB00'}, 500)
+  $(".all-label .ui-button-text").text('All ' + data.supporter_count)
+  $(".new-label .ui-button-text").text(data.new_supporter_count + ' New')
   
   delete_last = -> 
     if $('#supporters-numbers li').length > 10
@@ -39,7 +41,8 @@ loadCampaign = (pusher, campaign, prev_channel) ->
           allowed: character_limit,
           warning: 20,
         })
-        $('#receivers').buttonset()
+        $('#receivers1').buttonset()
+        $('#receivers2').buttonset()
     ).error(-> window.location.replace '/')
 
     channel_name = campaign.replace('+','')

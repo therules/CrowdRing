@@ -77,7 +77,7 @@ module Crowdring
       end
     end
 
-    before { protected! }
+    before { protected! unless request.path_info =~ /(voice|sms)response/ }
 
     def sms_response
       proc {|to| 
@@ -173,6 +173,22 @@ module Crowdring
       end
     end
 
+    get '/campaign/:phone_number/csv' do
+      headers "Content-Disposition" => "attachment;filename=#{params[:phone_number]}.csv",
+              "Content-Type" => "application/octet-stream"
+      supporters = case params[:receivers]
+        when "all"
+          Campaign.get(params[:phone_number]).supporters
+        when "new"
+          Campaign.get(params[:phone_number]).new_supporters
+      end
+      CSV.generate do |csv|
+        csv << ['Phone Number', 'Support Date']
+        supporters.each {|s| csv << [s.phone_number, s.created_at.strftime('%F')] }
+      end
+    end
+
+
     post '/broadcast' do
       from = params[:phone_number]
       campaign = Campaign.get(from)
@@ -192,7 +208,6 @@ module Crowdring
       flash[:notice] = "Message broadcast"
       redirect to("/##{from}")
     end
-
 
     run! if app_file == $0
   end

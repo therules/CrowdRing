@@ -11,7 +11,10 @@ module Crowdring
     validates_with_method :phone_number, :valid_phone_number?
 
     after :save do |s|
-      Pusher[s.campaign.phone_number[1..-1]].trigger('new', { number: s.pretty_phone_number, count: s.campaign.supporters.size })
+      data = {  number: s.pretty_phone_number,
+                supporter_count: s.campaign.supporters.count,
+                new_supporter_count: s.campaign.new_supporters.count }
+      Pusher[s.campaign.phone_number[1..-1]].trigger('new', data) 
     end
 
     def pretty_phone_number
