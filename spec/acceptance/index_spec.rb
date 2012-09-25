@@ -30,7 +30,7 @@ describe 'Filtering supporters', type: :request, js: true do
     page.find("input[value='new'] + label").text.should match('1')
 
     within('#broadcast') do
-      choose('new')
+      choose('new1')
       click_button('Broadcast')
     end
 

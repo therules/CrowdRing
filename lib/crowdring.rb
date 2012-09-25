@@ -174,9 +174,8 @@ module Crowdring
     end
 
     get '/campaign/:phone_number/csv' do
-      headers "Content-Disposition" => "attachment;filename=#{params[:phone_number]}.csv",
-              "Content-Type" => "application/octet-stream"
-      supporters = case params[:receivers]
+      attachment("#{params[:phone_number]}.csv")
+      supporters = case params[:filter]
         when "all"
           Campaign.get(params[:phone_number]).supporters
         when "new"
@@ -184,7 +183,7 @@ module Crowdring
       end
       CSV.generate do |csv|
         csv << ['Phone Number', 'Support Date']
-        supporters.each {|s| csv << [s.phone_number, s.created_at.strftime('%F')] }
+        supporters.each {|s| csv << [s.phone_number, s.support_date] }
       end
     end
 
@@ -193,7 +192,7 @@ module Crowdring
       from = params[:phone_number]
       campaign = Campaign.get(from)
       message = params[:message]
-      to = case params[:receivers]
+      to = case params[:filter]
         when "all"
           campaign.supporters
         when "new"

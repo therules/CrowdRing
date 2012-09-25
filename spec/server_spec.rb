@@ -223,13 +223,13 @@ module Crowdring
         it 'should broadcast a message to all supporters of a campaign' do
           @campaign.supporters.create(phone_number: @number2)
           @campaign.supporters.create(phone_number: @number3)
-          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
+          post '/broadcast', {phone_number: @number, message: 'message', filter: 'all'}
           @sent_to.should include(@number2)
           @sent_to.should include(@number3)
         end
 
         it 'should redirect to the campaign page after broadcasting' do
-          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'all'}
+          post '/broadcast', {phone_number: @number, message: 'message', filter: 'all'}
           last_response.should be_redirect
           last_response.location.should match("/##{Regexp.quote(@number)}$")
         end
@@ -237,19 +237,61 @@ module Crowdring
         it 'should broadcast only to the new supporters of a campaign' do
           @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
           @campaign.most_recent_broadcast = DateTime.now - 1
+          @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}
+          post '/broadcast', {phone_number: @number, message: 'message', filter: 'new'}
           @sent_to.should eq([@number3])
         end
 
         it 'should not have any new supporters after a broadcast' do
           @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
           @campaign.most_recent_broadcast = DateTime.now - 1
+          @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post '/broadcast', {phone_number: @number, message: 'message', receivers: 'new'}
+          post '/broadcast', {phone_number: @number, message: 'message', filter: 'new'}
           Campaign.get(@number).new_supporters.should be_empty
+        end
+      end
+
+      describe 'campaign exporting' do
+        before(:each) do
+          @campaign = Campaign.create(phone_number: @number, title: @number)
+        end
+
+        it 'should return a csv file' do
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all'}
+          last_response.header['Content-Disposition'].should match('attachment')
+          last_response.header['Content-Disposition'].should match('\.csv')
+        end
+
+        def verify_csv(csvString, supporters)
+          csv_supporters = CSV.parse(csvString)
+          csv_supporters[0][0].should eq('Phone Number')
+          csv_supporters[0][1].should eq('Support Date')
+          csv_supporters[1..-1].zip(@campaign.supporters).each do |csvSupporter, origSupporter|
+            csvSupporter[0].should eq(origSupporter.phone_number)
+            csvSupporter[1].should eq(origSupporter.support_date)
+          end
+        end
+
+        it 'should export all of the supporters numbers and support dates' do
+          @campaign.supporters.create(phone_number: @number2)
+          @campaign.supporters.create(phone_number: @number3)
+
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all'}
+          verify_csv(last_response.body, @campaign.supporters)
+        end
+
+        it 'should export only the new supporters numbers and support dates' do
+          @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
+          @campaign.most_recent_broadcast = DateTime.now - 1
+          @campaign.save
+          @campaign.supporters.create(phone_number: @number3)
+
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'new'}
+          verify_csv(last_response.body, @campaign.new_supporters)
         end
       end
     end

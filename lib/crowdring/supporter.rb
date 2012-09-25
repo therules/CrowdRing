@@ -22,6 +22,10 @@ module Crowdring
       number.format "+%c (%a) %n" + " [" + Phoner::Country.find_by_country_code(number.country_code).char_3_code + "]"
     end
 
+    def support_date
+      created_at.strftime('%F')
+    end
+
 
     private
 
