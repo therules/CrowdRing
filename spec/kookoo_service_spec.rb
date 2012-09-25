@@ -25,33 +25,32 @@ describe Crowdring::KooKooRequest do
 end
 
 describe Crowdring::KooKooService do
+  before(:each) do
+    @service = Crowdring::KooKooService.new('api_key', 'number')
+  end   
+
   it 'should not support outgoing' do
-    service = Crowdring::KooKooService.new('someSid', 'someToken')
-    service.supports_outgoing?.should be_false
+    @service.supports_outgoing?.should be_false
   end
   
   it 'should transform a http request' do
-    service = Crowdring::KooKooService.new('someSid', 'someToken')
-    service.should respond_to(:transform_request)
+    @service.should respond_to(:transform_request)
   end
 
   it 'should build a reject response' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
-    response = s.build_response('from', [{cmd: :reject}])
+    response = @service.build_response('from', [{cmd: :reject}])
     response.should eq(Builder::XmlMarkup.new(indent: 2).response { |r| r.hangup })
   end
 
   it 'should build a send sms response' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
-    response = s.build_response('from', [{cmd: :sendsms, to: 'to', msg: 'msg'}])
+    response = @service.build_response('from', [{cmd: :sendsms, to: 'to', msg: 'msg'}])
     response.should eq(Builder::XmlMarkup.new(indent: 2).response { |r| r.sendsms 'msg', to: 'to'})
   end
 
   it 'should build a response for a series of commands' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
     cmds = [{cmd: :sendsms, to: 'to', msg: 'msg'},
             {cmd: :reject}]
-    response = s.build_response('from', cmds)
+    response = @service.build_response('from', cmds)
     response.should eq(Builder::XmlMarkup.new(indent: 2).response do |r|
       r.sendsms 'msg', to: 'to'
       r.hangup
@@ -59,15 +58,13 @@ describe Crowdring::KooKooService do
   end
 
   it 'should return a list of the available numbers' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
-    s.numbers.should eq(['number'])
+    @service.numbers.should eq(['number'])
   end
 
   it 'should GET the right uri on send_msg' do
-    s = Crowdring::KooKooService.new('api_key', 'number')
     path = '/outbound/outbound_sms.php?message=msg&phone_no=to&api_key=api_key'
     FakeWeb.register_uri(:get, 'http://www.kookoo.in' + path, body: '')
-    s.send_sms(to: 'to', msg: 'msg')
+    @service.send_sms(to: 'to', msg: 'msg')
     FakeWeb.last_request.path.should eq(path)
   end
 
