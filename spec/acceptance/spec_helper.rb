@@ -14,7 +14,3 @@ include Rack::Test::Methods
 def app
   Crowdring::Server
 end
-
-def login
-  authorize 'admin', 'admin'
-end
