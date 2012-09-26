@@ -11,6 +11,7 @@ require 'resque'
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'
 require 'crowdring/tropo_service'
+require 'crowdring/logging_service'
 require 'crowdring/composite_service'
 require 'crowdring/batch_send_sms'
 
@@ -26,18 +27,13 @@ module Crowdring
     set :logging, true
 
     def self.service_handler
-      if settings.environment == :development
-        FakeCompositeService.instance
-      else
-        CompositeService.instance
-      end
+      CompositeService.instance
     end
 
     configure :development do
       register Sinatra::Reloader
 
-      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
-      service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
+      service_handler.add('logger', LoggingService.new(['+11111111111', '+12222222222'], output: true), default: true)
     end
 
     configure :production do
@@ -54,7 +50,7 @@ module Crowdring
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
       
-      database_url = ENV["DATABASE_URL"] || 'postgres://localhost/crowdring'
+      database_url = ENV["DATABASE_URL"] || "postgres://localhost/crowdring_#{settings.environment}"
       DataMapper.setup(:default, database_url)
       DataMapper.finalize
 
@@ -154,7 +150,7 @@ module Crowdring
       campaign = Campaign.new(params)
       if campaign.save
         flash[:notice] = "Campaign created"
-        redirect to("/##{params[:phone_number]}")
+        redirect to("/campaigns##{params[:phone_number]}")
       else
         flash[:errors] = campaign.errors.full_messages.join('|')
         redirect to('/campaign/new')
@@ -203,7 +199,7 @@ module Crowdring
       campaign.save
 
       flash[:notice] = "Message broadcast"
-      redirect to("/##{from}")
+      redirect to("/campaigns##{from}")
     end
 
     run! if app_file == $0

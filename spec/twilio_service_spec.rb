@@ -1,4 +1,4 @@
-require 'crowdring/twilio_service'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::TwilioRequest do
   it 'should extract the from parameter' do

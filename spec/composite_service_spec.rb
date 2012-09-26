@@ -1,4 +1,4 @@
-require 'crowdring/composite_service'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::CompositeService do 
 

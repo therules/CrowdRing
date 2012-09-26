@@ -1,6 +1,8 @@
 require 'rspec'
 require 'rack/test'
 require 'pusher-fake'
+require 'fakeweb'
+
 
 ENV['RACK_ENV'] ||= 'test'
 ENV['PUSHER_APP_ID'] = 'app_id'

@@ -1,3 +1,3 @@
 web: bundle exec thin start -p $PORT -l -
 redis: redis-server
-resque: bundle exec rake resque:work VVERBOSE=1 TERM_CHILD=1 QUEUE=send_sms
+resque: bundle exec rake environment resque:work VVERBOSE=1 TERM_CHILD=1 QUEUE=send_sms

@@ -1,5 +1,4 @@
-require 'crowdring/filter'
-require 'phone'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe 'filters' do
   it 'should return all of the given elements' do

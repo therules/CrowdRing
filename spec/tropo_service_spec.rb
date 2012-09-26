@@ -1,5 +1,4 @@
-require 'crowdring/tropo_service'
-require 'fakeweb'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::TropoRequest do
   it 'should extract the from parameter' do

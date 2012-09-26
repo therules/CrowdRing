@@ -1,5 +1,4 @@
-require 'crowdring/kookoo_service'
-require 'fakeweb'
+require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::KooKooRequest do
   it 'should extract the from parameter' do

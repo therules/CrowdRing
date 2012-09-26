@@ -14,7 +14,11 @@ module Crowdring
       data = {  number: s.pretty_phone_number,
                 supporter_count: s.campaign.supporters.count,
                 new_supporter_count: s.campaign.new_supporters.count }
-      Pusher[s.campaign.phone_number[1..-1]].trigger('new', data) 
+      begin
+        Pusher[s.campaign.phone_number[1..-1]].trigger('new', data) 
+      rescue SocketError
+        p "SocketError: Failed to send message to Pusher"
+      end
     end
 
     def pretty_phone_number

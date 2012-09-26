@@ -1,6 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-
 module Crowdring
   describe Server do
     include Rack::Test::Methods
@@ -53,7 +52,7 @@ module Crowdring
         it 'should redirect to campaign view on successful campaign creation' do
           post '/campaign/create', {'title' => 'title', 'phone_number' => @number}
           last_response.should be_redirect
-          last_response.location.should match("/##{Regexp.quote(@number)}$")
+          last_response.location.should match("campaigns##{Regexp.quote(@number)}$")
         end
 
         it 'should not create a campaign when given a empty title' do
@@ -231,7 +230,7 @@ module Crowdring
         it 'should redirect to the campaign page after broadcasting' do
           post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'all'}
           last_response.should be_redirect
-          last_response.location.should match("/##{Regexp.quote(@number)}$")
+          last_response.location.should match("campaigns##{Regexp.quote(@number)}$")
         end
 
         it 'should broadcast only to the new supporters of a campaign' do
