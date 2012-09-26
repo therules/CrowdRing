@@ -1,6 +1,7 @@
 module Crowdring
   class Supporter
     include DataMapper::Resource
+    include PhoneNumberFields
 
     property :id,           Serial
     property :phone_number, String
@@ -21,29 +22,9 @@ module Crowdring
       end
     end
 
-    def pretty_phone_number
-      number = Phoner::Phone.parse phone_number
-      number.format "+%c (%a) %n" + " [" + country.char_3_code + "]"
-    end
-
     def support_date
       created_at.strftime('%F')
     end
 
-    def country
-      number = Phoner::Phone.parse phone_number
-      Phoner::Country.find_by_country_code(number.country_code)
-    end
-
-
-    private
-
-    def valid_phone_number?
-      if Phoner::Phone.valid? @phone_number
-        true
-      else
-        [false, 'Phone number does not appear to be valid']
-      end
-    end
   end
 end

@@ -260,18 +260,17 @@ module Crowdring
         end
 
         it 'should return a csv file' do
-          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all'}
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all', fields: {phone_number: 'yes', support_date: 'yes'}}
           last_response.header['Content-Disposition'].should match('attachment')
           last_response.header['Content-Disposition'].should match('\.csv')
         end
 
-        def verify_csv(csvString, supporters)
+        def verify_csv(csvString, supporters, fields=[])
           csv_supporters = CSV.parse(csvString)
-          csv_supporters[0][0].should eq('Phone Number')
-          csv_supporters[0][1].should eq('Support Date')
+          headers = csv_supporters[0]
+          fields.zip(headers).each {|f, h| h.should eq(CsvField.from_id(f).display_name) }
           csv_supporters[1..-1].zip(@campaign.supporters).each do |csvSupporter, origSupporter|
-            csvSupporter[0].should eq(origSupporter.phone_number)
-            csvSupporter[1].should eq(origSupporter.support_date)
+            fields.each_with_index {|field, idx| csvSupporter[idx].should eq(origSupporter.send(field)) }
           end
         end
 
@@ -279,8 +278,9 @@ module Crowdring
           @campaign.supporters.create(phone_number: @number2)
           @campaign.supporters.create(phone_number: @number3)
 
-          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all'}
-          verify_csv(last_response.body, @campaign.supporters)
+          fields = {phone_number: 'yes', support_date: 'yes'}
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all', fields: fields}
+          verify_csv(last_response.body, @campaign.supporters, fields.keys)
         end
 
         it 'should export only the new supporters numbers and support dates' do
@@ -291,6 +291,24 @@ module Crowdring
 
           get "/campaign/#{@campaign.phone_number}/csv", {filter: "after:#{@campaign.most_recent_broadcast}"}
           verify_csv(last_response.body, @campaign.new_supporters)
+        end
+
+        it 'should export the supporters country codes' do
+          @campaign.supporters.create(phone_number: @number2)
+          @campaign.supporters.create(phone_number: @number3)
+
+          fields = {country_code: 'yes'}
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all', fields: fields}
+          verify_csv(last_response.body, @campaign.supporters, fields.keys)
+        end
+
+        it 'should export the supporters area codes' do
+          @campaign.supporters.create(phone_number: @number2)
+          @campaign.supporters.create(phone_number: @number3)
+
+          fields = {area_code: 'yes'}
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'all', fields: fields}
+          verify_csv(last_response.body, @campaign.supporters, fields.keys)
         end
       end
     end

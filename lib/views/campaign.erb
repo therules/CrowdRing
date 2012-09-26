@@ -33,7 +33,7 @@
           <label class="all-label" for="all1">All <%= @supporter_count %></label>
           <input type="radio" name="filter" value="after:<%= @campaign.most_recent_broadcast %>" id="new1" />
           <label class="new-label" for="new1"><%= @campaign.new_supporters.count %> New</label>
-          <input type="radio" name="filter" value="country:US" id="country1" />
+          <input type="radio" name="filter" value="country:" id="country1" />
           <label for="country1">Country</label>
         </div>
       </div>
@@ -52,11 +52,14 @@
           <label class="all-label" for="all2">All <%= @supporter_count %></label>
           <input type="radio" name="filter" value="after:<%= @campaign.most_recent_broadcast %>" id="new2" />
           <label class="new-label" for="new2"><%= @campaign.new_supporters.count %> New</label>
-          <input type="radio" name="filter" value="country:US" id="country2" />
+          <input type="radio" name="filter" value="country:" id="country2" />
           <label for="country2">Country</label>
         </div>
       </div>
       <div id="filter-options" style="display:none;"></div>
+      <% for field in @all_fields %>
+        <input type="checkbox" name="fields[<%= field.id %>" value="yes" <%= 'checked="checked"' if field.default? %>><%= field.display_name %>
+      <% end %>
       <button type="submit" id='exportbutton'>Export</button>
     </form>
   </div>

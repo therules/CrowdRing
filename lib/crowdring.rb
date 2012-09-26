@@ -17,8 +17,10 @@ require 'crowdring/batch_send_sms'
 
 require 'crowdring/filter'
 
+require 'crowdring/phone_number_fields'
 require 'crowdring/campaign'
 require 'crowdring/supporter'
+require 'crowdring/csv_fields'
 
 module Crowdring
   class Server < Sinatra::Base
@@ -170,6 +172,7 @@ module Crowdring
         @supporters =  @campaign.supporters.all(order: [:created_at.desc], limit: 10)
         @supporter_count = @campaign.supporters.count
         @countries = @campaign.supporters.map(&:country).uniq
+        @all_fields = CsvField.all_fields
         erb :campaign
       else
         flash[:errors] = "No campaign with number #{params[:phone_number]}"
@@ -180,9 +183,10 @@ module Crowdring
     get '/campaign/:phone_number/csv' do
       attachment("#{params[:phone_number]}.csv")
       supporters = Filter.create(params[:filter]).filter(Campaign.get(params[:phone_number]).supporters)
+      fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
-        csv << ['Phone Number', 'Support Date']
-        supporters.each {|s| csv << [s.phone_number, s.support_date] }
+        csv << fields.map {|f| f.display_name }
+        supporters.each {|s| csv << fields.map {|f| s.send(f.id) } }
       end
     end
 
