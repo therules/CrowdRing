@@ -2,23 +2,16 @@
   <%= erb :includes %>
   <body>
     <%= erb :logoHeader %>
-    <div class="content">
-      <div id="menu">
-        <div id="campaign-selector">
-          <select class="campaign-select" data-placeholder="Choose a campaign">
-            <option value=""></option>
-            <% for @campaign in @campaigns %>
-              <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</option>
-            <% end %>
-          </select>
-        </div>
-        <div id="new-campaign">
-          <form action="/campaign/new" method="get" >
-            <button>New Campaign</button>
-          </form>
-        </div>
+      <div id="new-campaign">
+        <form action="/campaign/new" method="get" >
+          <button>New Campaign</button>
+        </form>
       </div>
-      <div id="campaign"></div>
-     </div>
+    <div class="content">
+      <% for @campaign in @campaigns %>
+        <%= erb :campaign_preview %>
+      <% end %>
+
+    </div>
   </body>
 </html>

@@ -137,6 +137,12 @@ module Crowdring
       erb :index
     end
 
+    get '/campaigns' do
+      @campaigns = Campaign.all
+
+      erb :campaigns
+    end
+
     get '/campaign/new' do
       used_numbers = Campaign.all.map(&:phone_number)
       @numbers = Server.service_handler.numbers - used_numbers
