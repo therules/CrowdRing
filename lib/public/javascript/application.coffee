@@ -16,6 +16,7 @@ new_supporter = (data) ->
 
 
 setupBroadcastTextArea = ->
+  character_limit = 160
   $('#broadcast-text-area').bind('input', -> 
     if $.trim($(this).val()) == "" || $(this).val().length > character_limit
       $('#broadcastbutton').attr('disabled', 'disabled')
@@ -25,6 +26,22 @@ setupBroadcastTextArea = ->
     allowed: character_limit,
     warning: 20,
   })
+
+setupFilters = (buttons) ->
+  $(buttons).buttonset()
+  $("#{buttons} :radio").change ->
+    context = $(buttons).parent().parent()
+    $("#filter-options", context).slideUp()
+    clicked = $(this)
+    id = $(this).attr('id')
+    id = id.substr(0, id.length-1)
+    if $("##{id}-options").length == 1
+      $("#filter-options", context).html($("##{id}-options").html()).slideDown()
+
+      $("#filter-options :checkbox", context).change(->
+        str = 'country:' + $("#filter-options :checked", context).map((_, c) -> c.value).toArray().join('|')
+        clicked.val(str)
+      )
 
 loadCampaign = (pusher, campaign, prev_channel) ->
   if prev_channel?
@@ -38,13 +55,12 @@ loadCampaign = (pusher, campaign, prev_channel) ->
   if campaign != ""
     $.get("/campaign/#{campaign}",
       (data) ->
-        character_limit = 160
         $("#campaign").hide()
                       .html(data)
                       .slideDown(200)
-        setupBroadcastTextArea
-        $('#receivers1').buttonset()
-        $('#receivers2').buttonset()
+        setupBroadcastTextArea()
+        setupFilters('#broadcast-filter')
+        setupFilters('#export-filter')
     ).error(-> window.location.replace '/')
 
     channel_name = campaign.replace('+','')
@@ -63,6 +79,7 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
+
 
 
 

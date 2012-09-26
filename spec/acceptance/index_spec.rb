@@ -27,11 +27,11 @@ describe 'Filtering supporters', type: :request, js: true do
     newSupporter = @campaign.supporters.create(phone_number: @number3)
    
     visit "/campaign/#{@number}"
-    page.find("input[value='new'] + label").text.should match('1')
+    page.find("label[for=new1]").text.should match('1')
 
     within('#broadcast') do
       choose('new1')
-      click_button('Broadcast')
+      click_button('broadcastbutton')
     end
 
     @logging_service.last_broadcast[:to_numbers].should eq([@number3])

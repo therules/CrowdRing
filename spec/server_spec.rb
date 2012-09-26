@@ -240,7 +240,7 @@ module Crowdring
           @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'new'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
           @sent_to.should eq([@number3])
         end
 
@@ -250,7 +250,7 @@ module Crowdring
           @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          post "/campaign/#{@number}/broadcast", {message: 'message', filter: 'new'}
+          post "/campaign/#{@number}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
           Campaign.get(@number).new_supporters.should be_empty
         end
       end
@@ -290,7 +290,7 @@ module Crowdring
           @campaign.save
           @campaign.supporters.create(phone_number: @number3)
 
-          get "/campaign/#{@campaign.phone_number}/csv", {filter: 'new'}
+          get "/campaign/#{@campaign.phone_number}/csv", {filter: "after:#{@campaign.most_recent_broadcast}"}
           verify_csv(last_response.body, @campaign.new_supporters)
         end
       end

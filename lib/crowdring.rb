@@ -14,6 +14,8 @@ require 'crowdring/tropo_service'
 require 'crowdring/composite_service'
 require 'crowdring/batch_send_sms'
 
+require 'crowdring/filter'
+
 require 'crowdring/campaign'
 require 'crowdring/supporter'
 
@@ -36,7 +38,6 @@ module Crowdring
 
       service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
       service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
-      
     end
 
     configure :production do
@@ -166,6 +167,7 @@ module Crowdring
       if @campaign
         @supporters =  @campaign.supporters.all(order: [:created_at.desc], limit: 10)
         @supporter_count = @campaign.supporters.count
+        @countries = @campaign.supporters.map(&:country).uniq
         erb :campaign
       else
         flash[:errors] = "No campaign with number #{params[:phone_number]}"
@@ -175,12 +177,7 @@ module Crowdring
 
     get '/campaign/:phone_number/csv' do
       attachment("#{params[:phone_number]}.csv")
-      supporters = case params[:filter]
-        when "all"
-          Campaign.get(params[:phone_number]).supporters
-        when "new"
-          Campaign.get(params[:phone_number]).new_supporters
-      end
+      supporters = Filter.create(params[:filter]).filter(Campaign.get(params[:phone_number]).supporters)
       CSV.generate do |csv|
         csv << ['Phone Number', 'Support Date']
         supporters.each {|s| csv << [s.phone_number, s.support_date] }
@@ -192,13 +189,8 @@ module Crowdring
       from = params[:phone_number]
       campaign = Campaign.get(from)
       message = params[:message]
-      to = case params[:filter]
-        when "all"
-          campaign.supporters
-        when "new"
-          campaign.new_supporters
-      end
-      to = to.map(&:phone_number)
+      supporters = Filter.create(params[:filter]).filter(Campaign.get(params[:phone_number]).supporters)
+      to = supporters.map(&:phone_number)
 
       Server.service_handler.broadcast(from, message, to)
       campaign.most_recent_broadcast = DateTime.now
