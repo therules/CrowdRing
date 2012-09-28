@@ -8,7 +8,7 @@
           <select class="campaign-select" data-placeholder="Choose a campaign">
             <option value=""></option>
             <% for @campaign in @campaigns %>
-              <option value=<%= @campaign.phone_number %>><%= @campaign.title %> (<%= @campaign.pretty_phone_number %>)</option>
+              <option value=<%= @campaign.id %>><%= @campaign.title %></option>
             <% end %>
           </select>
         </div>

@@ -1,27 +1,41 @@
 module Crowdring
   class Campaign
     include DataMapper::Resource
-    include PhoneNumberFields
 
-    property :phone_number, String, key: true
+    property :id,           Serial
     property :title,        String, required: true, length: 0..64,
       messages: { presence: 'Non-empty title required',
                   length: 'Title must be fewer than 64 letters in length' }
     property :most_recent_broadcast, DateTime
 
-    validates_with_method :phone_number, :valid_phone_number?
+    has n, :assigned_phone_numbers, constraint: :destroy
+    has n, :memberships, 'CampaignMembership', constraint: :destroy
+    has n, :supporters, through: :memberships
 
-    has n, :supporters, constraint: :destroy
-    
+    def assign_phone_numbers(numbers)
+      numbers && numbers.inject(true) do |res, n|
+        begin
+          assigned_phone_numbers.create(phone_number: n).saved? && res 
+        rescue DataObjects::IntegrityError
+          false
+        end
+      end
+    end
+
+    def join(supporter)
+      membership = memberships.first_or_create(supporter: supporter)
+      membership.update(count: membership.count+1)
+    end
+
     def introductory_message
       "Thanks for supporting #{title}! Have a lovely day!"
     end
 
-    def new_supporters
+    def new_memberships
       if most_recent_broadcast.nil?
-        supporters
+        memberships 
       else
-        supporters.select { |s| s.created_at > most_recent_broadcast }
+        memberships.select { |s| s.created_at > most_recent_broadcast }
       end
     end
   end

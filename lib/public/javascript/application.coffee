@@ -63,10 +63,10 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         setupFilters('#export-filter')
     ).error(-> window.location.replace '/')
 
-    channel_name = campaign.replace('+','')
+    channel_name = campaign
     channel = pusher.subscribe(channel_name)
     channel.bind 'new', new_supporter
-  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], channel_name)
+  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
 
 $ ->
@@ -75,7 +75,7 @@ $ ->
 
   pusher = new Pusher(window.pusher_key)
   $("#campaign").empty()
-  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..-1], null)
+  window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], null)
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()

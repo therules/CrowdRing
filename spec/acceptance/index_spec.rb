@@ -16,17 +16,18 @@ describe 'Filtering supporters', type: :request, js: true do
     DataMapper.auto_migrate!
     @number2 = '+22222222222'
     @number3 = '+33333333333'
-    @campaign = Crowdring::Campaign.new(phone_number: @number, title: 'title')
-    @campaign.save
+    @campaign = Crowdring::Campaign.create(title: 'title')
+    @campaign.assigned_phone_numbers.create(phone_number: @number)
     page.driver.browser.authorize 'admin', 'admin'
   end
 
   it 'Filtering supporters based on who has joined since the most recent broadcast' do
-    origSupporter = @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
+    origSupporter = Crowdring::Supporter.create(phone_number: @number2)
+    @campaign.memberships.create(supporter: origSupporter, created_at: DateTime.now-2)
     @campaign.most_recent_broadcast = DateTime.now - 1
     newSupporter = @campaign.supporters.create(phone_number: @number3)
    
-    visit "/campaign/#{@number}"
+    visit "/campaign/#{@campaign.id}"
     page.find("label[for=new1]").text.should match('1')
 
     within('#broadcast') do
@@ -35,6 +36,6 @@ describe 'Filtering supporters', type: :request, js: true do
     end
 
     @logging_service.last_broadcast[:to_numbers].should eq([@number3])
-    Crowdring::Campaign.get(@number).new_supporters.count.should eq(0)
+    Crowdring::Campaign.get(@campaign.id).new_memberships.count.should eq(0)
   end
 end

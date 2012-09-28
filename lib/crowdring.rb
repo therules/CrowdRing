@@ -20,6 +20,8 @@ require 'crowdring/filter'
 require 'crowdring/phone_number_fields'
 require 'crowdring/campaign'
 require 'crowdring/supporter'
+require 'crowdring/campaign_membership'
+require 'crowdring/assigned_phone_number'
 require 'crowdring/csv_fields'
 
 require 'crowdring/crowdring'

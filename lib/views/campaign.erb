@@ -3,7 +3,10 @@
 <div id="campaign-information">
   <div id="campaign-details">
     <h3><%= @campaign.title %> </h3>
-    <h3><%= @campaign.pretty_phone_number %></h3>
+    <% for number in @campaign.assigned_phone_numbers %>
+      <h2><%= number.pretty_phone_number %></h2>
+    <% end %>
+
 
     <div id="campaign-supporters">
       <h3><div class="count"><%= @supporter_count %> Supporter<% if @supporters.length != 1 %>s<% end %></div></h3>
@@ -18,7 +21,7 @@
       </div>
     </div>
   
-    <form action="/campaign/<%= @campaign.phone_number %>/destroy" method="post" onsubmit="return confirm('Really destroy <%= @campaign.title %>?');">
+    <form action="/campaign/<%= @campaign.id %>/destroy" method="post" onsubmit="return confirm('Really destroy <%= @campaign.title %>?');">
       <button type="submit">Destroy Campaign</button>
     </form>
   </div>
@@ -26,13 +29,13 @@
 
   <div id="broadcast" class="form-box">
     <h3>Broadcast</h3>
-    <form name="broadcast" action="/campaign/<%= @campaign.phone_number %>/broadcast" method="post">
+    <form name="broadcast" action="/campaign/<%= @campaign.id %>/broadcast" method="post">
       <div id="filter-container">
         <div id="broadcast-filter" class="filter-buttons">
           <input type="radio" name="filter" value="all" id="all1" checked="checked" />
           <label class="all-label" for="all1">All <%= @supporter_count %></label>
           <input type="radio" name="filter" value="after:<%= @campaign.most_recent_broadcast %>" id="new1" />
-          <label class="new-label" for="new1"><%= @campaign.new_supporters.count %> New</label>
+          <label class="new-label" for="new1"><%= @campaign.new_memberships.count %> New</label>
           <input type="radio" name="filter" value="country:" id="country1" />
           <label for="country1">Country</label>
         </div>
@@ -45,13 +48,13 @@
 
   <div id="export" class="form-box">
     <h3>Export to CSV</h3>
-    <form name="export" action="/campaign/<%= @campaign.phone_number %>/csv" method="get">
+    <form name="export" action="/campaign/<%= @campaign.id %>/csv" method="get">
       <div id="filter-container">
         <div id="export-filter" class="filter-buttons">
           <input type="radio" name="filter" value="all" id="all2" checked="checked" />
           <label class="all-label" for="all2">All <%= @supporter_count %></label>
           <input type="radio" name="filter" value="after:<%= @campaign.most_recent_broadcast %>" id="new2" />
-          <label class="new-label" for="new2"><%= @campaign.new_supporters.count %> New</label>
+          <label class="new-label" for="new2"><%= @campaign.new_memberships.count %> New</label>
           <input type="radio" name="filter" value="country:" id="country2" />
           <label for="country2">Country</label>
         </div>

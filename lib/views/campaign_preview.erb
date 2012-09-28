@@ -1,5 +1,7 @@
 <div class="campaign-preview">
-  <a href="/campaigns#<%= @campaign.phone_number %>"><h1><%= @campaign.title %></h1></a>
-  <h2><%= @campaign.pretty_phone_number %></h2>
+  <a href="/campaigns#<%= @campaign.id %>"><h1><%= @campaign.title %></h1></a>
+  <% for number in @campaign.assigned_phone_numbers %>
+    <h2><%= number.pretty_phone_number %></h2>
+  <% end %>
   <h2><%= @campaign.supporters.count %> Supporters</h2>
 </div>
