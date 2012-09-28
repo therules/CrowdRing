@@ -1,0 +1,274 @@
+@body-font: Helvetica, Arial, sans-serif; 
+@h1-color: #FFCC66;
+@dark-blue:#04394D;
+@background-dark: #285F74;
+@base-unit: 3px;
+@color-button: #99DCF5;
+@450-Left-Margin:5%;  
+
+
+.rounded-corners(@radius: 3px){
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.wrap () {
+  text-wrap: normal;
+  word-wrap: break-word;
+}
+
+.campaign-preview () {
+  background-color: white;
+  height: : 150px;
+  width: 300px;
+  float: left;
+  margin-bottom: 2%;
+  .wrap;
+  .rounded-corners;
+}
+
+a{
+ text-decoration: none;
+}
+
+p{
+  text-align: center;
+  color:@h1-color;
+  style:bold;
+}
+
+body {
+  width: auto;
+  font-family: @body-font;
+  background-color: @background-dark;
+}
+
+
+header{
+  position: relative;
+  padding-bottom: 8%;
+  height: 2em;
+  max-width: 480px;
+  border-bottom: 2px solid #eee;
+  
+  h1{
+    display: inline-block;
+    font-size: 2em;
+    color: @h1-color;
+
+  }
+  img{
+    height: 2.5em;
+    display: inline-block;
+  }
+}
+
+div.content{
+  width: 100%;
+  display: inline-block;
+  overflow: hidden;
+  margin: 0;
+
+  
+  #new-campaign-box {
+
+    background-color: white;
+    height: : 150px;
+    width: auto;
+    
+    .rounded-corners;
+
+    h1, h2, h3, label { color: @dark-blue; }
+
+    input {
+      width: 55%;
+      margin-left: 10px;
+      font-size: 14px;
+      color: #404040;
+      .rounded-corners;
+      margin-bottom: 10px;
+      background-color: #F0F0F0;
+      box-shadow: 0px 0px 5px #888888 inset;
+    }  
+  }
+
+
+  #campaign-preview{
+   .campaign-preview;
+ }
+}
+
+button {
+  color: #;
+  background: @color-button;
+  border: 1px solid @color-button - #222;
+  padding: 5px 12px;
+  float: left;
+  font-size: 15px;  
+  .rounded-corners;
+
+  &:active {
+    position: relative;
+    top: 1px;
+  }
+}
+
+#menu {
+  background-color: @dark-blue ;
+  height: 30px;
+}
+
+
+#campaign-selector {
+  width: 60%;
+
+  .campaign-select{
+    font-size: 15px;
+    .wrap;
+  }
+
+} 
+
+select{
+  max-width: 280px;
+}
+
+h3 {
+  color: @dark-blue;
+}
+
+.count {
+  display: inline;
+}
+
+
+#campaign {
+  border-width: 2px;
+  padding-left: 3px;
+  margin-top: 3px;
+
+  li {
+    color: #FFA849;
+  }
+}
+
+#new-campaign{
+  display: inline-block;
+  float: left;
+  margin-left: auto;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  width: 60%;
+  
+  button{
+    width: 300px;
+  }
+}
+
+.notice {
+  text-align: left;
+  border: thin solid #79C2D9;
+  background: #A1DBED;
+}
+
+.errors {
+  text-align: left;
+  border: thin solid #782513;
+  background: #DC7F6B;
+}
+
+label {
+  display: inline;
+  color: @h1-color;
+}
+
+#campaign-information {  
+  height: 80%;
+
+  #campaign-details {
+    .campaign-preview;
+    height: 150px;
+
+    #supporters-numbers  {
+      display: none;
+    }
+  }
+
+  .form-box  {
+    float: left;
+    width: 300px;
+    background-color: white;
+    margin-bottom: 2%;
+    .rounded-corners;
+
+    button {
+      float: right;
+    }
+
+    form {
+      margin-left: 8px;
+    }
+
+    #filter-container{
+      display: table;
+      width: 100%;
+    }
+
+    #filter-options {
+      width: 90%;
+      margin: 0px auto;
+      padding: 5px 10px;
+      background-color: #F0F0F0;
+      box-shadow: 0px 0px 5px #888888 inset;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
+
+    .filter-buttons {
+      display: table-row;
+    }
+
+    label {
+      display: table-cell;
+    }
+
+
+  }
+  #return{
+   text-decoration: none;
+ }
+
+
+ #export{
+  display: none;
+}
+
+#broadcast {
+  #broadcast-text-area {
+    margin-top: 5px;
+    width: 90%;
+    min-height: 100px;
+    font-size: 14px;
+    color: #404040;
+    resize:none;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #F0F0F0;
+    box-shadow: 0px 0px 5px #888888 inset;
+    .rounded-corners;
+  }
+
+  .counter{
+    position:relative;
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  .warning{color:#600;}  
+  .exceeded{color:#e00;}  
+}
+
+}

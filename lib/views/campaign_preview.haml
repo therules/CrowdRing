@@ -3,5 +3,5 @@
     %h1=campaign.title
   - campaign.assigned_phone_numbers.each do |number|
     %h2= number.pretty_phone_number
-  %h2= campaign.supporters.count
+  %h2= "#{campaign.supporters.count} Supporters"
   
