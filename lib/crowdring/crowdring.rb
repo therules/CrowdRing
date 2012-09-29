@@ -1,9 +1,12 @@
 module Crowdring
   class Server < Sinatra::Base
+    register Sinatra::SinatraAuthentication
     enable :sessions
     use Rack::Flash
     set :logging, true
     set :root, File.dirname(__FILE__) + '/..'
+    set :sinatra_authentication_view_path, settings.views + "/auth/"
+
 
     def self.service_handler
       CompositeService.instance

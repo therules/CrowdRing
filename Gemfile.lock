@@ -99,6 +99,8 @@ GEM
       thin (= 1.4.1)
       yajl-ruby (= 1.1.0)
     rack (1.4.1)
+    rack-flash (0.1.2)
+      rack
     rack-flash3 (1.0.1)
       rack
       rack
@@ -125,6 +127,7 @@ GEM
     rspec-mocks (2.11.2)
     ruby-hmac (0.4.0)
     rubyzip (0.9.9)
+    rufus-tokyo (1.0.7)
     selenium-webdriver (2.25.0)
       childprocess (>= 0.2.5)
       libwebsocket (~> 0.1.3)
@@ -135,6 +138,15 @@ GEM
       rack (~> 1.3, >= 1.3.6)
       rack-protection (~> 1.2)
       tilt (~> 1.3, >= 1.3.3)
+    sinatra-authentication (0.4.1)
+      dm-core
+      dm-migrations
+      dm-timestamps
+      dm-validations
+      rack-flash
+      rufus-tokyo
+      sinatra
+      sinbook
     sinatra-contrib (1.3.1)
       backports (>= 2.0)
       eventmachine
@@ -142,6 +154,8 @@ GEM
       rack-test
       sinatra (~> 1.3.0)
       tilt (~> 1.3)
+    sinbook (0.1.9)
+      yajl-ruby
     stringex (1.4.0)
     thin (1.4.1)
       daemons (>= 1.0.9)
@@ -186,6 +200,7 @@ DEPENDENCIES
   resque
   rspec
   sinatra
+  sinatra-authentication
   sinatra-contrib
   thin
   tropo-provisioning

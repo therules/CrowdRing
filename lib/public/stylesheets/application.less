@@ -31,11 +31,13 @@ body {
     float: left;
   }
 
+
   header {
     padding: 4px;
     font-family: @body-font;
     border-bottom: 1px solid #eee;
     height: 100px;
+    position: relative;
 
     img {
       display: inline-block;
@@ -49,6 +51,15 @@ body {
       vertical-align: middle;
       font-size: 70px;
       color: @h1-color;
+    }
+
+    #login-logout {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      a {
+        color: @h1-color;
+      }
     }
   }
   #menu {
@@ -265,7 +276,7 @@ body {
     }
   }
 
-  #new-campaign-box {
+  .rounded-box {
     margin-top: 5px;
     background-color: white;
     padding: 20px;
@@ -274,7 +285,6 @@ body {
     h1, h2, h3, label { color: @dark-blue; }
 
     input {
-      width: 540px;
       margin-left: 10px;
       font-size: 14px;
       color: #404040;
@@ -284,5 +294,9 @@ body {
       background-color: #F0F0F0;
       box-shadow: 0px 0px 5px #888888 inset;
     }
+  }
+
+  .title-input {
+    width: 540px;
   }
 }

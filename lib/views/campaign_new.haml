@@ -1,4 +1,4 @@
-#new-campaign-box
+#new-campaign.rounded-box
   %h2 New Campaign
   -if @numbers.empty?
     %h3 Sorry, all numbers are currently in use
@@ -6,7 +6,7 @@
     %form{action: '/campaign/create', method: 'post'}
       .field
         %label Title:
-        %input{type: 'text', name: 'title'}
+        %input.title-input{type: 'text', name: 'title'}
       .field
         %label Phone Number:
         %select{name: 'phone_numbers_to_assign[]'}
