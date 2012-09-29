@@ -1,0 +1,59 @@
+%h2 Campaign Details
+#campaign-information
+  #campaign-details
+    %h3= @campaign.title
+    -@campaign.assigned_phone_numbers.each do |number|
+      %h2= number.pretty_phone_number
+    #campaign-supporters
+      %h3.count
+        = "#{@supporter_count} Supporter" + ('s') if @supporter_count != 1
+      #supporters-numbers
+        %ul.supporters
+          -@supporters.each do |supporter|
+            %li= supporter.pretty_phone_number
+        .number-fade-out 
+
+    %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
+      %button Destroy Campaign
+
+  #broadcast.form-box
+    %h3 Broadcast
+    %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
+      #filter-container
+        #broadcast-filter.filter-buttons
+          %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
+          %label.all-label{for: 'all1'}= "All #{@supporter_count}"
+          %input#new1{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast}"}
+          %label.new-label{for: 'new1'}= "#{@campaign.new_memberships.count} New"
+          %input#country1{type: 'radio', name: 'filter', value: 'country:'}
+          %label{for: 'country1'} Country
+      #filter-options{style: 'display:none'}
+      %textarea#broadcast-text-area{name: 'message', placeholder: 'Hello supporters...'}
+      %button#broadcastbutton{disabled: 'disabled'} Broadcast
+
+  #export.form-box
+    %h3 Export to CSV
+    %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
+      #filter-container
+        #export-filter.filter-buttons
+          %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
+          %label.all-label{for: 'all2'}= "All #{@supporter_count}"
+          %input#new2{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast}"}
+          %label.new-label{for: 'new2'}= "#{@campaign.new_memberships.count} New"
+          %input#country2{type: 'radio', name: 'filter', value: 'country:'}
+          %label{for: 'country2'} Country
+      #filter-options{style: 'display:none'}
+      -@all_fields.each do |field|
+        %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
+      %button#exportbutton Export
+
+#country-options{style: 'display:none'}
+  %form
+    -if @countries.empty?
+      No countries to select from.
+    -@countries.each do |country|
+      %label{for: "check#{country.char_3_code}"}
+        %input{id: "check#{country.char_3_code}", type: 'checkbox', name: 'country', value: "#{country.char_3_code}"}= "#{country.name} [#{country.char_3_code}]"
+
+
+

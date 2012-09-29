@@ -11,7 +11,7 @@ module Crowdring
 
     after :create do |m|
       data = {  number: m.supporter.pretty_phone_number,
-                supporter_count: m.campaign.supporters.count,
+                supporter_count: m.campaign.memberships.count,
                 new_supporter_count: m.campaign.new_memberships.count }
       begin
         Pusher[m.campaign.id].trigger('new', data) 

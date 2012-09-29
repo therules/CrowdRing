@@ -109,20 +109,20 @@ module Crowdring
     get '/' do  
       @campaigns = Campaign.all
 
-      erb :index
+      haml :index
     end
 
     get '/campaigns' do
       @campaigns = Campaign.all
 
-      erb :campaigns
+      haml :campaigns
     end
 
     get '/campaign/new' do
       used_numbers = AssignedPhoneNumber.all.map(&:phone_number)
       @numbers = Server.service_handler.numbers - used_numbers
 
-      erb :campaign_new
+      haml :campaign_new
     end
 
     post '/campaign/create' do
@@ -152,7 +152,7 @@ module Crowdring
         @supporter_count = @campaign.supporters.count
         @countries = @campaign.supporters.map(&:country).uniq
         @all_fields = CsvField.all_fields
-        erb :campaign
+        haml :campaign, layout: !request.xhr?
       else
         flash[:errors] = "No campaign with id #{params[:id]}"
         404

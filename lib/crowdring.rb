@@ -7,6 +7,7 @@ require 'rack-flash'
 require 'facets/module/mattr'
 require 'phone'
 require 'resque'
+require 'haml'
 
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'

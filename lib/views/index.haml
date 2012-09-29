@@ -1,0 +1,5 @@
+#new-campaign
+  %form{action: 'campaign/new', method: 'get'}
+    %button New Campaign
+  -@campaigns.each do |campaign|
+    = haml :campaign_preview, locals: {campaign: campaign}

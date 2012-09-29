@@ -1,0 +1,10 @@
+#menu
+  #campaign-selector
+    %select.campaign-select{data_placeholder: 'Choose a campaign'}
+      %option{option: value=''}
+      -@campaigns.each do |campaign|
+        %option{value: "#{campaign.id}"} #{campaign.title}
+  #new-campaign
+    %form{action: '/campaign/new', method: 'get'}
+      %button New Campaign
+  #campaign

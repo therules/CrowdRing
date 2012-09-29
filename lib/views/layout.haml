@@ -1,0 +1,28 @@
+%html(xmlns="http://www.w3.org/1999/xhtml")
+  %link{rel: 'stylesheet', type: 'text/css', href: '/stylesheets/chosen.css'}
+  %link{rel: 'stylesheet/less', type: 'text/css', href: '/stylesheets/application.less'}
+  %link{rel: 'stylesheet', type: 'text/css', href: 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/overcast/jquery-ui.css'}
+  %script{type: 'text/javascript', src: '/javascript/jquery-1.8.1.min.js'}
+  %script{type: 'text/javascript', src: '/javascript/jquery-ui-1.8.23.custom.min.js'}
+  %script{type: 'text/javascript', src: '/javascript/charCount.js'}
+  %script{type: 'text/coffeescript', src: '/javascript/application.coffee'}
+  %script{type: 'text/javascript', src: '/javascript/less-1.3.0.min.js'}
+  %script{type: 'text/javascript', src: '/javascript/chosen.jquery.min.js'}
+  %script{type: 'text/javascript', src: '/javascript/coffee-script-1.3.1.min.js'}
+  %script{type: 'text/javascript', src: '/javascript/1.12-pusher.min.js'}
+  %script{type: 'text/javascript'}
+    window.pusher_key = '#{ENV['PUSHER_KEY']}';
+  %link{ref: 'shortcut icon'}
+
+  %body
+    %header
+      %title CROWDRING
+      %a{href: '/'}
+        %img.logo{src: '/crowdringlogo.png'}
+      %a{href: '/'}
+        %h1 CROWDRING
+    -if flash.has?(:notice)
+      .notice= flash[:notice]
+    -if flash.has?(:errors)
+      .errors= flash[:errors].sub('|', '<br />')
+    #content= yield

@@ -77,6 +77,7 @@ GEM
     ffi (1.1.5)
     foreman (0.57.0)
       thor (>= 0.13.6)
+    haml (3.1.7)
     hashie (1.2.0)
     i18n (0.6.1)
     json (1.7.5)
@@ -176,6 +177,7 @@ DEPENDENCIES
   facets
   fakeweb
   foreman
+  haml
   phone
   pusher
   pusher-fake
