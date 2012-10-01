@@ -1,21 +1,19 @@
-%h2 Campaign Details
+%h1 Campaign Details
 #campaign-information
   #campaign-details
-    %h3= @campaign.title
+    %h2= @campaign.title
     -@campaign.assigned_phone_numbers.each do |number|
-      %h2= number.pretty_phone_number
+      %h3= number.pretty_phone_number
     #campaign-supporters
-      %h3.count
-        = "#{@supporter_count} Supporter" + ('s') if @supporter_count != 1
+      %h3
+        = "#{@supporter_count} " + (@supporter_count !=1 ? 'Supporters' : 'Supporter')
       #supporters-numbers
         %ul.supporters
           -@supporters.each do |supporter|
             %li= supporter.pretty_phone_number
         .number-fade-out 
 
-    %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
-      %button Destroy Campaign
-
+    
   #broadcast.form-box
     %h3 Broadcast
     %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
@@ -54,6 +52,13 @@
     -@countries.each do |country|
       %label{for: "check#{country.char_3_code}"}
         %input{id: "check#{country.char_3_code}", type: 'checkbox', name: 'country', value: "#{country.char_3_code}"}= "#{country.name} [#{country.char_3_code}]"
+#destroy
+  %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
+    %button Destroy Campaign 
+  %a{href: "/"}
+    %button «Back to Home
+
+
 
 
 

@@ -13,20 +13,57 @@
   -moz-border-radius: @radius;
 }
 
-.wrap () {
+.wrap (){
   text-wrap: normal;
   word-wrap: break-word;
 }
 
-.campaign-preview () {
-  background-color: white;
-  height: : 150px;
-  width: 300px;
-  float: left;
-  margin-bottom: 2%;
-  .wrap;
+.campaign-preview{
   .rounded-corners;
+  background-color: white;
+  width: 300px;
+  text-align: center;
+  float: left;
+  overflow: hidden;
+  margin-bottom: 10px;
 }
+
+
+body {
+  width: auto;
+  font-family: @body-font;
+  background-color: @background-dark;
+  
+  header{
+    position: relative;
+    padding-bottom: 8%;
+    height: 2em;
+    max-width: 480px;
+    border-bottom: 2px solid #eee;
+
+    h1{
+      display: inline-block;
+      font-size: 2em;
+      color: @h1-color;
+
+    }
+    img{
+      height: 2.5em;
+      display: inline-block;
+    }
+
+    #login-logout {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      a{
+        color: @h1-color;
+      }
+    }
+  }
+}
+
 
 a{
  text-decoration: none;
@@ -38,65 +75,18 @@ p{
   style:bold;
 }
 
-body {
-  width: auto;
-  font-family: @body-font;
-  background-color: @background-dark;
+
+#menu {
+  background-color: @dark-blue ;
+  height: 30px;
 }
 
-
-header{
-  position: relative;
-  padding-bottom: 8%;
-  height: 2em;
-  max-width: 480px;
-  border-bottom: 2px solid #eee;
-  
-  h1{
-    display: inline-block;
-    font-size: 2em;
-    color: @h1-color;
-
-  }
-  img{
-    height: 2.5em;
-    display: inline-block;
-  }
-}
 
 div.content{
   width: 100%;
-  display: inline-block;
   overflow: hidden;
   margin: 0;
-
-  
-  #new-campaign-box {
-
-    background-color: white;
-    height: : 150px;
-    width: auto;
-    
-    .rounded-corners;
-
-    h1, h2, h3, label { color: @dark-blue; }
-
-    input {
-      width: 55%;
-      margin-left: 10px;
-      font-size: 14px;
-      color: #404040;
-      .rounded-corners;
-      margin-bottom: 10px;
-      background-color: #F0F0F0;
-      box-shadow: 0px 0px 5px #888888 inset;
-    }  
-  }
-
-
-  #campaign-preview{
-   .campaign-preview;
- }
+  .campaign-preview;
 }
 
 button {
@@ -114,24 +104,20 @@ button {
   }
 }
 
-#menu {
-  background-color: @dark-blue ;
-  height: 30px;
-}
-
-
 #campaign-selector {
   width: 60%;
 
-  .campaign-select{
-    font-size: 15px;
+  h2 .campaign-select{
+    font-size: 14px;
+    float: left;
     .wrap;
   }
-
 } 
 
 select{
-  max-width: 280px;
+  max-width: 250px;
+  min-width: 200px;
+
 }
 
 h3 {
@@ -139,32 +125,45 @@ h3 {
 }
 
 .count {
-  display: inline;
+  display: inline-block;
 }
 
 
 #campaign {
-  border-width: 2px;
-  padding-left: 3px;
-  margin-top: 3px;
-
   li {
     color: #FFA849;
   }
-}
-
-#new-campaign{
-  display: inline-block;
-  float: left;
-  margin-left: auto;
-  margin-top: 5%;
-  margin-bottom: 5%;
-  width: 60%;
-  
-  button{
-    width: 300px;
+  h2{
+    color: @h1-color;
+    display: inline;
+  }
+  h1{
+    display: none;
   }
 }
+.rounded-box {
+  margin-top: 5px;
+  background-color: white;
+  padding: 20px;
+  .rounded-corners;
+
+  h1, h2, h3, label { color: @dark-blue; }
+
+  input {
+    margin-left: 10px;
+    font-size: 14px;
+    color: #404040;
+    padding: 5px;
+    .rounded-corners;
+    margin-bottom: 10px;
+    background-color: #F0F0F0;
+    box-shadow: 0px 0px 5px #888888 inset;
+  }
+  button{
+    width: auto;
+  }
+}
+
 
 .notice {
   text-align: left;
@@ -186,9 +185,12 @@ label {
 #campaign-information {  
   height: 80%;
 
+
+
   #campaign-details {
+
     .campaign-preview;
-    height: 150px;
+    height: auto;
 
     #supporters-numbers  {
       display: none;
@@ -270,5 +272,4 @@ label {
   .warning{color:#600;}  
   .exceeded{color:#e00;}  
 }
-
 }
