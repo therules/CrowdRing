@@ -65,7 +65,7 @@ module Crowdring
 
     def voice_response
       proc {|to|
-        [{cmd: :reject}]
+        [{cmd: :pause, duration: 10}, {cmd: :reject}]
       }
     end
 
