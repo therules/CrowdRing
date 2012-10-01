@@ -40,7 +40,7 @@ module Crowdring
           when :reject
             r.Reject reason: 'busy'
           when :pause
-            r.Pause c[:duration]
+            r.Pause length: c[:duration]
           end
         end
       end
