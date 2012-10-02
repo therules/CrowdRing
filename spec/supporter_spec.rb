@@ -18,8 +18,8 @@ describe Crowdring::Supporter do
   end
 
   it 'should belong to many different campaigns' do
-    camp1 = Crowdring::Campaign.create(title: 'camp1')
-    camp2 = Crowdring::Campaign.create(title: 'camp2')
+    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_message: 'intro message')
+    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_message: 'intro message')
     supporter = Crowdring::Supporter.create(phone_number: @number1)
 
     supporter.campaigns << camp1;
@@ -31,7 +31,7 @@ describe Crowdring::Supporter do
   end
 
   it 'should destroy all relevant memberships when destroying a supporter' do
-    campaign = Crowdring::Campaign.create(title: 'campaign')
+    campaign = Crowdring::Campaign.create(title: 'campaign', introductory_message: 'intro message')
     supporter = Crowdring::Supporter.create(phone_number: @number1)
     campaign.join(supporter)
     supporter.destroy

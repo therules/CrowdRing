@@ -12,6 +12,9 @@
         %select{name: 'phone_numbers_to_assign[]'}
           -@numbers.each do |n|
             %option #{n}
+      .field
+        %label Introductory Message:
+        %textarea.msg-text-area{name: 'introductory_message', placeholder: 'Thanks for supporting...'}
       %button{type: 'submit'} Create
 %a{href: '/'} 
   %button « Back to Home 

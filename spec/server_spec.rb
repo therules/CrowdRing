@@ -45,33 +45,43 @@ module Crowdring
       end
 
       describe 'campaign creation/deletion' do
-        it 'should create a new campaign given a valid title and number' do
-          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers}
+        it 'should create a new campaign given a valid title, number, and introductory message' do
+          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers, 'introductory_message' => 'Hello'}
           Campaign.first(title: 'title').should_not be_nil
         end
 
         it 'should redirect to campaign view on successful campaign creation' do
-          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers}
+          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers, 'introductory_message' => 'Hello'}
           last_response.should be_redirect
           last_response.location.should match("campaigns##{Regexp.quote(Campaign.first(title: 'title').id.to_s)}$")
         end
 
         it 'should not create a campaign when given a empty title' do
-          post '/campaign/create', {'title' => '', 'phone_numbers_to_assign' => @numbers}
+          post '/campaign/create', {'title' => '', 'phone_numbers_to_assign' => @numbers, 'introductory_message' => 'Hello'}
           Campaign.first(title: 'title').should be_nil
         end
 
         it 'should not create a campaign when given an extremely long title' do
-          post '/campaign/create', {'title' => 'foobar'*100, 'phone_numbers_to_assign' => @number}
+          post '/campaign/create', {'title' => 'foobar'*100, 'phone_numbers_to_assign' => @number, 'introductory_message' => 'Hello'}
           Campaign.first(title: 'foobar'*100).should be_nil
         end
 
         it 'should create a campaign with all valid given numbers' do
-          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => [@number, 'foobar', @number2]}
+          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => [@number, 'foobar', @number2], 'introductory_message' => 'Hello'}
           c = Campaign.first(title: 'title')
           c.assigned_phone_numbers.count.should eq(2)
           c.assigned_phone_numbers.should include(AssignedPhoneNumber.get(@number))
           c.assigned_phone_numbers.should include(AssignedPhoneNumber.get(@number))
+        end
+
+        it 'should not create a campaign with an empty introductory message' do
+          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers, 'introductory_message' => ''}
+          Campaign.first(title: 'title').should be_nil
+        end
+
+        it 'should not create a campaign with an extremely long introductory message' do
+          post '/campaign/create', {'title' => 'title', 'phone_numbers_to_assign' => @numbers, 'introductory_message' => 'foobar'*100}
+          Campaign.first(title: 'title').should be_nil
         end
 
         it 'should remain on campaign creation page when fails to create a campaign' do
@@ -81,13 +91,13 @@ module Crowdring
         end
 
         it 'should be able to destroy a campaign' do
-          c = Campaign.create(title: 'title')
+          c = Campaign.create(title: 'title', introductory_message: 'intro message')
           post "/campaign/#{c.id}/destroy"
           Campaign.get(c.id).should be_nil
         end
 
         it 'should redirect back to / after destroying a campaign' do
-          c = Campaign.create(title: 'title')
+          c = Campaign.create(title: 'title', introductory_message: 'intro message')
           post "/campaign/#{c.id}/destroy"
           last_response.should be_redirect
           last_response.location.should match('/$')
@@ -96,7 +106,7 @@ module Crowdring
 
       describe 'campaign fetching' do
         it 'should successfully fetch a campaign at campaign/id' do
-          c = Campaign.create(title: 'title')
+          c = Campaign.create(title: 'title', introductory_message: 'intro message')
           get "/campaign/#{c.id}"
           last_response.should be_ok
         end
@@ -109,7 +119,7 @@ module Crowdring
 
       describe 'voice/sms response forwarding' do
         before(:each) do
-          @campaign = Campaign.create(title: @number)
+          @campaign = Campaign.create(title: @number, introductory_message: 'intro message')
           @campaign.assign_phone_numbers([@number])
           @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
           @fooservice = double('fooservice', build_response: 'fooResponse',
@@ -205,7 +215,7 @@ module Crowdring
       describe 'message broadcasting' do
         before(:each) do
           @sent_to = []
-          @campaign = Campaign.create(title: @number)
+          @campaign = Campaign.create(title: @number, introductory_message: 'intro message')
           @campaign.assign_phone_numbers([@number])
           fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
           fooservice = double('fooservice', build_response: 'fooResponse',
@@ -256,7 +266,7 @@ module Crowdring
 
       describe 'campaign exporting' do
         before(:each) do
-          @campaign = Campaign.create(title: @number)
+          @campaign = Campaign.create(title: @number, introductory_message: 'intro message')
           @campaign.assign_phone_numbers([@number])
         end
 

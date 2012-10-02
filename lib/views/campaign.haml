@@ -10,6 +10,7 @@
 #campaign-information
   #campaign-details
     %h2= @campaign.title
+    %h4= "Introductory message:<br /> #{@campaign.introductory_message}"
     -@campaign.assigned_phone_numbers.each do |number|
       %h3= number.pretty_phone_number
     #campaign-supporters
@@ -34,7 +35,7 @@
           %input#country1{type: 'radio', name: 'filter', value: 'country:'}
           %label{for: 'country1'} Country
       #filter-options{style: 'display:none'}
-      %textarea#broadcast-text-area{name: 'message', placeholder: 'Hello supporters...'}
+      %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello supporters...'}
       %button#broadcastbutton{disabled: 'disabled'} Broadcast
 
   #export.form-box

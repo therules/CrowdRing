@@ -7,6 +7,9 @@ module Crowdring
       messages: { presence: 'Non-empty title required',
                   length: 'Title must be fewer than 64 letters in length' }
     property :most_recent_broadcast, DateTime
+    property :introductory_message, String, required: true, length: 0..160,
+      messages: { presence: 'Non-empty introductory message required',
+                    length: 'Introductory message must be fewer than 160 letters in length' }
 
     has n, :assigned_phone_numbers, constraint: :destroy
     has n, :memberships, 'CampaignMembership', constraint: :destroy
@@ -25,10 +28,6 @@ module Crowdring
     def join(supporter)
       membership = memberships.first_or_create(supporter: supporter)
       membership.update(count: membership.count+1)
-    end
-
-    def introductory_message
-      "Thanks for supporting #{title}! Have a lovely day!"
     end
 
     def new_memberships

@@ -16,7 +16,7 @@ describe 'Filtering supporters', type: :request, js: true do
     DataMapper.auto_migrate!
     @number2 = '+22222222222'
     @number3 = '+33333333333'
-    @campaign = Crowdring::Campaign.create(title: 'title')
+    @campaign = Crowdring::Campaign.create(title: 'title', introductory_message: 'intro message')
     @campaign.assigned_phone_numbers.create(phone_number: @number)
     page.driver.browser.authorize 'admin', 'admin'
   end
