@@ -1,4 +1,12 @@
 %h1 Campaign Details
+
+#options
+  %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
+    %button Destroy Campaign 
+#back-to-home
+  %a{href: "/"}
+    %button «Back to Home
+
 #campaign-information
   #campaign-details
     %h2= @campaign.title
@@ -52,13 +60,6 @@
     -@countries.each do |country|
       %label{for: "check#{country.char_3_code}"}
         %input{id: "check#{country.char_3_code}", type: 'checkbox', name: 'country', value: "#{country.char_3_code}"}= "#{country.name} [#{country.char_3_code}]"
-#destroy
-  %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
-    %button Destroy Campaign 
-  %a{href: "/"}
-    %button «Back to Home
-
-
 
 
 
