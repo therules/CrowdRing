@@ -43,11 +43,6 @@ describe Crowdring::TwilioService do
     response.should eq(Twilio::TwiML::Response.new {|r| r.Reject reason: 'busy'}.text)
   end
 
-  it 'should build a pause response for the given duration' do
-    response = @service.build_response('from', [{cmd: :pause, duration: 10}])
-    response.should eq(Twilio::TwiML::Response.new {|r| r.Pause 10}.text)
-  end
-
   it 'should build a send sms response' do
     response = @service.build_response('from', [{cmd: :sendsms, to: 'to', msg: 'msg'}])
     response.should eq(Twilio::TwiML::Response.new {|r| r.Sms 'msg', from: 'from', to: 'to' }.text)

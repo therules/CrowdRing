@@ -39,8 +39,6 @@ module Crowdring
             r.Sms c[:msg], from: from, to: c[:to]
           when :reject
             r.Reject reason: 'busy'
-          when :pause
-            r.Pause c[:duration]
           end
         end
       end
