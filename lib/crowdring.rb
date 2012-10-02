@@ -10,6 +10,8 @@ require 'phone'
 require 'resque'
 require 'haml'
 
+require 'lazy_high_charts'
+
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'
 require 'crowdring/tropo_service'

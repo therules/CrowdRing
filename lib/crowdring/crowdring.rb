@@ -6,6 +6,7 @@ module Crowdring
     set :logging, true
     set :root, File.dirname(__FILE__) + '/..'
     set :sinatra_authentication_view_path, settings.views + "/auth/"
+    include LazyHighCharts::LayoutHelper
 
 
     def self.service_handler
@@ -52,6 +53,14 @@ module Crowdring
       def authorized?
         @auth ||=  Rack::Auth::Basic::Request.new(request.env)
         @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['USERNAME'], ENV['PASSWORD']]
+      end
+
+      def to_attributes(options)
+        options.map {|k, v| v.nil? ? '' : " #{k}='#{v}'"}.join
+      end
+      
+      def content_tag(type, content, options={})
+        "<#{type}#{to_attributes(options)}>#{content}</#{type}>"
       end
     end
 
@@ -111,7 +120,12 @@ module Crowdring
 
     get '/' do  
       @campaigns = Campaign.all
-
+      @h = LazyHighCharts::HighChart.new('graph') do |f|
+        f.options[:chart][:defaultSeriesType] = "area"
+        f.series(:name=>'John', :data=>[3, 20, 3, 5, 4, 10, 12 ,3, 5,6,7,7,80,9,9])
+        f.series(:name=>'Jane', :data=> [1, 3, 4, 3, 3, 5, 4,-46,7,8,8,9,9,0,0,9] )
+      end
+ 
       haml :index
     end
 

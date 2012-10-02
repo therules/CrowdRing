@@ -84,6 +84,8 @@ GEM
     json_pure (1.7.5)
     jwt (0.1.5)
       multi_json (>= 1.0)
+    lazy_high_charts (1.2.2)
+      bundler (~> 1.0)
     libwebsocket (0.1.5)
       addressable
     mime-types (1.19)
@@ -192,6 +194,7 @@ DEPENDENCIES
   fakeweb
   foreman
   haml
+  lazy_high_charts
   phone
   pusher
   pusher-fake

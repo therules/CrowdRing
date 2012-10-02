@@ -1,5 +1,7 @@
 #new-campaign
   %form{action: 'campaign/new', method: 'get'}
     %button New Campaign
+  =high_chart("my_id", @h) 
+
   -@campaigns.each do |campaign|
     = haml :campaign_preview, locals: {campaign: campaign}
