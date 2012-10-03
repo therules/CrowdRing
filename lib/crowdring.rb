@@ -9,7 +9,6 @@ require 'facets/module/mattr'
 require 'phone'
 require 'resque'
 require 'haml'
-
 require 'lazy_high_charts'
 
 require 'crowdring/twilio_service'
@@ -27,6 +26,9 @@ require 'crowdring/supporter'
 require 'crowdring/campaign_membership'
 require 'crowdring/assigned_phone_number'
 require 'crowdring/csv_fields'
+
+require 'crowdring/high_charts_builder'
+require 'crowdring/campaign_stats'
 
 require 'crowdring/crowdring'
 

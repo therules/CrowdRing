@@ -7,6 +7,7 @@
   %a{href: "/"}
     %button «Back to Home
 
+
 #campaign-information
   #campaign-details
     %h2= @campaign.title
@@ -22,7 +23,6 @@
             %li= supporter.pretty_phone_number
         .number-fade-out 
 
-    
   #broadcast.form-box
     %h3 Broadcast
     %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
@@ -53,7 +53,9 @@
       -@all_fields.each do |field|
         %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
       %button#exportbutton Export
-
+  
+  #basic-chart= high_chart("basic-chart", @basic_chart) 
+   
 #country-options{style: 'display:none'}
   %form
     -if @countries.empty?

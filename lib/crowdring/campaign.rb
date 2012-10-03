@@ -10,6 +10,7 @@ module Crowdring
     property :introductory_message, String, required: true, length: 0..160,
       messages: { presence: 'Non-empty introductory message required',
                     length: 'Introductory message must be fewer than 160 letters in length' }
+    property :created_at,   DateTime
 
     has n, :assigned_phone_numbers, constraint: :destroy
     has n, :memberships, 'CampaignMembership', constraint: :destroy
