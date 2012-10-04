@@ -17,18 +17,19 @@
       %button#new-filter-button{type: 'button'} Add filtered message
       .field
         %label Default Message:
-        %textarea.msg-text-area{name: 'introductory_message', placeholder: 'Thanks for supporting...'}
+        %textarea.msg-text-area{name: 'default_introductory_message', placeholder: 'Thanks for supporting...'}
       %button{type: 'submit'} Create
 %a{href: '/'} 
   %button « Back to Home 
 
 
-.filter-message-template.original{style: 'display:none'}
-  %select{name: 'filter-type'}
+.filtered-message-template.original{style: 'display:none'}
+  %select.filter-type
     %option Area Code
     %option Country
-  %input{name: 'tag-name', type: 'text'}
+  %input.tag_name{type: 'text'}
   %button#add-tag-button{type: 'button'} Add
   #tag-filters
-  %textarea.msg-text-area{placeholder: 'Thanks for supporting...'}
+  %input{name: 'filtered_messages[]tags', type: 'hidden', value:''}
+  %textarea.msg-text-area{name: 'filtered_messages[]introductory_message', placeholder: 'Thanks for supporting...'}
 

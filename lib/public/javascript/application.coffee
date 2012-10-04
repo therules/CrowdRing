@@ -69,19 +69,21 @@ loadCampaign = (pusher, campaign, prev_channel) ->
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
 newFilterMessage = ->
-  newDiv = $('.filter-message-template.original').clone().removeClass('original').removeAttr('style')
+  newDiv = $('.filtered-message-template.original').clone().removeClass('original').removeAttr('style')
   $('#filtered-messages').append(newDiv)
 
-  $('#add-tag-button', newDiv).click -> 
-    $('#tag-filters', newDiv).append(
-      $('select[name=filter-type]', newDiv).val() + ':' + 
-      $('input[name=tag-name]', newDiv).val())
-    $('input[name=tag-name]').val('')
-  $('input[name=tag-name]', newDiv).keypress (evt) ->
+  $('#add-tag-button', newDiv).click ->
+    tagName = $('input, tag-name', newDiv).val()
+    if tagName == ""
+      return
+    fullTagName = $('select, filter-type', newDiv).val() + ':' + tagName
+    $('#tag-filters', newDiv).append(fullTagName)
+    $('input, tag-name', newDiv).val('')
+    $('input[name="filtered_messages[]tags"]', newDiv).val($('input[name="filtered_messages[]tags"]', newDiv).val() + '|' + fullTagName)
+  $('input, tag-name', newDiv).keypress (evt) ->
     if evt.which == 13
       $('#add-tag-button', newDiv).click()
       return false
-    return true
 
 
 $ ->
