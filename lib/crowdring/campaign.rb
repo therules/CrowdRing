@@ -14,7 +14,7 @@ module Crowdring
 
     has n, :assigned_phone_numbers, constraint: :destroy
     has n, :memberships, 'CampaignMembership', constraint: :destroy
-    has n, :supporters, through: :memberships
+    has n, :ringers, through: :memberships
 
     def assign_phone_numbers(numbers)
       numbers && numbers.inject(true) do |res, n|
@@ -26,8 +26,8 @@ module Crowdring
       end
     end
 
-    def join(supporter)
-      membership = memberships.first_or_create(supporter: supporter)
+    def join(ringer)
+      membership = memberships.first_or_create(ringer: ringer)
       membership.update(count: membership.count+1)
     end
 

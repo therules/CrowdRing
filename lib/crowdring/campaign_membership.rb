@@ -7,12 +7,12 @@ module Crowdring
     property :count, Integer, default: 0
 
     belongs_to :campaign, 'Campaign', key: true
-    belongs_to :supporter, 'Supporter', key: true
+    belongs_to :ringer, 'Ringer', key: true
 
     after :create do |m|
-      data = {  number: m.supporter.pretty_phone_number,
-                supporter_count: m.campaign.memberships.count,
-                new_supporter_count: m.campaign.new_memberships.count }
+      data = {  number: m.ringer.pretty_phone_number,
+                ringer_count: m.campaign.memberships.count,
+                new_ringer_count: m.campaign.new_memberships.count }
       begin
         Pusher[m.campaign.id].trigger('new', data) 
       rescue SocketError
@@ -27,7 +27,7 @@ module Crowdring
     end
 
     def phone_number
-      supporter.phone_number
+      ringer.phone_number
     end
 
   end

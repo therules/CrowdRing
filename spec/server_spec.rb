@@ -227,9 +227,9 @@ module Crowdring
         end
 
 
-        it 'should broadcast a message to all supporters of a campaign' do
-          @campaign.supporters.create(phone_number: @number2)
-          @campaign.supporters.create(phone_number: @number3)
+        it 'should broadcast a message to all ringers of a campaign' do
+          @campaign.ringers.create(phone_number: @number2)
+          @campaign.ringers.create(phone_number: @number3)
           post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
           @sent_to.should include(@number2)
           @sent_to.should include(@number3)
@@ -241,23 +241,23 @@ module Crowdring
           last_response.location.should match("campaigns##{Regexp.quote(@campaign.id.to_s)}$")
         end
 
-        it 'should broadcast only to the new supporters of a campaign' do
-          supporter = Crowdring::Supporter.create(phone_number: @number2)
-          @campaign.memberships.create(supporter: supporter, created_at: DateTime.now-2)
+        it 'should broadcast only to the new ringers of a campaign' do
+          ringer = Crowdring::Ringer.create(phone_number: @number2)
+          @campaign.memberships.create(ringer: ringer, created_at: DateTime.now-2)
           @campaign.most_recent_broadcast = DateTime.now - 1
           @campaign.save
-          @campaign.supporters.create(phone_number: @number3)
+          @campaign.ringers.create(phone_number: @number3)
 
           post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
           @sent_to.should eq([@number3])
         end
 
-        it 'should not have any new supporters after a broadcast' do
-          supporter = Crowdring::Supporter.create(phone_number: @number2)
-          @campaign.memberships.create(supporter: supporter, created_at: DateTime.now-2)
+        it 'should not have any new ringers after a broadcast' do
+          ringer = Crowdring::Ringer.create(phone_number: @number2)
+          @campaign.memberships.create(ringer: ringer, created_at: DateTime.now-2)
           @campaign.most_recent_broadcast = DateTime.now - 1
           @campaign.save
-          @campaign.supporters.create(phone_number: @number3)
+          @campaign.ringers.create(phone_number: @number3)
 
           post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
           Campaign.get(@campaign.id).new_memberships.should be_empty
@@ -277,45 +277,45 @@ module Crowdring
         end
 
         def verify_csv(csvString, memberships, fields=[])
-          csv_supporters = CSV.parse(csvString)
-          headers = csv_supporters[0]
+          csv_ringers = CSV.parse(csvString)
+          headers = csv_ringers[0]
           fields.zip(headers).each {|f, h| h.should eq(CsvField.from_id(f).display_name) }
-          csv_supporters[1..-1].zip(memberships).each do |csvSupporter, origSupporter|
-            fields.each_with_index {|field, idx| csvSupporter[idx].should eq(origSupporter.send(field)) }
+          csv_ringers[1..-1].zip(memberships).each do |csvRinger, origRinger|
+            fields.each_with_index {|field, idx| csvRinger[idx].should eq(origRinger.send(field)) }
           end
         end
 
-        it 'should export all of the supporters numbers and support dates' do
-          @campaign.supporters.create(phone_number: @number2)
-          @campaign.supporters.create(phone_number: @number3)
+        it 'should export all of the ringers numbers and support dates' do
+          @campaign.ringers.create(phone_number: @number2)
+          @campaign.ringers.create(phone_number: @number3)
 
           fields = {phone_number: 'yes', support_date: 'yes'}
           get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
           verify_csv(last_response.body, @campaign.memberships, fields.keys)
         end
 
-        it 'should export only the new supporters numbers and support dates' do
-          @campaign.supporters.create(phone_number: @number2, created_at: DateTime.now - 2)
+        it 'should export only the new ringers numbers and support dates' do
+          @campaign.ringers.create(phone_number: @number2, created_at: DateTime.now - 2)
           @campaign.most_recent_broadcast = DateTime.now - 1
           @campaign.save
-          @campaign.supporters.create(phone_number: @number3)
+          @campaign.ringers.create(phone_number: @number3)
 
           get "/campaign/#{@campaign.id}/csv", {filter: "after:#{@campaign.most_recent_broadcast}"}
           verify_csv(last_response.body, @campaign.new_memberships)
         end
 
-        it 'should export the supporters country codes' do
-          @campaign.supporters.create(phone_number: @number2)
-          @campaign.supporters.create(phone_number: @number3)
+        it 'should export the ringers country codes' do
+          @campaign.ringers.create(phone_number: @number2)
+          @campaign.ringers.create(phone_number: @number3)
 
           fields = {country_code: 'yes'}
           get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
           verify_csv(last_response.body, @campaign.memberships, fields.keys)
         end
 
-        it 'should export the supporters area codes' do
-          @campaign.supporters.create(phone_number: @number2)
-          @campaign.supporters.create(phone_number: @number3)
+        it 'should export the ringers area codes' do
+          @campaign.ringers.create(phone_number: @number2)
+          @campaign.ringers.create(phone_number: @number3)
 
           fields = {area_code: 'yes'}
           get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}

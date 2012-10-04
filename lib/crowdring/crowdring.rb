@@ -83,8 +83,8 @@ module Crowdring
 
       if AssignedPhoneNumber.get(request.to)
         campaign = AssignedPhoneNumber.get(request.to).campaign
-        supporter = Supporter.first_or_create(phone_number: from)
-        campaign.join(supporter)
+        ringer = Ringer.first_or_create(phone_number: from)
+        campaign.join(ringer)
         Server.service_handler.send_sms(to: from, from: request.to, msg: campaign.introductory_message)
       end
 
@@ -160,9 +160,9 @@ module Crowdring
     get '/campaign/:id' do
       @campaign = Campaign.get(params[:id])
       if @campaign
-        @supporters =  @campaign.supporters.all(order: [:created_at.desc], limit: 10)
-        @supporter_count = @campaign.supporters.count
-        @countries = @campaign.supporters.map(&:country).uniq
+        @ringers =  @campaign.memberships.all(order: [:created_at.desc], limit: 10)
+        @ringer_count = @campaign.ringers.count
+        @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields
         @basic_chart = HighChartsBuilder.basic_stats(@campaign)
 
@@ -189,7 +189,7 @@ module Crowdring
       from = params[:from] || campaign.assigned_phone_numbers.first.phone_number
       message = params[:message]
       memberships = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).memberships)
-      to = memberships.map(&:supporter).map(&:phone_number)
+      to = memberships.map(&:ringer).map(&:phone_number)
 
       Server.service_handler.broadcast(from, message, to)
       campaign.most_recent_broadcast = DateTime.now

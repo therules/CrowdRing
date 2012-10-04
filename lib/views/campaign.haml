@@ -7,35 +7,35 @@
   %a{href: "/"}
     %button «Back to Home
 
-
 #campaign-information
   #campaign-details
     %h2= @campaign.title
     %h4= "Introductory message:<br /> #{@campaign.introductory_message}"
     -@campaign.assigned_phone_numbers.each do |number|
       %h3= number.pretty_phone_number
-    #campaign-supporters
-      %h3
-        = "#{@supporter_count} " + (@supporter_count !=1 ? 'Supporters' : 'Supporter')
-      #supporters-numbers
-        %ul.supporters
-          -@supporters.each do |supporter|
-            %li= supporter.pretty_phone_number
+    #campaign-ringers
+      %h3.count
+        = "#{@ringer_count} " + (@ringer_count !=1 ? 'Ringers' : 'Ringer')
+      #ringers-numbers
+        %ul.ringers
+          -@ringers.each do |ringer|
+            %li= ringer.pretty_phone_number
         .number-fade-out 
 
+    
   #broadcast.form-box
     %h3 Broadcast
     %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
       #filter-container
         #broadcast-filter.filter-buttons
           %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-          %label.all-label{for: 'all1'}= "All #{@supporter_count}"
+          %label.all-label{for: 'all1'}= "All #{@ringer_count}"
           %input#new1{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast}"}
           %label.new-label{for: 'new1'}= "#{@campaign.new_memberships.count} New"
           %input#country1{type: 'radio', name: 'filter', value: 'country:'}
           %label{for: 'country1'} Country
       #filter-options{style: 'display:none'}
-      %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello supporters...'}
+      %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello ringers...'}
       %button#broadcastbutton{disabled: 'disabled'} Broadcast
 
   #export.form-box
@@ -44,7 +44,7 @@
       #filter-container
         #export-filter.filter-buttons
           %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-          %label.all-label{for: 'all2'}= "All #{@supporter_count}"
+          %label.all-label{for: 'all2'}= "All #{@ringer_count}"
           %input#new2{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast}"}
           %label.new-label{for: 'new2'}= "#{@campaign.new_memberships.count} New"
           %input#country2{type: 'radio', name: 'filter', value: 'country:'}
@@ -53,9 +53,7 @@
       -@all_fields.each do |field|
         %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
       %button#exportbutton Export
-  
-  #basic-chart= high_chart("basic-chart", @basic_chart) 
-   
+
 #country-options{style: 'display:none'}
   %form
     -if @countries.empty?

@@ -1,16 +1,16 @@
-new_supporter = (data) ->
-  $("#campaign-supporters .count").text(data.supporter_count + " Supporter" + (if data.supporter_count != 1 then "s" else ""))
+new_ringer = (data) ->
+  $("#campaign-ringers .count").text(data.ringer_count + " Ringer" + (if data.ringer_count != 1 then "s" else ""))
                          .effect("highlight", {color: '#63DB00'}, 500)
-  $(".all-label .ui-button-text").text('All ' + data.supporter_count)
-  $(".new-label .ui-button-text").text(data.new_supporter_count + ' New')
+  $(".all-label .ui-button-text").text('All ' + data.ringer_count)
+  $(".new-label .ui-button-text").text(data.new_ringer_count + ' New')
   
   delete_last = -> 
-    if $('#supporters-numbers li').length > 10
-      $('#supporters-numbers li').last().remove()
+    if $('#ringers-numbers li').length > 10
+      $('#ringers-numbers li').last().remove()
   
   $("<li>#{data.number}</li>").hide()
                               .css('opacity', 0.0)
-                              .prependTo("ul.supporters")
+                              .prependTo("ul.ringers")
                               .slideDown(250)
                               .animate({opacity: 1.0}, 250, delete_last)
 
@@ -65,7 +65,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
     channel_name = campaign
     channel = pusher.subscribe(channel_name)
-    channel.bind 'new', new_supporter
+    channel.bind 'new', new_ringer
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
 

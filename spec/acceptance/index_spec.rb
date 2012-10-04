@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 require 'crowdring/logging_service'
 
-describe 'Filtering supporters', type: :request, js: true do
+describe 'Filtering ringers', type: :request, js: true do
 
   before(:all) do
     @number = '+11111111111'
@@ -21,11 +21,11 @@ describe 'Filtering supporters', type: :request, js: true do
     page.driver.browser.authorize 'admin', 'admin'
   end
 
-  it 'Filtering supporters based on who has joined since the most recent broadcast' do
-    origSupporter = Crowdring::Supporter.create(phone_number: @number2)
-    @campaign.memberships.create(supporter: origSupporter, created_at: DateTime.now-2)
+  it 'Filtering ringers based on who has joined since the most recent broadcast' do
+    origRinger = Crowdring::Ringer.create(phone_number: @number2)
+    @campaign.memberships.create(ringer: origRinger, created_at: DateTime.now-2)
     @campaign.most_recent_broadcast = DateTime.now - 1
-    newSupporter = @campaign.supporters.create(phone_number: @number3)
+    newRinger = @campaign.ringers.create(phone_number: @number3)
    
     visit "/campaign/#{@campaign.id}"
     page.find("label[for=new1]").text.should match('1')

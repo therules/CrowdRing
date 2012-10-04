@@ -4,6 +4,6 @@
 
 	- campaign.assigned_phone_numbers.each do |number|
 		%h2= number.pretty_phone_number
-		%h2= "#{campaign.supporters.count} " + (campaign.supporters.count !=1 ? "Supporters" : "Supporter")
+		%h2= "#{campaign.ringers.count} " + (campaign.ringers.count !=1 ? "Ringers" : "Ringer")
 
 

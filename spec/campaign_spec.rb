@@ -53,23 +53,23 @@ describe Crowdring::Campaign do
     expect {c2.assigned_phone_numbers.create(phone_number: @number1)}.to raise_error(DataObjects::IntegrityError)
   end
 
-  it 'should have many supporters' do
-    @c.supporters.create(phone_number: @number1)
-    @c.supporters.create(phone_number: @number2)
+  it 'should have many ringers' do
+    @c.ringers.create(phone_number: @number1)
+    @c.ringers.create(phone_number: @number2)
 
-    @c.supporters.should include(Crowdring::Supporter.first(phone_number: @number1))
-    @c.supporters.should include(Crowdring::Supporter.first(phone_number: @number2))
+    @c.ringers.should include(Crowdring::Ringer.first(phone_number: @number1))
+    @c.ringers.should include(Crowdring::Ringer.first(phone_number: @number2))
   end
 
-  it 'should track the original date a supporter supported a campaign' do
-    s = Crowdring::Supporter.create(phone_number: @number2)
+  it 'should track the original date a ringer supported a campaign' do
+    s = Crowdring::Ringer.create(phone_number: @number2)
     @c.join(s)
 
     @c.memberships.first.created_at.to_date.should eq(Date.today)
   end
 
-  it 'should track a supporters most recent support of a campaign' do
-    s = Crowdring::Supporter.create(phone_number: @number2)
+  it 'should track a ringers most recent support of a campaign' do
+    s = Crowdring::Ringer.create(phone_number: @number2)
     @c.join(s)
     first_join = @c.memberships.first.updated_at
     @c.join(s)
@@ -78,8 +78,8 @@ describe Crowdring::Campaign do
     first_join.should be < membership.updated_at
   end
 
-  it 'should track the number of times a supporter calls into a campaign' do
-    s = Crowdring::Supporter.create(phone_number: @number2)
+  it 'should track the number of times a ringer calls into a campaign' do
+    s = Crowdring::Ringer.create(phone_number: @number2)
     @c.join(s)
     @c.join(s)
     @c.join(s)
@@ -88,12 +88,12 @@ describe Crowdring::Campaign do
   end
 
   it 'should remove memberships when a campaign is destroyed' do
-    s = Crowdring::Supporter.create(phone_number: @number2)
+    s = Crowdring::Ringer.create(phone_number: @number2)
     @c.join(s)
     @c.destroy
 
     Crowdring::CampaignMembership.all.should be_empty
-    Crowdring::Supporter.all.count.should eq(1)
+    Crowdring::Ringer.all.count.should eq(1)
   end
 
 end
