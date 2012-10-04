@@ -68,9 +68,24 @@ loadCampaign = (pusher, campaign, prev_channel) ->
     channel.bind 'new', new_ringer
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
+newFilterMessage = ->
+  newDiv = $('.filter-message-template.original').clone().removeClass('original').removeAttr('style')
+  $('#filtered-messages').append(newDiv)
+
+  $('#add-tag-button', newDiv).click -> 
+    $('#tag-filters', newDiv).append(
+      $('select[name=filter-type]', newDiv).val() + ':' + 
+      $('input[name=tag-name]', newDiv).val())
+    $('input[name=tag-name]').val('')
+  $('input[name=tag-name]', newDiv).keypress (evt) ->
+    if evt.which == 13
+      $('#add-tag-button', newDiv).click()
+      return false
+    return true
+
 
 $ ->
-  $('select').chosen()
+  $('select.campaign-select').chosen()
   setTimeout((->$('.notice').slideUp('medium')), 3000)
 
   pusher = new Pusher(window.pusher_key)
@@ -79,6 +94,7 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
+  $("#new-filter-button").click newFilterMessage
 
 
 

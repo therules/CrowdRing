@@ -95,5 +95,4 @@ describe Crowdring::Campaign do
     Crowdring::CampaignMembership.all.should be_empty
     Crowdring::Ringer.all.count.should eq(1)
   end
-
 end

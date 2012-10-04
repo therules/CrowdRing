@@ -12,10 +12,23 @@
         %select{name: 'phone_numbers_to_assign[]'}
           -@numbers.each do |n|
             %option #{n}
+      %h3 Introductory Message
+      #filtered-messages
+      %button#new-filter-button{type: 'button'} Add filtered message
       .field
-        %label Introductory Message:
+        %label Default Message:
         %textarea.msg-text-area{name: 'introductory_message', placeholder: 'Thanks for supporting...'}
       %button{type: 'submit'} Create
 %a{href: '/'} 
   %button « Back to Home 
+
+
+.filter-message-template.original{style: 'display:none'}
+  %select{name: 'filter-type'}
+    %option Area Code
+    %option Country
+  %input{name: 'tag-name', type: 'text'}
+  %button#add-tag-button{type: 'button'} Add
+  #tag-filters
+  %textarea.msg-text-area{placeholder: 'Thanks for supporting...'}
 
