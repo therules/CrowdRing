@@ -29,6 +29,7 @@ require 'crowdring/campaign_membership_observer'
 require 'crowdring/assigned_phone_number'
 require 'crowdring/tag'
 require 'crowdring/tag_filter'
+require 'crowdring/filtered_message'
 require 'crowdring/filter_tagging'
 require 'crowdring/csv_fields'
 

@@ -9,8 +9,12 @@ module Crowdring
 
     def filter(items)
       items.select do |item|
-        grouped_tags.reduce(true) {|acc, tags| acc and has_any?(tags, item.tags)}
+        accept? item
       end
+    end
+
+    def accept?(item)
+      grouped_tags.reduce(true) {|acc, tags| acc and has_any?(tags, item.tags)}
     end
 
     private
