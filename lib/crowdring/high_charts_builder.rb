@@ -9,8 +9,8 @@ module Crowdring
 	      f.options[:xAxis] = {ordinal: false, type: 'datetime'}
 	      f.options[:tooltip] = {yDecimals: 0}
         f.options[:yAxis] = [
-	        {title: {text: 'New Calls/Day'}, labels: {style: { color: 'rgba(67, 142, 204, 1)'}}}, 
-	        {title: {text: 'Total Calls'}, opposite: true, labels: {style: { color: 'green'}}}]
+	        {title: {text: 'Total Calls'}, opposite: true, labels: {style: { color: 'green'}}},
+	        {title: {text: 'New Calls/Day'}, labels: {style: { color: 'rgba(67, 142, 204, 1)'}}}]
 	      
 	      f.options[:legend] = {enabled: true, verticalAlign: 'top'}
 	      

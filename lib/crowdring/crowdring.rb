@@ -8,7 +8,6 @@ module Crowdring
     set :sinatra_authentication_view_path, settings.views + "/auth/"
     include LazyHighCharts::LayoutHelper
 
-
     def self.service_handler
       CompositeService.instance
     end

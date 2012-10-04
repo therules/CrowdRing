@@ -53,6 +53,7 @@
       -@all_fields.each do |field|
         %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
       %button#exportbutton Export
+  #basic-chart= high_chart("basic-chart", @basic_chart) 
 
 #country-options{style: 'display:none'}
   %form
