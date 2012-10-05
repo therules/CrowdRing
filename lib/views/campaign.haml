@@ -10,7 +10,7 @@
 #campaign-information
   #campaign-details
     %h2= @campaign.title
-    %h4= "Introductory message:<br /> #{@campaign.introductory_message}"
+    %h4 Introductory message:<br /> not so easy...
     -@campaign.assigned_phone_numbers.each do |number|
       %h3= number.pretty_phone_number
     #campaign-ringers

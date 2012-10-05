@@ -5,7 +5,7 @@ describe Crowdring::Campaign do
     DataMapper.auto_migrate!
     @number1 = '+11111111111'
     @number2 = '+22222222222'
-    @c = Crowdring::Campaign.create(title: 'test', introductory_message: 'intro message')
+    @c = Crowdring::Campaign.create(title: 'test', introductory_response: @intro_response)
   end
 
   it 'should create a campaign with multiple assigned phone numbers' do
@@ -47,9 +47,9 @@ describe Crowdring::Campaign do
   end
 
   it 'should not allow assigning the same number to multiple campaigns' do
-    c1 = Crowdring::Campaign.create(title: 'test', introductory_message: 'intro msg')
+    c1 = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.create_with_default('intro msg'))
     c1.assigned_phone_numbers.create(phone_number: @number1)
-    c2 = Crowdring::Campaign.create(title: 'test2', introductory_message: 'intro msg')
+    c2 = Crowdring::Campaign.create(title: 'test2', introductory_response: Crowdring::IntroductoryResponse.create_with_default('intro msg'))
     expect {c2.assigned_phone_numbers.create(phone_number: @number1)}.to raise_error(DataObjects::IntegrityError)
   end
 

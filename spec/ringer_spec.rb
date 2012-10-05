@@ -18,8 +18,8 @@ describe Crowdring::Ringer do
   end
 
   it 'should belong to many different campaigns' do
-    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_message: 'intro message')
-    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_message: 'intro message')
+    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_response: @intro_response)
+    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_response: @intro_response)
     ringer = Crowdring::Ringer.create(phone_number: @number1)
 
     ringer.campaigns << camp1;
@@ -31,7 +31,7 @@ describe Crowdring::Ringer do
   end
 
   it 'should destroy all relevant memberships when destroying a ringer' do
-    campaign = Crowdring::Campaign.create(title: 'campaign', introductory_message: 'intro message')
+    campaign = Crowdring::Campaign.create(title: 'campaign', introductory_response: @intro_response)
     ringer = Crowdring::Ringer.create(phone_number: @number1)
     campaign.join(ringer)
     ringer.destroy

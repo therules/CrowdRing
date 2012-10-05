@@ -6,7 +6,7 @@ module Crowdring
     property :message,  String, required: true
     property :priority, Integer
 
-    has 1, :tag_filter, constraint: :destroy
+    has 1, :tag_filter, through: Resource, constraint: :destroy
 
     def send_message(params)
       if tag_filter.accept?(params[:to])

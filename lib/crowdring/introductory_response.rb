@@ -5,6 +5,8 @@ module Crowdring
     property :id, Serial
 
     has n, :filtered_messages, constraint: :destroy
+    
+    belongs_to :campaign, required: false
 
     def self.create_with_default(message)
       intro_response = create
@@ -18,7 +20,7 @@ module Crowdring
     end
 
     def send_message(params)
-      prioritized_messages.each {|fm| return if fm.send_message(params) }
+      prioritized_messages.find {|fm| fm.send_message(params) }
     end
 
     private

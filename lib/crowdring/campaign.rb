@@ -7,14 +7,12 @@ module Crowdring
       messages: { presence: 'Non-empty title required',
                   length: 'Title must be fewer than 64 letters in length' }
     property :most_recent_broadcast, DateTime
-    property :introductory_message, String, required: true, length: 0..160,
-      messages: { presence: 'Non-empty introductory message required',
-                    length: 'Introductory message must be fewer than 160 letters in length' }
     property :created_at,   DateTime
 
     has n, :assigned_phone_numbers, constraint: :destroy
     has n, :memberships, 'CampaignMembership', constraint: :destroy
     has n, :ringers, through: :memberships
+    has 1, :introductory_response, constraint: :destroy
 
     def assign_phone_numbers(numbers)
       numbers && numbers.inject(true) do |res, n|

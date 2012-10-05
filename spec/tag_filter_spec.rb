@@ -76,4 +76,10 @@ describe Crowdring::TagFilter do
     tag_filter.accept?(drop_item).should be_false
   end
 
+  it 'should accept a | delimited string of tags' do
+    tag_filter = Crowdring::TagFilter.create(tags: 'foo:bar|boo:baz')
+    tag_filter.saved?.should be_true
+    tag_filter.tags.count.should eq(2)
+  end
+
 end

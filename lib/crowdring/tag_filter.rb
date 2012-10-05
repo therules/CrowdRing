@@ -13,6 +13,13 @@ module Crowdring
       end
     end
 
+    def tags=(tags)
+      if tags.is_a? String
+        tags = tags.split('|').reject(&:empty?).map {|str| Tag.from_str(str)}
+      end
+      super tags
+    end
+
     def accept?(item)
       grouped_tags.reduce(true) {|acc, tags| acc and has_any?(tags, item.tags)}
     end

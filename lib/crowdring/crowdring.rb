@@ -84,7 +84,7 @@ module Crowdring
         campaign = AssignedPhoneNumber.get(request.to).campaign
         ringer = Ringer.first_or_create(phone_number: from)
         campaign.join(ringer)
-        Server.service_handler.send_sms(to: from, from: request.to, msg: campaign.introductory_message)
+        campaign.introductory_response.send_message(from: request.to, to: ringer)
       end
 
       cur_service.build_response(request.to, response.(from))
@@ -137,9 +137,18 @@ module Crowdring
     end
 
     post '/campaign/create' do
+      filtered_message_params = params.delete('filtered_messages') || []
+      default_message = params.delete('default_message')
+
+      intro_response = IntroductoryResponse.create_with_default(default_message)
+      filtered_message_params.each do |msg_params|
+        intro_response.add_message(TagFilter.create(tags: msg_params['tags']), msg_params['message'])
+      end
+
       numbers = params.delete('phone_numbers_to_assign')
       campaign = Campaign.new(params)
       if campaign.save
+        campaign.introductory_response = intro_response
         flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
         flash[:notice] = "Campaign created"
         redirect to("/campaigns##{campaign.id}")

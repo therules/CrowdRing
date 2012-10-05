@@ -17,7 +17,7 @@
       %button#new-filter-button{type: 'button'} Add filtered message
       .field
         %label Default Message:
-        %textarea.msg-text-area{name: 'default_introductory_message', placeholder: 'Thanks for supporting...'}
+        %textarea.msg-text-area{name: 'default_message', placeholder: 'Thanks for supporting...'}
       %button{type: 'submit'} Create
 %a{href: '/'} 
   %button « Back to Home 
@@ -31,5 +31,5 @@
   %button#add-tag-button{type: 'button'} Add
   #tag-filters
   %input{name: 'filtered_messages[]tags', type: 'hidden', value:''}
-  %textarea.msg-text-area{name: 'filtered_messages[]introductory_message', placeholder: 'Thanks for supporting...'}
+  %textarea.msg-text-area{name: 'filtered_messages[]message', placeholder: 'Thanks for supporting...'}
 
