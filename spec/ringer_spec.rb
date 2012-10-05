@@ -40,4 +40,10 @@ describe Crowdring::Ringer do
     Crowdring::CampaignMembership.all.count.should eq(0)
     Crowdring::Campaign.all.count.should eq(1)
   end
+
+  it 'should be tagged with the ringers area code upon creation' do
+    ringer = Crowdring::Ringer.create(phone_number: @number1)
+
+    ringer.tags.should include(Crowdring::Tag.from_str('area code:111'))
+  end
 end

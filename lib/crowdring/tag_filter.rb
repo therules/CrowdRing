@@ -4,8 +4,7 @@ module Crowdring
 
     property :id, Serial
 
-    has n, :tags, through: :filter_taggings
-    has n, :filter_taggings
+    has n, :tags, through: Resource
 
     def filter(items)
       items.select do |item|

@@ -30,7 +30,6 @@ require 'crowdring/assigned_phone_number'
 require 'crowdring/tag'
 require 'crowdring/tag_filter'
 require 'crowdring/filtered_message'
-require 'crowdring/filter_tagging'
 require 'crowdring/introductory_response'
 require 'crowdring/csv_fields'
 
