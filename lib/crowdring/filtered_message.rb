@@ -13,9 +13,9 @@ module Crowdring
         CompositeService.instance.send_sms(
           from: params[:from], to: params[:to].phone_number, 
           msg: message)
-        nil
+        true
       else
-        params[:to]
+        false
       end
     end
 
