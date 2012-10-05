@@ -36,5 +36,9 @@ module Crowdring
         memberships.select { |s| s.created_at > most_recent_broadcast }
       end
     end
+
+    def slug
+      title.gsub(/\s/, '_').gsub(/[^a-zA-Z_]/, '').downcase
+    end
   end
 end

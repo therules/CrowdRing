@@ -160,6 +160,7 @@ GEM
       tilt (~> 1.3)
     sinbook (0.1.9)
       yajl-ruby
+    statsd-ruby (1.0.0)
     stringex (1.4.0)
     thin (1.4.1)
       daemons (>= 1.0.9)
@@ -208,6 +209,7 @@ DEPENDENCIES
   sinatra
   sinatra-authentication
   sinatra-contrib
+  statsd-ruby
   thin
   tropo-provisioning
   tropo-webapi-ruby

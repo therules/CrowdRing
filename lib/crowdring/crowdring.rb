@@ -1,4 +1,10 @@
 module Crowdring
+  def self.statsd
+    @statsd ||= Statsd.new(ENV['STATSD_HOST'] || "http://localhost").tap do |s|
+      s.namespace = "crowdring"
+    end
+  end
+
   class Server < Sinatra::Base
     register Sinatra::SinatraAuthentication
     enable :sessions
@@ -6,6 +12,7 @@ module Crowdring
     set :logging, true
     set :root, File.dirname(__FILE__) + '/..'
     set :sinatra_authentication_view_path, settings.views + "/auth/"
+
     include LazyHighCharts::LayoutHelper
 
     def self.service_handler
@@ -64,6 +71,11 @@ module Crowdring
     end
 
     before { protected! unless request.path_info =~ /(voice|sms)response/ }
+    before {
+      if request.path_info =~ /(voice|sms)response/
+        Crowdring.statsd.increment "#{$1}_received.count"
+      end
+    }
 
     def sms_response
       proc {|to| 
@@ -149,6 +161,7 @@ module Crowdring
       campaign = Campaign.new(params)
       if campaign.save
         campaign.introductory_response = intro_response
+        campaign.save
         flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
         flash[:notice] = "Campaign created"
         redirect to("/campaigns##{campaign.id}")

@@ -36,6 +36,7 @@ require 'crowdring/csv_fields'
 require 'crowdring/high_charts_builder'
 require 'crowdring/campaign_stats'
 
+require 'statsd'
 require 'crowdring/crowdring'
 
 
