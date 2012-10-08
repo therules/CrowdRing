@@ -68,22 +68,38 @@ loadCampaign = (pusher, campaign, prev_channel) ->
     channel.bind 'new', new_ringer
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
+
+tagFor = (tagname) ->
+  $("<div>#{tagname} <button type='button'>Remove</button></div>")
+
+addTag = (parent) ->
+  tagName = $('input, tag-name', parent).val()
+  if tagName == ""
+    return
+  fullTagName = $('select, filter-type', parent).val() + ':' + tagName
+  newTag = tagFor(fullTagName)
+  tags = $('input[name="filtered_messages[]tags"]', parent)
+  $('button', newTag).click ->
+    tags.val(tags.val().replace('|'+fullTagName, ''))
+    newTag.remove()
+  newTag.appendTo($('#tag-filters', parent))
+  $('.tag-name', parent).val('')
+  oldTags = tags.val()
+  $('input[name="filtered_messages[]tags"]', parent).val(oldTags + '|' + fullTagName)
+
 newFilterMessage = ->
   newDiv = $('.filtered-message-template.original').clone().removeClass('original').removeAttr('style')
   $('#filtered-messages').append(newDiv)
 
   $('#add-tag-button', newDiv).click ->
-    tagName = $('input, tag-name', newDiv).val()
-    if tagName == ""
-      return
-    fullTagName = $('select, filter-type', newDiv).val() + ':' + tagName
-    $('#tag-filters', newDiv).append(fullTagName)
-    $('input, tag-name', newDiv).val('')
-    $('input[name="filtered_messages[]tags"]', newDiv).val($('input[name="filtered_messages[]tags"]', newDiv).val() + '|' + fullTagName)
+    addTag(newDiv)
+    
   $('input, tag-name', newDiv).keypress (evt) ->
     if evt.which == 13
       $('#add-tag-button', newDiv).click()
       return false
+  $('#remove-filter-button', newDiv).click ->
+    newDiv.remove()
 
 
 $ ->

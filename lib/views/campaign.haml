@@ -62,6 +62,7 @@
     -@countries.each do |country|
       %label{for: "check#{country.char_3_code}"}
         %input{id: "check#{country.char_3_code}", type: 'checkbox', name: 'country', value: "#{country.char_3_code}"}= "#{country.name} [#{country.char_3_code}]"
+        
 
 
 
