@@ -23,6 +23,18 @@ module Crowdring
       prioritized_messages.find {|fm| fm.send_message(params) }
     end
 
+    def default_message
+      prioritized_messages.last.message
+    end
+
+    def nondefault_messages
+      Enumerator.new do |y|
+        prioritized_messages.each do |m|
+          y << m unless m.priority == 100
+        end
+      end
+    end    
+
     private
 
     def prioritized_messages

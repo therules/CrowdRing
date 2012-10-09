@@ -1,0 +1,17 @@
+.filtered-message-template
+  %select.filter-type
+    %option Area Code
+    %option Country
+  %input.tag-name{type: 'text'}
+  %button#add-tag-button{type: 'button', onclick: "window.addTag($(this).parent(), #{id});"} Add
+
+  #tag-filters
+    -tags.each do |tag|
+      %div
+        =tag
+        %input{type: 'hidden', name: "filtered_messages[#{id}]tags[]", value: "#{tag}"}
+        %button{type: 'button', onclick: 'window.removeTag($(this));'} Remove
+  %textarea.msg-text-area{name: "filtered_messages[#{id}][message]", placeholder: 'Thanks for supporting...'}
+    =message
+  %button#remove-filter-button{type: 'button', onclick: "window.removeFilter($(this));"} Remove
+

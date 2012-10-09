@@ -148,6 +148,16 @@ module Crowdring
       haml :campaign_new
     end
 
+    get '/campaign/:id/edit' do
+      @campaign = Campaign.get(params[:id])
+
+      used_numbers = (AssignedPhoneNumber.all - @campaign.assigned_phone_numbers).map(&:phone_number)
+      @numbers = Server.service_handler.numbers - used_numbers      
+      @campaign_numbers = @campaign.assigned_phone_numbers.map(&:phone_number)
+
+      haml :campaign_edit
+    end
+
     post '/campaign/create' do
       filtered_message_params = params['filtered_messages'] ? params.delete('filtered_messages').values : []
       default_message = params.delete('default_message')
@@ -163,11 +173,38 @@ module Crowdring
         campaign.introductory_response = intro_response
         campaign.save
         flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
-        flash[:notice] = "Campaign created"
+        flash[:notice] = "Campaign updated"
         redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = campaign.errors.full_messages.join('|')
         redirect to('/campaign/new')
+      end
+    end
+
+    post '/campaign/:id/update' do
+      params.delete('splat')
+      params.delete('captures')
+      filtered_message_params = params['filtered_messages'] ? params.delete('filtered_messages').values : []
+      default_message = params.delete('default_message')
+
+      intro_response = IntroductoryResponse.create_with_default(default_message)
+      filtered_message_params.each do |msg_params|
+        intro_response.add_message(TagFilter.create(tags: msg_params['tags']), msg_params['message'])
+      end
+
+      numbers = params.delete('phone_numbers_to_assign')
+      campaign = Campaign.get(params[:id])
+      if campaign.update(params)
+        campaign.introductory_response.destroy
+        campaign.introductory_response = intro_response
+        campaign.save
+        campaign.assigned_phone_numbers.destroy
+        flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
+        flash[:notice] = "Campaign created"
+        redirect to("/campaigns##{campaign.id}")
+      else
+        flash[:errors] = campaign.errors.full_messages.join('|')
+        redirect to("campaign/#{@campaign.id}/edit")
       end
     end
 

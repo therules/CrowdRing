@@ -15,5 +15,9 @@ module Crowdring
       type, value = str.split(':')
       Tag.first_or_create(type: type.downcase, value: value.downcase)
     end
+
+    def to_s
+      "#{type}:#{value}"
+    end
   end
 end
