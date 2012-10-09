@@ -4,7 +4,7 @@ module Crowdring
 
     property :id, Serial
 
-    has n, :tags, through: Resource
+    has n, :tags, through: Resource, constraint: :skip
 
     def filter(items)
       items.select do |item|
@@ -13,9 +13,7 @@ module Crowdring
     end
 
     def tags=(tags)
-      if tags.is_a? String
-        tags = tags.split('|').reject(&:empty?).map {|str| Tag.from_str(str)}
-      end
+      tags = tags.map {|str| Tag.from_str(str)}
       super tags
     end
 

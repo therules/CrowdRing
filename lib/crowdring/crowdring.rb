@@ -149,7 +149,7 @@ module Crowdring
     end
 
     post '/campaign/create' do
-      filtered_message_params = params.delete('filtered_messages') || []
+      filtered_message_params = params['filtered_messages'] ? params.delete('filtered_messages').values : []
       default_message = params.delete('default_message')
 
       intro_response = IntroductoryResponse.create_with_default(default_message)
@@ -172,9 +172,13 @@ module Crowdring
     end
 
     post '/campaign/:id/destroy' do
-      Campaign.get(params[:id]).destroy
+      campaign = Campaign.get(params[:id])
+      if campaign.destroy
+        flash[:notice] = "Campaign destroyed"
+      else
+        flash[:errors] = "Failed to destroy campaign|" + campaign.errors.full_messages.join('|')
+      end
 
-      flash[:notice] = "Campaign destroyed"
       redirect to('/')
     end
 

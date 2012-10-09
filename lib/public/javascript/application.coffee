@@ -69,30 +69,27 @@ loadCampaign = (pusher, campaign, prev_channel) ->
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
 
-tagFor = (tagname) ->
-  $("<div>#{tagname} <button type='button'>Remove</button></div>")
+tagFor = (tagname, id) ->
+  $("<div>#{tagname} <input type='hidden' name='filtered_messages[#{id}]tags[]' value='#{tagname}' /> <button type='button'>Remove</button></div>")
 
-addTag = (parent) ->
+addTag = (parent, id) ->
   tagName = $('input, tag-name', parent).val()
   if tagName == ""
     return
   fullTagName = $('select, filter-type', parent).val() + ':' + tagName
-  newTag = tagFor(fullTagName)
-  tags = $('input[name="filtered_messages[]tags"]', parent)
+  newTag = tagFor(fullTagName, id)
   $('button', newTag).click ->
-    tags.val(tags.val().replace('|'+fullTagName, ''))
     newTag.remove()
   newTag.appendTo($('#tag-filters', parent))
   $('.tag-name', parent).val('')
-  oldTags = tags.val()
-  $('input[name="filtered_messages[]tags"]', parent).val(oldTags + '|' + fullTagName)
 
-newFilterMessage = ->
+newFilterMessage = (id) ->
   newDiv = $('.filtered-message-template.original').clone().removeClass('original').removeAttr('style')
+  $('textarea[name="MESSAGE"]', newDiv).attr('name', "filtered_messages[#{id}][message]")
   $('#filtered-messages').append(newDiv)
 
   $('#add-tag-button', newDiv).click ->
-    addTag(newDiv)
+    addTag(newDiv, id)
     
   $('input, tag-name', newDiv).keypress (evt) ->
     if evt.which == 13
@@ -101,6 +98,8 @@ newFilterMessage = ->
   $('#remove-filter-button', newDiv).click ->
     newDiv.remove()
 
+  $('#new-filter-button').unbind()
+  $('#new-filter-button').click -> newFilterMessage(id+1)
 
 $ ->
   $('select.campaign-select').chosen()
@@ -112,7 +111,7 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
-  $("#new-filter-button").click newFilterMessage
+  $("#new-filter-button").click -> newFilterMessage(0)
 
 
 
