@@ -5,8 +5,8 @@ describe Crowdring::IntroductoryResponse do
   before(:each) do
     DataMapper::auto_migrate!
  
-    @number = '+11111111111'
-    @number2 = '+22222222222'
+    @number = '+18001111111'
+    @number2 = '+18002222222'
     @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
     @fooservice = double('fooservice', build_response: 'fooResponse',
         supports_outgoing?: true,

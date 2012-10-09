@@ -22,7 +22,7 @@ module Crowdring
     end
 
     def country
-      Phoner::Country.find_by_country_code(number.country_code)
+      number.country
     end
 
     private

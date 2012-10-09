@@ -3,8 +3,8 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Crowdring::Campaign do
   before(:each) do
     DataMapper.auto_migrate!
-    @number1 = '+11111111111'
-    @number2 = '+22222222222'
+    @number1 = '+18001111111'
+    @number2 = '+18002222222'
     @c = Crowdring::Campaign.create(title: 'test', introductory_response: @intro_response)
   end
 

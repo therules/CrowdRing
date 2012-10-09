@@ -3,9 +3,9 @@ require File.dirname(__FILE__) + '/spec_helper'
 describe Crowdring::Ringer do
   before(:each) do
     DataMapper.auto_migrate!
-    @number1 = '+11111111111'
-    @number2 = '+22222222222'
-    @number3 = '+33333333333'
+    @number1 = '+18001111111'
+    @number2 = '+18002222222'
+    @number3 = '+18003333333'
   end
 
   it 'should not create two ringers with the same phone number' do
@@ -44,7 +44,7 @@ describe Crowdring::Ringer do
   it 'should be tagged with the ringers area code upon creation' do
     ringer = Crowdring::Ringer.create(phone_number: @number1)
 
-    ringer.tags.should include(Crowdring::Tag.from_str('area code:111'))
+    ringer.tags.should include(Crowdring::Tag.from_str('area code:800'))
   end
 
   it 'should be tagged with the ringers country name upon creation' do

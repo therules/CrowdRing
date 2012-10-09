@@ -21,7 +21,7 @@ module Crowdring
 
     configure :development do
       register Sinatra::Reloader
-      service_handler.add('logger', LoggingService.new(['+11111111111', '+12222222222'], output: true), default: true)
+      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222'], output: true), default: true)
     end
 
     configure :production do

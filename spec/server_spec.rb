@@ -11,10 +11,10 @@ module Crowdring
     before(:each) do
       Server.service_handler.reset
       DataMapper.auto_migrate!
-      @number = '+11231231234'
+      @number = '+18001231234'
       @numbers = [@number]
-      @number2 = '+22222222222'
-      @number3 = '+33333333333'
+      @number2 = '+18002222222'
+      @number3 = '+18003333333'
       @intro_response = IntroductoryResponse.create_with_default('default')
     end
 

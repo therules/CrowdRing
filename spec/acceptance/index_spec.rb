@@ -5,7 +5,7 @@ require 'crowdring/logging_service'
 describe 'Filtering ringers', type: :request, js: true do
 
   before(:all) do
-    @number = '+11111111111'
+    @number = '+18001111111'
     @logging_service = Crowdring::LoggingService.new([@number])
     Crowdring::Server.service_handler.add('logging', @logging_service)
   end
@@ -14,9 +14,9 @@ describe 'Filtering ringers', type: :request, js: true do
     Capybara.app_host = 'http://localhost:5000'
 
     DataMapper.auto_migrate!
-    @number2 = '+22222222222'
-    @number3 = '+33333333333'
-    @campaign = Crowdring::Campaign.create(title: 'title', introductory_response: @intro_response)
+    @number2 = '+18002222222'
+    @number3 = '+18003333333'
+    @campaign = Crowdring::Campaign.create(title: 'title', introductory_response: Crowdring::IntroductoryResponse.create_with_default('default'))
     @campaign.assigned_phone_numbers.create(phone_number: @number)
     page.driver.browser.authorize 'admin', 'admin'
   end
