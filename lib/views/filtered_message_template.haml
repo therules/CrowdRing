@@ -2,7 +2,7 @@
   %select.filter-type
     %option Area Code
     %option Country
-  %input.tag-name{type: 'text'}
+  %input.tag-name{type: 'text', onkeydown: "if (event.keyCode == 13) {window.addTag($(this).parent(), #{id}); return false;}"}
   %button#add-tag-button{type: 'button', onclick: "window.addTag($(this).parent(), #{id});"} Add
 
   #tag-filters

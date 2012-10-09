@@ -159,7 +159,7 @@ module Crowdring
     end
 
     post '/campaign/create' do
-      filtered_message_params = params['filtered_messages'] ? params.delete('filtered_messages').values : []
+      filtered_message_params = (params.delete('filtered_messages') || {}).values
       default_message = params.delete('default_message')
 
       intro_response = IntroductoryResponse.create_with_default(default_message)
@@ -184,7 +184,7 @@ module Crowdring
     post '/campaign/:id/update' do
       params.delete('splat')
       params.delete('captures')
-      filtered_message_params = params['filtered_messages'] ? params.delete('filtered_messages').values : []
+      filtered_message_params = (params.delete('filtered_messages') || {}).values
       default_message = params.delete('default_message')
 
       intro_response = IntroductoryResponse.create_with_default(default_message)

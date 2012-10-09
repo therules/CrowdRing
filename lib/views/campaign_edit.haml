@@ -23,8 +23,8 @@
       %textarea.msg-text-area{name: 'default_message', placeholder: 'Thanks for supporting...'}
         =@campaign.introductory_response.default_message
     %button{type: 'submit'} Update
-%a{href: '/'} 
-  %button « Back to Home 
+%a{href: "/campaigns##{@campaign.id}"} 
+  %button « Back to dashboard
 
 
 .filtered-message-template.original{style: 'display:none'}

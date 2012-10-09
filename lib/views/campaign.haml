@@ -1,10 +1,12 @@
 %h1 Campaign Details
 
 #options
+  %form{action: "/campaign/#{@campaign.id}/edit"}
+    %button Edit
   %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
     %button Destroy Campaign 
 #back-to-home
-  %a{href: "/"}
+  %form{action: "/"}
     %button «Back to Home
 
 #campaign-information
