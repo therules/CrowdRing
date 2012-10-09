@@ -223,6 +223,7 @@ module Crowdring
       @campaign = Campaign.get(params[:id])
       if @campaign
         @ringers =  @campaign.memberships.all(order: [:created_at.desc], limit: 10)
+        @ring_count = @campaign.ring_count
         @ringer_count = @campaign.ringers.count
         @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields

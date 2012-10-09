@@ -95,4 +95,16 @@ describe Crowdring::Campaign do
     Crowdring::CampaignMembership.all.should be_empty
     Crowdring::Ringer.all.count.should eq(1)
   end
+
+  it 'should give the total number of rings, including non-unique' do
+    r1 = Crowdring::Ringer.create(phone_number: @number1)
+    r2 = Crowdring::Ringer.create(phone_number: @number2)
+
+    @c.join(r1)
+    @c.join(r2)
+    @c.join(r1)
+    @c.join(r1)
+
+    @c.ring_count.should eq(4)
+  end
 end

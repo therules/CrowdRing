@@ -37,6 +37,10 @@ module Crowdring
       end
     end
 
+    def ring_count
+      memberships.reduce(0) {|count, m| count + m.count }
+    end
+
     def slug
       title.gsub(/\s/, '_').gsub(/[^a-zA-Z_]/, '').downcase
     end

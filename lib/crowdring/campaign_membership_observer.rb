@@ -5,11 +5,11 @@ module Crowdring
     observe CampaignMembership
 
     after :create do |m|
-      CampaignMembershipObserver.push_notify(m)
       CampaignMembershipObserver.statsd_increment("members_joined", m.campaign.slug)
     end
 
     after :update do |m|
+      CampaignMembershipObserver.push_notify(m)
       CampaignMembershipObserver.statsd_increment("members_responded", m.campaign.slug)
     end
       
@@ -21,6 +21,7 @@ module Crowdring
     def self.push_notify(m)
       data = {  number: m.ringer.pretty_phone_number,
           ringer_count: m.campaign.memberships.count,
+          ring_count: m.campaign.ring_count,
           new_ringer_count: m.campaign.new_memberships.count }
 
       begin

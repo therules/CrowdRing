@@ -16,8 +16,11 @@
     -@campaign.assigned_phone_numbers.each do |number|
       %h3= number.pretty_phone_number
     #campaign-ringers
-      %h3.count
-        = "#{@ringer_count} " + (@ringer_count !=1 ? 'Ringers' : 'Ringer')
+      .counts
+        %h3.total_count
+          = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
+        %h3.unique_count
+          = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
       #ringers-numbers
         %ul.ringers
           -@ringers.each do |ringer|
