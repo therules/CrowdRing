@@ -25,11 +25,11 @@ module Crowdring
       number.country
     end
 
-    private
-
     def number
       Phoner::Phone.parse phone_number
     end
+
+    private
 
     def valid_phone_number?
       if Phoner::Phone.valid? @phone_number
