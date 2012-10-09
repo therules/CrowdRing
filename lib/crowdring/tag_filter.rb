@@ -13,6 +13,7 @@ module Crowdring
     end
 
     def tags=(tags)
+      return if tags.nil?
       tags = tags.map {|str| Tag.from_str(str)}
       super tags
     end
