@@ -1,0 +1,14 @@
+#introductory_response
+  %h3 Messages
+  #messages 
+    -introductory_response.nondefault_messages.each do |fm|
+      When
+      .message
+        -fm.tag_filter.tags.each do |tag|
+          %li= tag
+      Then
+      .message
+        = "\"#{fm.message}\""
+    Default
+    .message  
+      = "\"#{introductory_response.default_message}\""
