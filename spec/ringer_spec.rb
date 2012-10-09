@@ -46,4 +46,10 @@ describe Crowdring::Ringer do
 
     ringer.tags.should include(Crowdring::Tag.from_str('area code:111'))
   end
+
+  it 'should be tagged with the ringers country name upon creation' do
+    ringer = Crowdring::Ringer.create(phone_number: @number1)
+
+    ringer.tags.should include(Crowdring::Tag.from_str('country:united states'))
+  end
 end

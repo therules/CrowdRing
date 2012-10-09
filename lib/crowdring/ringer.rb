@@ -18,6 +18,7 @@ module Crowdring
 
     def add_tags
       tags << Tag.from_str('area code:' + area_code)
+      tags << Tag.from_str('country:' + country_name)
       save
     end
   end
