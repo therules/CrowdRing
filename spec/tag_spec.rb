@@ -40,4 +40,10 @@ describe Crowdring::Tag do
     Crowdring::Tag.all.count.should eq(1)    
   end
 
+  it 'should give a sensible result on an invalid string' do
+    tag = Crowdring::Tag.from_str(':')
+    tag.should_not be_nil
+    tag.saved?.should be_false
+  end
+
 end

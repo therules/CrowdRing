@@ -13,7 +13,7 @@ module Crowdring
     # str of format "type:value"
     def self.from_str(str)
       type, value = str.split(':')
-      Tag.first_or_create(type: type.downcase, value: value.downcase)
+      Tag.first_or_create(type: (type || '').downcase, value: (value || '').downcase)
     end
 
     def to_s

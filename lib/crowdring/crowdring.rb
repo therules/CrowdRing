@@ -267,10 +267,13 @@ module Crowdring
     end
 
     post '/tags/create' do
-      tag = Tag.new(params)
-      if tag.save
+      tag = Tag.from_str(params[:type] + ':' + params[:value])
+      if tag.saved?
         flash[:notice] = "#{tag} tag created"
         redirect to('/')
+      else
+        flash[:errors] = tag.errors.full_messages.join('|')
+        redirect to('/tags/new')
       end
     end
 
