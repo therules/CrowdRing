@@ -148,20 +148,8 @@ module Crowdring
     end
 
     post '/campaign/create' do
-      filtered_message_params = (params.delete('filtered_messages') || {}).values
-      default_message = params.delete('default_message')
-
-      intro_response = IntroductoryResponse.create_with_default(default_message)
-      filtered_message_params.each do |msg_params|
-        intro_response.add_message(TagFilter.create(tags: msg_params['tags']), msg_params['message'])
-      end
-
-      numbers = params.delete('phone_numbers_to_assign')
-      campaign = Campaign.new(params)
+      campaign = Campaign.new(params[:campaign])
       if campaign.save
-        campaign.introductory_response = intro_response
-        campaign.save
-        flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
         flash[:notice] = "Campaign updated"
         redirect to("/campaigns##{campaign.id}")
       else
@@ -171,24 +159,9 @@ module Crowdring
     end
 
     post '/campaign/:id/update' do
-      params.delete('splat')
-      params.delete('captures')
-      filtered_message_params = (params.delete('filtered_messages') || {}).values
-      default_message = params.delete('default_message')
-
-      intro_response = IntroductoryResponse.create_with_default(default_message)
-      filtered_message_params.each do |msg_params|
-        intro_response.add_message(TagFilter.create(tags: msg_params['tags']), msg_params['message'])
-      end
-
-      numbers = params.delete('phone_numbers_to_assign')
       campaign = Campaign.get(params[:id])
-      if campaign.update(params)
-        campaign.introductory_response.destroy
-        campaign.introductory_response = intro_response
-        campaign.save
-        campaign.assigned_phone_numbers.destroy
-        flash[:errors] = "Failed to assign numbers" unless campaign.assign_phone_numbers(numbers)
+      campaign.assigned_phone_numbers.destroy
+      if campaign.update(params[:campaign])
         flash[:notice] = "Campaign created"
         redirect to("/campaigns##{campaign.id}")
       else

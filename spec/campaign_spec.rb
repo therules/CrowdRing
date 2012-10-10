@@ -24,22 +24,11 @@ describe Crowdring::Campaign do
   end
 
   it 'should easily assign multiple numbers given the raw numbers' do
-    @c.assign_phone_numbers([@number1, @number2]).should be_true
+    @c.assigned_phone_numbers = [@number1, @number2]
+    @c.save
 
     @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number1))
     @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number2))
-  end
-
-  it 'should signify if assigning multiple raw numbers fails' do
-    @c.assign_phone_numbers([@number1, @number1]).should be_false
-    @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number1))
-  end
-
-  it 'should assign all the valid phone numbers provided' do
-    @c.assign_phone_numbers([@number1, 'foobar', @number1, @number2]).should be_false
-    @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number1))
-    @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number2))
-    @c.assigned_phone_numbers.count.should eq(2)
   end
 
   it 'should not allow assignment of an invalid phone number' do
@@ -47,9 +36,9 @@ describe Crowdring::Campaign do
   end
 
   it 'should not allow assigning the same number to multiple campaigns' do
-    c1 = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.create_with_default('intro msg'))
+    c1 = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.create(default_message:'intro msg'))
     c1.assigned_phone_numbers.create(phone_number: @number1)
-    c2 = Crowdring::Campaign.create(title: 'test2', introductory_response: Crowdring::IntroductoryResponse.create_with_default('intro msg'))
+    c2 = Crowdring::Campaign.create(title: 'test2', introductory_response: Crowdring::IntroductoryResponse.create(default_message:'intro msg'))
     expect {c2.assigned_phone_numbers.create(phone_number: @number1)}.to raise_error(DataObjects::IntegrityError)
   end
 

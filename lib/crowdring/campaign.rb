@@ -14,14 +14,16 @@ module Crowdring
     has n, :ringers, through: :memberships
     has 1, :introductory_response, constraint: :destroy
 
-    def assign_phone_numbers(numbers)
-      numbers && numbers.inject(true) do |res, n|
-        begin
-          assigned_phone_numbers.create(phone_number: n).saved? && res 
-        rescue DataObjects::IntegrityError
-          false
-        end
+    def assigned_phone_numbers=(numbers)
+      if !numbers.empty? and numbers.first.is_a? String
+        numbers = numbers.map {|n| AssignedPhoneNumber.new(phone_number: n) }
       end
+
+      super numbers
+    end
+
+    def default_response=(message)
+      introductory_response.default_response = message
     end
 
     def join(ringer)

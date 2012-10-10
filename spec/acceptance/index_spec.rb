@@ -16,7 +16,7 @@ describe 'Filtering ringers', type: :request, js: true do
     DataMapper.auto_migrate!
     @number2 = '+18002222222'
     @number3 = '+18003333333'
-    @campaign = Crowdring::Campaign.create(title: 'title', introductory_response: Crowdring::IntroductoryResponse.create_with_default('default'))
+    @campaign = Crowdring::Campaign.create(title: 'title', introductory_response: Crowdring::IntroductoryResponse.create(default_message:'default'))
     @campaign.assigned_phone_numbers.create(phone_number: @number)
   end
 

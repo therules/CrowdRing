@@ -8,11 +8,14 @@ module Crowdring
     
     belongs_to :campaign, required: false
 
-    def self.create_with_default(message)
-      intro_response = create
-      filter = TagFilter.create
-      intro_response.filtered_messages.create(tag_filter: filter, message: message, priority: 100)
-      intro_response
+    def filtered_messages=(messages)
+      messages = messages.values if messages.is_a? Hash
+      messages.each_with_index.each {|m, i| filtered_messages.new(m.merge({priority: i})) }
+    end
+
+    def default_message=(message)
+      default_filtered_message.destroy if default_filtered_message
+      filtered_messages.new(tag_filter: TagFilter.create, message: message, priority: 100)
     end
 
     def add_message(filter, message)
@@ -24,7 +27,7 @@ module Crowdring
     end
 
     def default_message
-      prioritized_messages.last.message
+      default_filtered_message.message
     end
 
     def nondefault_messages
@@ -36,6 +39,10 @@ module Crowdring
     end    
 
     private
+
+    def default_filtered_message
+      filtered_messages.first(priority: 100)
+    end
 
     def prioritized_messages
       filtered_messages.all(order: [:priority.asc])

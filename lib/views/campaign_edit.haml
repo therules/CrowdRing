@@ -7,7 +7,7 @@
         =@campaign.title
     .field
       %label Phone Number:
-      %select{name: 'phone_numbers_to_assign[]'}
+      %select{name: 'campaign[assigned_phone_numbers][]'}
         -@numbers.each do |n|
           -if @campaign_numbers.include? n
             %option{selected: 'selected'} #{n}
@@ -20,7 +20,7 @@
     %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
     .field
       %label Default Message:
-      %textarea.msg-text-area{name: 'default_message', placeholder: 'Thanks for supporting...'}
+      %textarea.msg-text-area{name: 'campaign[introductory_response][default_message]', placeholder: 'Thanks for supporting...'}
         =@campaign.introductory_response.default_message
     %button{type: 'submit'} Update
 %a{href: "/campaigns##{@campaign.id}"} 

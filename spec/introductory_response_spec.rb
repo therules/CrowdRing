@@ -21,7 +21,7 @@ describe Crowdring::IntroductoryResponse do
   it 'should send the default message if no filters are provided' do
     @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 
-    intro_response = Crowdring::IntroductoryResponse.create_with_default('default')
+    intro_response = Crowdring::IntroductoryResponse.create(default_message:'default')
     intro_response.send_message(from: @number, to: @ringer)
   end
 
@@ -33,7 +33,7 @@ describe Crowdring::IntroductoryResponse do
     fm2 = Crowdring::TagFilter.create
     fm2.tags << chicago
 
-    intro_response = Crowdring::IntroductoryResponse.create_with_default('default')
+    intro_response = Crowdring::IntroductoryResponse.create(default_message:'default')
     intro_response.add_message(fm2, 'chicago')
     intro_response.add_message(fm, 'pittsburgh')
 
@@ -49,7 +49,7 @@ describe Crowdring::IntroductoryResponse do
     fm2 = Crowdring::TagFilter.create
     fm2.tags << chicago
 
-    intro_response = Crowdring::IntroductoryResponse.create_with_default('default')
+    intro_response = Crowdring::IntroductoryResponse.create(default_message:'default')
     intro_response.add_message(fm2, 'chicago')
 
     @ringer.stub(:tags) { [pittsburgh] }

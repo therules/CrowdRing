@@ -8,6 +8,10 @@ module Crowdring
 
     has 1, :tag_filter, through: Resource, constraint: :destroy
 
+    def tags=(tags)
+      self.tag_filter = TagFilter.create(tags: tags)
+    end
+
     def send_message(params)
       if tag_filter.accept?(params[:to])
         CompositeService.instance.send_sms(

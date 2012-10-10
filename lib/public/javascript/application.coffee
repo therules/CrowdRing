@@ -73,7 +73,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
 
 tagFor = (tagname, id) ->
-  $("<div>#{tagname} <input type='hidden' name='filtered_messages[#{id}]tags[]' value='#{tagname}' /> <button type='button'>Remove</button></div>")
+  $("<div>#{tagname} <input type='hidden' name='campaign[introductory_response][filtered_messages][#{id}]tags[]' value='#{tagname}' /> <button type='button'>Remove</button></div>")
 
 removeFilter = (btn) ->
   btn.parent().remove()
@@ -92,7 +92,7 @@ addTag = (parent, item, id) ->
 newFilterMessage = ->
   id = $('.filtered-message-template').length
   newDiv = $('#original-filtered-message-template-container div:first-child').clone()
-  $('textarea[name="MESSAGE"]', newDiv).attr('name', "filtered_messages[#{id}][message]")
+  $('textarea[name="MESSAGE"]', newDiv).attr('name', "campaign[introductory_response][filtered_messages][#{id}][message]")
   $('#filtered-messages').append(newDiv)
 
   $('#add-tag-button', newDiv).click ->
