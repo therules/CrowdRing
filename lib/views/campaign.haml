@@ -12,14 +12,14 @@
 #campaign-information
   #campaign-details
     %h2= @campaign.title
-    =haml :introductory_response, locals: {introductory_response: @campaign.introductory_response}
     -@campaign.assigned_phone_numbers.each do |number|
       %h3= number.pretty_phone_number
+    =haml :introductory_response, locals: {introductory_response: @campaign.introductory_response}
     #campaign-ringers
       .counts
-        %h3.total_count
+        %h4.total_count
           = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
-        %h3.unique_count
+        %h4.unique_count
           = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
       #ringers-numbers
         %ul.ringers
