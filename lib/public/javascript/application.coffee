@@ -91,7 +91,7 @@ addTag = (parent, item, id) ->
 
 newFilterMessage = ->
   id = $('.filtered-message-template').length
-  newDiv = $('.filtered-message-template.original').clone().removeClass('original').removeAttr('style')
+  newDiv = $('#original-filtered-message-template-container div:first-child').clone()
   $('textarea[name="MESSAGE"]', newDiv).attr('name', "filtered_messages[#{id}][message]")
   $('#filtered-messages').append(newDiv)
 

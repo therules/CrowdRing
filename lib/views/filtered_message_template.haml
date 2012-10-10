@@ -1,3 +1,7 @@
+-tags ||= []
+-id ||= nil
+-message ||= ''
+-msg_name = id.nil? ? 'MESSAGE' : "filtered_messages[#{id}][message]"
 .filtered-message-template
   Add tag:
   %input.tag-name{type: 'text'}
@@ -9,7 +13,7 @@
         =tag
         %input{type: 'hidden', name: "filtered_messages[#{id}]tags[]", value: "#{tag}"}
         %button{type: 'button', onclick: 'window.removeTag($(this));'} Remove
-  %textarea.msg-text-area{name: "filtered_messages[#{id}][message]", placeholder: 'Thanks for supporting...'}
+  %textarea.msg-text-area{name: msg_name, placeholder: 'Thanks for supporting...'}
     =message
   %button#remove-filter-button{type: 'button', onclick: "window.removeFilter($(this));"} Remove
 

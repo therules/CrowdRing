@@ -26,12 +26,6 @@
 %a{href: "/campaigns##{@campaign.id}"} 
   %button « Back to dashboard
 
+#original-filtered-message-template-container{style: 'display:none'}
+  =haml :filtered_message_template 
 
-.filtered-message-template.original{style: 'display:none'}
-  Add tag:
-  %input.tag-name{type: 'text'}
-  %a{href: '/tags/new'}new tag
-
-  #tag-filters
-  %textarea.msg-text-area{name: 'MESSAGE', placeholder: 'Thanks for supporting...'}
-  %button#remove-filter-button{type: 'button'} Remove
