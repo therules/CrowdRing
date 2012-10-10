@@ -2,13 +2,13 @@
   %h3 Messages
   #messages 
     -introductory_response.nondefault_messages.each do |fm|
-      When
+      %label When:
       .message
         -fm.tag_filter.tags.each do |tag|
           %li= tag
-      Then
+      %label Then:
       .message
         = "\"#{fm.message}\""
-    Default
+    %label Default:
     .message  
       = "\"#{introductory_response.default_message}\""
