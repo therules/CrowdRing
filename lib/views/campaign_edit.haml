@@ -28,14 +28,10 @@
 
 
 .filtered-message-template.original{style: 'display:none'}
-  %select.filter-type
-    %option Area Code
-    %option Country
-    %option Region
+  Add tag:
   %input.tag-name{type: 'text'}
-  %button#add-tag-button{type: 'button'} Add
+  %a{href: '/tags/new'}new tag
 
   #tag-filters
   %textarea.msg-text-area{name: 'MESSAGE', placeholder: 'Thanks for supporting...'}
   %button#remove-filter-button{type: 'button'} Remove
-

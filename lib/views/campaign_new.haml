@@ -14,7 +14,7 @@
             %option #{n}
       %h3 Introductory Message
       #filtered-messages
-      %button#new-filter-button{type: 'button'} Add filtered message
+      %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
       .field
         %label Default Message:
         %textarea.msg-text-area{name: 'default_message', placeholder: 'Thanks for supporting...'}
@@ -24,12 +24,9 @@
 
 
 .filtered-message-template.original{style: 'display:none'}
-  %select.filter-type
-    %option Area Code
-    %option Country
-    %option Region
+  Add tag:
   %input.tag-name{type: 'text'}
-  %button#add-tag-button{type: 'button'} Add
+  %a{href: '/tags/new'}new tag
 
   #tag-filters
   %textarea.msg-text-area{name: 'MESSAGE', placeholder: 'Thanks for supporting...'}

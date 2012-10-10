@@ -1,9 +1,7 @@
 .filtered-message-template
-  %select.filter-type
-    %option Area Code
-    %option Country
-  %input.tag-name{type: 'text', onkeydown: "if (event.keyCode == 13) {window.addTag($(this).parent(), #{id}); return false;}"}
-  %button#add-tag-button{type: 'button', onclick: "window.addTag($(this).parent(), #{id});"} Add
+  Add tag:
+  %input.tag-name{type: 'text'}
+  %a{href: '/tags/new'}new tag
 
   #tag-filters
     -tags.each do |tag|

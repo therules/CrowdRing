@@ -11,6 +11,7 @@ require 'phone'
 require 'resque'
 require 'haml'
 require 'lazy_high_charts'
+require 'json'
 
 require 'crowdring/twilio_service'
 require 'crowdring/kookoo_service'

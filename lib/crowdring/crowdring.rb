@@ -262,6 +262,28 @@ module Crowdring
       redirect to("/campaigns##{campaign.id}")
     end
 
+    get '/tags/new' do
+      haml :tag_new
+    end
+
+    post '/tags/create' do
+      tag = Tag.new(params)
+      if tag.save
+        flash[:notice] = "#{tag} tag created"
+        redirect to('/')
+      end
+    end
+
+    get '/tags/tags.json' do
+      content_type :json
+
+      tags = [{label: 'apple', category: 'fruit'},
+       {label: 'banana', category: 'fruit'},
+        {label: 'beef', category: 'meat'}]
+
+      Tag.all.map {|tag| {category: tag.type, label: tag.value} }.to_json
+    end
+
     run! if app_file == $0
   end
 end

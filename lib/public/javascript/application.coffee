@@ -81,11 +81,8 @@ removeFilter = (btn) ->
 removeTag = (btn) ->
   btn.parent().remove()
 
-addTag = (parent, id) ->
-  tagName = $('input, tag-name', parent).val()
-  if tagName == ""
-    return
-  fullTagName = $('select, filter-type', parent).val() + ':' + tagName
+addTag = (parent, item, id) ->
+  fullTagName = item.category + ':' + item.label
   newTag = tagFor(fullTagName, id)
   $('button', newTag).click ->
     removeTag($(this))
@@ -101,12 +98,24 @@ newFilterMessage = ->
   $('#add-tag-button', newDiv).click ->
     addTag(newDiv, id)
     
-  $('input, tag-name', newDiv).keypress (evt) ->
+  $('.tag-name', newDiv).keypress (evt) ->
     if evt.which == 13
       $('#add-tag-button', newDiv).click()
       return false
   $('#remove-filter-button', newDiv).click ->
     removeFilter($(this))
+
+  $.getJSON('/tags/tags.json', (data) ->
+    $('.tag-name', newDiv).catcomplete({
+      delay: 0, 
+      source: data,
+      autoFocus: true,
+      minLength: 0,
+      select: (evt, ui) ->
+        addTag($(this).parent(), ui.item, id)
+        return false
+    }))
+
 
 $ ->
   $('select.campaign-select').chosen()
@@ -118,11 +127,22 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
-  $("#new-filter-button").click -> newFilterMessage()
+
+  $.getJSON('/tags/tags.json', (data) ->
+    $('.tag-name').catcomplete({
+      delay: 0, 
+      source: data,
+      autoFocus: true,
+      minLength: 0,
+      select: (evt, ui) ->
+        addTag($(this).parent(), ui.item, $(this).parent().index())
+        return false
+    }))
 
   window.removeTag = (btn) -> removeTag(btn)
   window.addTag = (div, id) -> addTag(div, id)
   window.removeFilter = (btn) -> removeFilter(btn)
+  window.addFilter = -> newFilterMessage()
 
 
 
