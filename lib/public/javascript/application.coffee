@@ -82,7 +82,7 @@ removeTag = (btn) ->
   btn.parent().remove()
 
 addTag = (parent, item, id) ->
-  fullTagName = item.category + ':' + item.label
+  fullTagName = item.label
   newTag = tagFor(fullTagName, id)
   $('button', newTag).click ->
     removeTag($(this))

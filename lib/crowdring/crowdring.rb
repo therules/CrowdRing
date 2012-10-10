@@ -280,11 +280,7 @@ module Crowdring
     get '/tags/tags.json' do
       content_type :json
 
-      tags = [{label: 'apple', category: 'fruit'},
-       {label: 'banana', category: 'fruit'},
-        {label: 'beef', category: 'meat'}]
-
-      Tag.all.map {|tag| {category: tag.type, label: tag.value} }.to_json
+      Tag.all.map {|tag| {category: tag.type, visible_label: tag.value, label: tag.to_s} }.to_json
     end
 
     run! if app_file == $0
