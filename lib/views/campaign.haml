@@ -10,55 +10,67 @@
     %button «Back to Home
 
 #campaign-information
-  #campaign-details
-    %h2= @campaign.title
-    -@campaign.assigned_phone_numbers.each do |number|
-      %h3= number.pretty_phone_number
-    =haml :introductory_response, locals: {introductory_response: @campaign.introductory_response}
-    #campaign-ringers
-      .counts
-        %h4.total_count
-          = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
-        %h4.unique_count
-          = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
-      #ringers-numbers
-        %ul.ringers
-          -@ringers.each do |ringer|
-            %li= ringer.pretty_phone_number
-        .number-fade-out 
+  #tabs
+    %ul
+      %li
+        %a{href: "#campaign-details"}
+          %span Campaign Details
+      %li
+        %a{href: "#broadcast"}
+          %span BroadCast
+      %li
+        %a{href: "#export"}
+          %span Export To CSV
 
-    
-  #broadcast.form-box
-    %h3 Broadcast
-    %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
-      #filter-container
-        #broadcast-filter.filter-buttons
-          %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-          %label.all-label{for: 'all1'}= "All #{@ringer_count}"
-          %input#new1{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
-          %label.new-label{for: 'new1'}= "#{@campaign.new_memberships.count} New"
-          %input#country1{type: 'radio', name: 'filter', value: 'country:'}
-          %label{for: 'country1'} Country
-      #filter-options{style: 'display:none'}
-      %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello ringers...'}
-      %button#broadcastbutton{disabled: 'disabled'} Broadcast
+    #campaign-details
+      %h2= @campaign.title
+      -@campaign.assigned_phone_numbers.each do |number|
+        %h3= number.pretty_phone_number
+      =haml :introductory_response, locals: {introductory_response: @campaign.introductory_response}
+      #campaign-ringers
+        .counts
+          %h4.total_count
+            = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
+          %h4.unique_count
+            = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
+        #ringers-numbers
+          %ul.ringers
+            -@ringers.each do |ringer|
+              %li= ringer.pretty_phone_number
+          .number-fade-out 
 
-  #export.form-box
-    %h3 Export to CSV
-    %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
-      #filter-container
-        #export-filter.filter-buttons
-          %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-          %label.all-label{for: 'all2'}= "All #{@ringer_count}"
-          %input#new2{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
-          %label.new-label{for: 'new2'}= "#{@campaign.new_memberships.count} New"
-          %input#country2{type: 'radio', name: 'filter', value: 'country:'}
-          %label{for: 'country2'} Country
-      #filter-options{style: 'display:none'}
-      -@all_fields.each do |field|
-        %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
-      %button#exportbutton Export
-  #basic-chart= high_chart("basic-chart", @basic_chart) 
+    #broadcast.form-box
+      %h3 Broadcast
+      %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
+        #filter-container
+          #broadcast-filter.filter-buttons
+            %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
+            %label.all-label{for: 'all1'}= "All #{@ringer_count}"
+            %input#new1{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
+            %label.new-label{for: 'new1'}= "#{@campaign.new_memberships.count} New"
+            %input#country1{type: 'radio', name: 'filter', value: 'country:'}
+            %label{for: 'country1'} Country
+        #filter-options{style: 'display:none'}
+        %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello ringers...'}
+        %button#broadcastbutton{disabled: 'disabled'} Broadcast
+
+    #export.form-box
+      %h3 Export to CSV
+      %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
+        #filter-container
+          #export-filter.filter-buttons
+            %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
+            %label.all-label{for: 'all2'}= "All #{@ringer_count}"
+            %input#new2{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
+            %label.new-label{for: 'new2'}= "#{@campaign.new_memberships.count} New"
+            %input#country2{type: 'radio', name: 'filter', value: 'country:'}
+            %label{for: 'country2'} Country
+        #filter-options{style: 'display:none'}
+        -@all_fields.each do |field|
+          %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
+        %button#exportbutton Export
+
+#basic-chart= high_chart("basic-chart", @basic_chart) 
 
 #country-options{style: 'display:none'}
   %form

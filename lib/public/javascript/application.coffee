@@ -29,6 +29,8 @@ setupBroadcastTextArea = ->
     allowed: character_limit,
     warning: 20,
   })
+setupTabs = ->
+  $( "#tabs" ).tabs()
 
 setupFilters = (buttons) ->
   $(buttons).buttonset()
@@ -64,6 +66,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
         setupBroadcastTextArea()
         setupFilters('#broadcast-filter')
         setupFilters('#export-filter')
+        setupTabs()
     ).error(-> window.location.replace '/')
 
     channel_name = campaign
@@ -127,7 +130,8 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
-
+  
+  
   $.getJSON('/tags/tags.json', (data) ->
     $('.tag-name').catcomplete({
       delay: 0, 
