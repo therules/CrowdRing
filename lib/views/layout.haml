@@ -28,7 +28,7 @@
         %img.logo{src: '/crowdringlogo.png'}
       %a{href: '/'}
         %h1 CROWDRING
-      #login-logout=render_login_logout
+      =haml :user_header
     -if flash.has?(:notice)
       .notice= flash[:notice]
     -if flash.has?(:errors)

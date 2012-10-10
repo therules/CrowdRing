@@ -17,5 +17,10 @@ namespace :db do
     DataMapper.setup(:default, database_url)
     DataMapper.finalize
     DataMapper.auto_migrate!
+
+    User.set(
+      email: ENV["ADMIN_EMAIL"] || 'nherzing@gmail.com',
+      password: ENV["ADMIN_PASSWORD"] || 'password',
+      password_confirmation: ENV["ADMIN_PASSWORD"] || 'password')
   end
 end

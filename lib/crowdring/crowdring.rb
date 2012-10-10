@@ -49,18 +49,6 @@ module Crowdring
 
 
     helpers do
-      def protected!
-        unless authorized?
-          response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
-          throw(:halt, [401, "Not authorized\n"])
-        end
-      end
-
-      def authorized?
-        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [ENV['USERNAME'], ENV['PASSWORD']]
-      end
-
       def to_attributes(options)
         options.map {|k, v| v.nil? ? '' : " #{k}='#{v}'"}.join
       end
@@ -70,12 +58,13 @@ module Crowdring
       end
     end
 
-    before { protected! unless request.path_info =~ /(voice|sms)response/ }
-    before {
-      if request.path_info =~ /(voice|sms)response/
-        Crowdring.statsd.increment "#{$1}_received.count"
-      end
-    }
+    before /^((?!((voice|sms)response)|login).)*$/ do
+      login_required unless settings.environment == :test
+    end
+
+    before /(voice|sms)response/ do
+      Crowdring.statsd.increment "#{$1}_received.count"
+    end
 
     def sms_response
       proc {|to| 
@@ -281,6 +270,25 @@ module Crowdring
       content_type :json
 
       Tag.all.map {|tag| {category: tag.type, visible_label: tag.value, label: tag.to_s} }.to_json
+    end
+
+    get '/newuser' do
+      haml :newuser
+    end
+
+    post '/newuser' do
+      @user = User.set(params[:user])
+      if @user.valid && @user.id
+        if Rack.const_defined?('Flash')
+          flash[:notice] = "Account created."
+        end
+        redirect '/users'
+      else
+        if Rack.const_defined?('Flash')
+          flash[:errors] = "#{@user.errors}"
+        end
+        redirect '/newuser?' + hash_to_query_string(params['user'])
+      end
     end
 
     run! if app_file == $0

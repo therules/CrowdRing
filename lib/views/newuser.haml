@@ -1,0 +1,16 @@
+#sinatra_authentication.rounded-box
+  %h2 New User
+  %form{action: "/newuser", method: "post"}
+    .field
+      .label
+        %label{for: "user_email"} Email
+      %input{ id: "user_email", name: "user[email]", size: 30, type: "text" , value: params[:email]}
+    .field
+      .label
+        %label{for: "user_password"} Password
+      %input{ id: "user_password", name: "user[password]", size: 30, type: "password" }
+    .field
+      .label
+        %label{for: "user_password_confirmation"} Confirm Password
+      %input{ id: "user_password_confirmation", name: "user[password_confirmation]", size: 30, type: "password" }
+    %button Create User

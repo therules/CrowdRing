@@ -1,0 +1,6 @@
+#user-header
+  -if logged_in?
+    -if current_user.admin?
+      %a{href: '/users'} manage users
+    %a{href: "/users/#{current_user.id}/edit"} manage account
+    %a{href: '/logout'} logout

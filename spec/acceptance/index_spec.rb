@@ -18,7 +18,6 @@ describe 'Filtering ringers', type: :request, js: true do
     @number3 = '+18003333333'
     @campaign = Crowdring::Campaign.create(title: 'title', introductory_response: Crowdring::IntroductoryResponse.create_with_default('default'))
     @campaign.assigned_phone_numbers.create(phone_number: @number)
-    page.driver.browser.authorize 'admin', 'admin'
   end
 
   it 'Filtering ringers based on who has joined since the most recent broadcast' do
