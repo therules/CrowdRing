@@ -12,7 +12,15 @@ module Crowdring
     has n, :assigned_phone_numbers, constraint: :destroy
     has n, :memberships, 'CampaignMembership', constraint: :destroy
     has n, :ringers, through: :memberships
-    has 1, :introductory_response, constraint: :destroy
+    belongs_to :introductory_response
+
+    before :create do
+      introductory_response.save
+    end 
+
+    before :update do
+      introductory_response.save
+    end
 
     def assigned_phone_numbers=(numbers)
       if !numbers.empty? and numbers.first.is_a? String
@@ -22,8 +30,11 @@ module Crowdring
       super numbers
     end
 
-    def default_response=(message)
-      introductory_response.default_response = message
+    def all_errors
+      allerrors = [errors]
+      allerrors += assigned_phone_numbers ? assigned_phone_numbers.map(&:errors) : []
+      allerrors += introductory_response ? [introductory_response.errors] : []
+      allerrors
     end
 
     def join(ringer)

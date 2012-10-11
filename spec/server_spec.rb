@@ -25,23 +25,27 @@ module Crowdring
 
     describe 'campaign creation/deletion' do
       it 'should create a new campaign given a valid title, number, and introductory message' do
-        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers}}
+        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers, 
+            'introductory_response' => {'default_message' => 'default'}}}
         Campaign.first(title: 'title').should_not be_nil
       end
 
       it 'should redirect to campaign view on successful campaign creation' do
-        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers}}
+        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers,
+          'introductory_response' => {'default_message' => 'default'}}}
         last_response.should be_redirect
         last_response.location.should match("campaigns##{Regexp.quote(Campaign.first(title: 'title').id.to_s)}$")
       end
 
       it 'should not create a campaign when given a empty title' do
-        post '/campaign/create', {'campaign' => {'title' => '', 'assigned_phone_numbers' => @numbers}}
+        post '/campaign/create', {'campaign' => {'title' => '', 'assigned_phone_numbers' => @numbers,
+          'introductory_response' => {'default_message' => 'default'}}}
         Campaign.first(title: 'title').should be_nil
       end
 
       it 'should not create a campaign when given an extremely long title' do
-        post '/campaign/create', {'campaign' => {'title' => 'foobar'*100, 'assigned_phone_numbers' => @numbers}}
+        post '/campaign/create', {'campaign' => {'title' => 'foobar'*100, 'assigned_phone_numbers' => @numbers,
+          'introductory_response' => {'default_message' => 'default'}}}
         Campaign.first(title: 'foobar'*100).should be_nil
       end
 

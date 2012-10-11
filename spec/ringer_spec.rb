@@ -6,6 +6,7 @@ describe Crowdring::Ringer do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
+    @intro_response = Crowdring::IntroductoryResponse.create(default_message: 'default')
   end
 
   it 'should not create two ringers with the same phone number' do
@@ -18,8 +19,8 @@ describe Crowdring::Ringer do
   end
 
   it 'should belong to many different campaigns' do
-    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_response: @intro_response)
-    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_response: @intro_response)
+    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_response: @intro_response, assigned_phone_numbers: [@number2])
+    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_response: @intro_response, assigned_phone_numbers: [@number3])
     ringer = Crowdring::Ringer.create(phone_number: @number1)
 
     ringer.campaigns << camp1;

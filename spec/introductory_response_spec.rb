@@ -18,6 +18,28 @@ describe Crowdring::IntroductoryResponse do
     Crowdring::CompositeService.instance.add('foo', @fooservice) 
   end
 
+  it 'should not allow creation of a filtered message with no filters' do
+    intro_response = Crowdring::IntroductoryResponse.new()
+    intro_response.valid?.should be_false
+  end
+
+  it 'should not allow creation of an empty default message with no other messages' do
+    intro_response = Crowdring::IntroductoryResponse.new(default_message: '')
+    intro_response.default_message.should be_nil
+    intro_response.valid?.should be_false
+  end
+
+  it 'should allow creation of an empty default message when other messages are provided' do
+    intro_response = Crowdring::IntroductoryResponse.new(
+      default_message: '',
+      filtered_messages: [{tags: ['area code:814'], message: 'to 814'}])
+    intro_response.save.should be_true
+    ir = Crowdring::IntroductoryResponse.first
+    ir.should_not be_nil
+    ir.default_message.should be_nil
+    ir.filtered_messages.count.should eq(1)
+  end
+
   it 'should send the default message if no filters are provided' do
     @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 

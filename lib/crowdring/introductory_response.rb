@@ -5,8 +5,9 @@ module Crowdring
     property :id, Serial
 
     has n, :filtered_messages, constraint: :destroy
+
+    validates_presence_of :filtered_messages
     
-    belongs_to :campaign, required: false
 
     def filtered_messages=(messages)
       messages = messages.values if messages.is_a? Hash
@@ -14,6 +15,7 @@ module Crowdring
     end
 
     def default_message=(message)
+      return if message.empty?
       default_filtered_message.destroy if default_filtered_message
       filtered_messages.new(tag_filter: TagFilter.create, message: message, priority: 100)
     end
@@ -27,7 +29,11 @@ module Crowdring
     end
 
     def default_message
-      default_filtered_message.message
+      if default_filtered_message.nil?
+        nil
+      else
+        default_filtered_message.message
+      end
     end
 
     def nondefault_messages

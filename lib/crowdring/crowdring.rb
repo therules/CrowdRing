@@ -153,7 +153,7 @@ module Crowdring
         flash[:notice] = "Campaign updated"
         redirect to("/campaigns##{campaign.id}")
       else
-        flash[:errors] = campaign.errors.full_messages.join('|')
+        flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
         redirect to('/campaign/new')
       end
     end
@@ -165,8 +165,8 @@ module Crowdring
         flash[:notice] = "Campaign created"
         redirect to("/campaigns##{campaign.id}")
       else
-        flash[:errors] = campaign.errors.full_messages.join('|')
-        redirect to("campaign/#{@campaign.id}/edit")
+        flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
+        redirect to("campaign/#{campaign.id}/edit")
       end
     end
 

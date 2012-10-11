@@ -5,7 +5,7 @@ describe Crowdring::Campaign do
     DataMapper.auto_migrate!
     @number1 = '+18001111111'
     @number2 = '+18002222222'
-    @c = Crowdring::Campaign.create(title: 'test', introductory_response: @intro_response)
+    @c = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.new(default_message:'default'))
   end
 
   it 'should create a campaign with multiple assigned phone numbers' do
