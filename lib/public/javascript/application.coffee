@@ -100,11 +100,7 @@ newFilterMessage = ->
 
   $('#add-tag-button', newDiv).click ->
     addTag(newDiv, id)
-    
-  $('.tag-name', newDiv).keypress (evt) ->
-    if evt.which == 13
-      $('#add-tag-button', newDiv).click()
-      return false
+      
   $('#remove-filter-button', newDiv).click ->
     removeFilter($(this))
 
