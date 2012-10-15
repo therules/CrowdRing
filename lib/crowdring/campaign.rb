@@ -27,7 +27,7 @@ module Crowdring
 
     def unique_rings
       ringers_to_rings = rings.all.reduce({}) do |res, ring|
-        res.merge(res.key?(ring.ringer_id) ? {ring.ringer_id.to_sym => ring} : {})
+        res.merge(res.key?(ring.ringer_id) ? {} : {ring.ringer_id => ring})
       end
       ringers_to_rings.values
     end

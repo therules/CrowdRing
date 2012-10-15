@@ -39,7 +39,7 @@ module Crowdring
     end
 
     add_field 'phone_number', 'Phone Number', default: true
-    add_field 'support_date', 'Support Date', default: true
+    add_field 'created_at', 'Support Date', default: true
     add_field 'country_code', 'Country Code'
     add_field 'area_code', 'Area Code'
     add_field 'country_abbreviation', 'Country Abbreviation'

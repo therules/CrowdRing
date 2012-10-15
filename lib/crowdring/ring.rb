@@ -13,5 +13,6 @@ module Crowdring
     def phone_number
       ringer.phone_number
     end
+
   end
 end

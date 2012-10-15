@@ -240,7 +240,7 @@ module Crowdring
       end
 
       it 'should return a csv file' do
-        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: {phone_number: 'yes', support_date: 'yes'}}
+        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: {phone_number: 'yes', created_at: 'yes'}}
         last_response.header['Content-Disposition'].should match('attachment')
         last_response.header['Content-Disposition'].should match('\.csv')
       end
@@ -250,7 +250,7 @@ module Crowdring
         headers = csv_ringers[0]
         fields.zip(headers).each {|f, h| h.should eq(CsvField.from_id(f).display_name) }
         csv_ringers[1..-1].zip(memberships).each do |csvRinger, origRinger|
-          fields.each_with_index {|field, idx| csvRinger[idx].should eq(origRinger.send(field)) }
+          fields.each_with_index {|field, idx| csvRinger[idx].should eq(origRinger.send(field).to_s) }
         end
       end
 
@@ -260,7 +260,7 @@ module Crowdring
         @campaign.assigned_phone_numbers.first.ring(r1)
         @campaign.assigned_phone_numbers.first.ring(r2)
         
-        fields = {phone_number: 'yes', support_date: 'yes'}
+        fields = {phone_number: 'yes', created_at: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
         verify_csv(last_response.body, @campaign.unique_rings, fields.keys)
       end
