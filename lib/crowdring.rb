@@ -32,7 +32,7 @@ require 'crowdring/tag'
 require 'crowdring/tag_filter'
 require 'crowdring/ask'
 require 'crowdring/filtered_message'
-require 'crowdring/introductory_response'
+require 'crowdring/message'
 require 'crowdring/csv_fields'
 
 require 'crowdring/high_charts_builder'

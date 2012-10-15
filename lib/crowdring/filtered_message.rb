@@ -3,7 +3,7 @@ module Crowdring
     include DataMapper::Resource
 
     property :id,       Serial
-    property :message,  String, required: true
+    property :message_text,  String, required: true
     property :priority, Integer
 
     has 1, :tag_filter, through: Resource, constraint: :destroy
@@ -16,7 +16,7 @@ module Crowdring
       if tag_filter.accept?(params[:to])
         CompositeService.instance.send_sms(
           from: params[:from], to: params[:to].phone_number, 
-          msg: message)
+          msg: message_text)
         true
       else
         false

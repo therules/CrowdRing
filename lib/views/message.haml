@@ -1,7 +1,7 @@
-#introductory_response
+#message
   %h3 Messages
   #messages 
-    -introductory_response.nondefault_messages.each do |fm|
+    -message.nondefault_messages.each do |fm|
       %label When:
       .message
         -fm.tag_filter.tags.each do |tag|
@@ -12,4 +12,4 @@
         = "\"#{fm.message}\""
     %label Default:
     .message  
-      = "\"#{introductory_response.default_message}\""
+      = "\"#{message.default_message}\""

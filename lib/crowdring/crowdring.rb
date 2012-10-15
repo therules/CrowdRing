@@ -85,7 +85,7 @@ module Crowdring
         campaign = AssignedPhoneNumber.get(request.to).campaign
         ringer = Ringer.first_or_create(phone_number: from)
         AssignedPhoneNumber.get(request.to).ring(ringer)
-        campaign.introductory_response.send_message(from: request.to, to: ringer)
+        campaign.message.send_message(from: request.to, to: ringer)
       end
 
       cur_service.build_response(request.to, response.(from))

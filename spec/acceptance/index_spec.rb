@@ -18,7 +18,7 @@ describe 'Filtering ringers', type: :request, js: true do
     @number3 = '+18003333333'
     @campaign = Crowdring::Campaign.create(
       title: 'title', 
-      introductory_response: Crowdring::IntroductoryResponse.new(default_message:'default'),
+      message: Crowdring::Message.new(default_message:'default'),
       assigned_phone_numbers: [@number])
   end
 

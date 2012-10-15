@@ -11,14 +11,14 @@ module Crowdring
 
     has n, :rings, constraint: :destroy
     has n, :assigned_phone_numbers, constraint: :destroy
-    belongs_to :introductory_response
+    belongs_to :message
 
     before :create do
-      introductory_response.save
+      message.save
     end 
 
     before :update do
-      introductory_response.save
+      message.save
     end
 
     def ringers
@@ -47,7 +47,7 @@ module Crowdring
     def all_errors
       allerrors = [errors]
       allerrors += assigned_phone_numbers ? assigned_phone_numbers.map(&:errors) : []
-      allerrors += introductory_response ? [introductory_response.errors] : []
+      allerrors += message ? [message.errors] : []
       allerrors
     end
 

@@ -15,13 +15,13 @@
             %option #{n}
     %h3 Introductory Message
     #filtered-messages
-      -@campaign.introductory_response.nondefault_messages.each_with_index do |fm, i|
+      -@campaign.message.nondefault_messages.each_with_index do |fm, i|
         =haml :filtered_message_template, locals: {tags: fm.tag_filter.tags, message: fm.message, id: i }
     %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
     .field
       %label Default Message:
-      %textarea.msg-text-area{name: 'campaign[introductory_response][default_message]', placeholder: 'Thanks for supporting...'}
-        =@campaign.introductory_response.default_message
+      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
+        =@campaign.message.default_message
     %button{type: 'submit'} Update
 %a{href: "/campaigns##{@campaign.id}"} 
   %button « Back to dashboard

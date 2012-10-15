@@ -20,7 +20,7 @@ describe Crowdring::FilteredMessage do
     tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     tag_filter.tags << pittsburgh
-    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message: 'msg')
+    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     item1 = double('item1', tags: [pittsburgh], phone_number: @number2)
 
@@ -32,7 +32,7 @@ describe Crowdring::FilteredMessage do
     tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     tag_filter.tags << pittsburgh
-    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message: 'msg')
+    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     item1 = double('item1', tags: [pittsburgh], phone_number: @number2)
 
@@ -44,7 +44,7 @@ describe Crowdring::FilteredMessage do
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
     tag_filter.tags << chicago
-    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message: 'msg')
+    fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     item1 = double('item1', tags: [pittsburgh], phone_number: @number2)
 

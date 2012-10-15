@@ -1,5 +1,5 @@
 module Crowdring
-  class IntroductoryResponse
+  class Message
     include DataMapper::Resource
 
     property :id, Serial
@@ -10,6 +10,7 @@ module Crowdring
     
 
     def filtered_messages=(messages)
+      return super messages if !messages.is_a? Hash
       messages = messages.values if messages.is_a? Hash
       messages.each_with_index.each {|m, i| filtered_messages.new(m.merge({priority: i})) }
     end
@@ -17,11 +18,11 @@ module Crowdring
     def default_message=(message)
       return if message.empty?
       default_filtered_message.destroy if default_filtered_message
-      filtered_messages.new(tag_filter: TagFilter.create, message: message, priority: 100)
+      filtered_messages.new(tag_filter: TagFilter.create, message_text: message, priority: 100)
     end
 
     def add_message(filter, message)
-      filtered_messages.create(tag_filter: filter, message: message, priority: filtered_messages.count)
+      filtered_messages.create(tag_filter: filter, message_text: message, priority: filtered_messages.count)
     end
 
     def send_message(params)
@@ -32,7 +33,7 @@ module Crowdring
       if default_filtered_message.nil?
         nil
       else
-        default_filtered_message.message
+        default_filtered_message.message_text
       end
     end
 

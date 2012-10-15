@@ -5,13 +5,14 @@ module Crowdring
     property :id, Serial
     property :type, Discriminator
 
+    belongs_to :message, required: false
     belongs_to :triggered_ask, 'Ask', required: false
 
-    def respond(ringer)
-      ringer.tags << respondent_tag
-      ringer.save
+    def respond(ring)
+      ring.ringer.tags << respondent_tag
+      ring.ringer.save
 
-      triggered_ask.trigger_for(ringer) if triggered_ask
+      triggered_ask.trigger_for(ring) if triggered_ask
     end
 
     def recipients(ringers)
@@ -22,9 +23,11 @@ module Crowdring
       ringers.select {|r| r.tags.include?(respondent_tag)}
     end
 
-    def trigger_for(ringer)
-      ringer.tags << recipient_tag
-      ringer.save
+    def trigger_for(ring)
+      ring.ringer.tags << recipient_tag
+      ring.ringer.save
+
+      message.send_message(to: ring.ringer, from: ring.number_rang.phone_number) if message
     end
   end
 

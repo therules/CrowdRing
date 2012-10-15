@@ -6,7 +6,7 @@ describe Crowdring::Campaign do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
-    @c = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.new(default_message:'default'))
+    @c = Crowdring::Campaign.create(title: 'test', message: Crowdring::Message.new(default_message:'default'))
   end
 
   it 'should create a campaign with multiple assigned phone numbers' do
@@ -36,9 +36,9 @@ describe Crowdring::Campaign do
   end
 
   it 'should not allow assigning the same number to multiple campaigns' do
-    c1 = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.create(default_message:'intro msg'))
+    c1 = Crowdring::Campaign.create(title: 'test', message: Crowdring::Message.create(default_message:'intro msg'))
     c1.assigned_phone_numbers.create(phone_number: @number1)
-    c2 = Crowdring::Campaign.create(title: 'test2', introductory_response: Crowdring::IntroductoryResponse.create(default_message:'intro msg'))
+    c2 = Crowdring::Campaign.create(title: 'test2', message: Crowdring::Message.create(default_message:'intro msg'))
     expect {c2.assigned_phone_numbers.create(phone_number: @number1)}.to raise_error(DataObjects::IntegrityError)
   end
 
