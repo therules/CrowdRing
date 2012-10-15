@@ -275,18 +275,22 @@ module Crowdring
       end
 
       it 'should export the ringers country codes' do
-        @campaign.ringers.create(phone_number: @number2)
-        @campaign.ringers.create(phone_number: @number3)
-
+        r1 = Crowdring::Ringer.create(phone_number: @number2)
+        r2 = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(r1)
+        @campaign.assigned_phone_numbers.first.ring(r2)
+        
         fields = {country_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
         verify_csv(last_response.body, @campaign.new_rings, fields.keys)
       end
 
       it 'should export the ringers area codes' do
-        @campaign.ringers.create(phone_number: @number2)
-        @campaign.ringers.create(phone_number: @number3)
-
+        r1 = Crowdring::Ringer.create(phone_number: @number2)
+        r2 = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(r1)
+        @campaign.assigned_phone_numbers.first.ring(r2)
+        
         fields = {area_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
         verify_csv(last_response.body, @campaign.new_rings, fields.keys)

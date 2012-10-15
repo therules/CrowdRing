@@ -1,4 +1,12 @@
 module Crowdring
+  class RingerTagging
+    include DataMapper::Resource
+
+    belongs_to :ringer, key: true
+    belongs_to :tag, key: true
+  end
+
+
   class Ringer
     include DataMapper::Resource
     include PhoneNumberFields
@@ -7,7 +15,8 @@ module Crowdring
     property :phone_number, String, unique: true
     property :created_at,   DateTime
 
-    has n, :tags, through: Resource, constraint: :skip
+    has n, :ringer_taggings, constraint: :destroy
+    has n, :tags, through: :ringer_taggings, constraint: :skip
 
     has n, :rings, constraint: :destroy
     

@@ -25,6 +25,10 @@ module Crowdring
       rings.all.ringer
     end
 
+    def ring(ringer, number_rang)
+      rings.create(ringer: ringer, number_rang: number_rang)
+    end
+
     def unique_rings
       ringers_to_rings = rings.all.reduce({}) do |res, ring|
         res.merge(res.key?(ring.ringer_id) ? {} : {ring.ringer_id => ring})
