@@ -24,9 +24,10 @@ describe 'Filtering ringers', type: :request, js: true do
 
   it 'Filtering ringers based on who has joined since the most recent broadcast' do
     origRinger = Crowdring::Ringer.create(phone_number: @number2)
-    @campaign.memberships.create(ringer: origRinger, created_at: DateTime.now-2)
+    @campaign.rings.create(ringer: origRinger, created_at: DateTime.now-2, number_rang: @campaign.assigned_phone_numbers.first)
     @campaign.most_recent_broadcast = DateTime.now - 1
-    newRinger = @campaign.ringers.create(phone_number: @number3)
+    newRinger = Crowdring::Ringer.create(phone_number: @number3)
+    @campaign.assigned_phone_numbers.first.ring(newRinger)
    
     visit "/campaign/#{@campaign.id}"
     page.find("label[for=new1]").text.should match('1')
@@ -37,6 +38,6 @@ describe 'Filtering ringers', type: :request, js: true do
     end
 
     @logging_service.last_broadcast[:to_numbers].should eq([@number3])
-    Crowdring::Campaign.get(@campaign.id).new_memberships.count.should eq(0)
+    Crowdring::Campaign.get(@campaign.id).new_rings.count.should eq(0)
   end
 end

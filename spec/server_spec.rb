@@ -191,8 +191,11 @@ module Crowdring
 
 
       it 'should broadcast a message to all ringers of a campaign' do
-        @campaign.ringers.create(phone_number: @number2)
-        @campaign.ringers.create(phone_number: @number3)
+        r1 = Crowdring::Ringer.create(phone_number: @number2)
+        r2 = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(r1)
+        @campaign.assigned_phone_numbers.first.ring(r2)
+        
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
         @sent_to.should include(@number2)
         @sent_to.should include(@number3)
@@ -206,10 +209,12 @@ module Crowdring
 
       it 'should broadcast only to the new ringers of a campaign' do
         ringer = Crowdring::Ringer.create(phone_number: @number2)
-        @campaign.memberships.create(ringer: ringer, created_at: DateTime.now-2)
+        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2, number_rang:@campaign.assigned_phone_numbers.first)
+
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
-        @campaign.ringers.create(phone_number: @number3)
+        newringer = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
         @sent_to.should eq([@number3])
@@ -217,13 +222,15 @@ module Crowdring
 
       it 'should not have any new ringers after a broadcast' do
         ringer = Crowdring::Ringer.create(phone_number: @number2)
-        @campaign.memberships.create(ringer: ringer, created_at: DateTime.now-2)
+        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2, number_rang:@campaign.assigned_phone_numbers.first)
+
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
-        @campaign.ringers.create(phone_number: @number3)
+        newringer = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
-        Campaign.get(@campaign.id).new_memberships.should be_empty
+        Campaign.get(@campaign.id).new_rings.should be_empty
       end
     end
 
@@ -248,22 +255,23 @@ module Crowdring
       end
 
       it 'should export all of the ringers numbers and support dates' do
-        @campaign.ringers.create(phone_number: @number2)
-        @campaign.ringers.create(phone_number: @number3)
-
+        r1 = Crowdring::Ringer.create(phone_number: @number2)
+        r2 = Crowdring::Ringer.create(phone_number: @number3)
+        @campaign.assigned_phone_numbers.first.ring(r1)
+        @campaign.assigned_phone_numbers.first.ring(r2)
+        
         fields = {phone_number: 'yes', support_date: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
-        verify_csv(last_response.body, @campaign.memberships, fields.keys)
+        verify_csv(last_response.body, @campaign.unique_rings, fields.keys)
       end
 
       it 'should export only the new ringers numbers and support dates' do
-        @campaign.ringers.create(phone_number: @number2, created_at: DateTime.now - 2)
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
         @campaign.ringers.create(phone_number: @number3)
 
         get "/campaign/#{@campaign.id}/csv", {filter: "after:#{@campaign.most_recent_broadcast}"}
-        verify_csv(last_response.body, @campaign.new_memberships)
+        verify_csv(last_response.body, @campaign.new_rings)
       end
 
       it 'should export the ringers country codes' do
@@ -272,7 +280,7 @@ module Crowdring
 
         fields = {country_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
-        verify_csv(last_response.body, @campaign.memberships, fields.keys)
+        verify_csv(last_response.body, @campaign.new_rings, fields.keys)
       end
 
       it 'should export the ringers area codes' do
@@ -281,7 +289,7 @@ module Crowdring
 
         fields = {area_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
-        verify_csv(last_response.body, @campaign.memberships, fields.keys)
+        verify_csv(last_response.body, @campaign.new_rings, fields.keys)
       end
     end
   end

@@ -84,7 +84,7 @@ module Crowdring
       if AssignedPhoneNumber.get(request.to)
         campaign = AssignedPhoneNumber.get(request.to).campaign
         ringer = Ringer.first_or_create(phone_number: from)
-        campaign.join(ringer)
+        AssignedPhoneNumber.get(request.to).ring(ringer)
         campaign.introductory_response.send_message(from: request.to, to: ringer)
       end
 
@@ -184,8 +184,8 @@ module Crowdring
     get '/campaign/:id' do
       @campaign = Campaign.get(params[:id])
       if @campaign
-        @ringers =  @campaign.memberships.all(order: [:created_at.desc], limit: 10)
-        @ring_count = @campaign.ring_count
+        @ringers =  @campaign.rings.all(order: [:created_at.desc], limit: 10).ringer
+        @ring_count = @campaign.rings.count
         @ringer_count = @campaign.ringers.count
         @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields
@@ -200,11 +200,11 @@ module Crowdring
 
     get '/campaign/:id/csv' do
       attachment("#{params[:id]}.csv")
-      memberships = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).memberships)
+      rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).unique_rings)
       fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
         csv << fields.map {|f| f.display_name }
-        memberships.each {|s| csv << fields.map {|f| s.send(f.id) } }
+        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) } }
       end
     end
 
@@ -213,8 +213,8 @@ module Crowdring
       campaign = Campaign.get(params[:id])
       from = params[:from] || campaign.assigned_phone_numbers.first.phone_number
       message = params[:message]
-      memberships = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).memberships)
-      to = memberships.map(&:ringer).map(&:phone_number)
+      rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).rings)
+      to = rings.map(&:ringer).map(&:phone_number)
 
       Server.service_handler.broadcast(from, message, to)
       campaign.most_recent_broadcast = DateTime.now

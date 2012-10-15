@@ -18,27 +18,14 @@ describe Crowdring::Ringer do
     Crowdring::Ringer.create(phone_number: 'invalid!').saved?.should be_false
   end
 
-  it 'should belong to many different campaigns' do
-    camp1 = Crowdring::Campaign.create(title: 'camp1', introductory_response: @intro_response, assigned_phone_numbers: [@number2])
-    camp2 = Crowdring::Campaign.create(title: 'camp2', introductory_response: @intro_response, assigned_phone_numbers: [@number3])
-    ringer = Crowdring::Ringer.create(phone_number: @number1)
-
-    ringer.campaigns << camp1;
-    ringer.campaigns << camp2;
-
-    ringer.save.should be_true;
-    ringer.campaigns.should include(camp1)
-    ringer.campaigns.should include(camp2)
-  end
-
   it 'should destroy all relevant memberships when destroying a ringer' do
-    campaign = Crowdring::Campaign.create(title: 'campaign', introductory_response: @intro_response)
+    campaign = Crowdring::Campaign.create(title: 'campaign', introductory_response: @intro_response, assigned_phone_numbers: [@number2])
     ringer = Crowdring::Ringer.create(phone_number: @number1)
-    campaign.join(ringer)
+    campaign.assigned_phone_numbers.first.ring(ringer)
     ringer.destroy
 
     Crowdring::Ringer.all.count.should eq(0)
-    Crowdring::CampaignMembership.all.count.should eq(0)
+    Crowdring::Ring.all.count.should eq(0)
     Crowdring::Campaign.all.count.should eq(1)
   end
 

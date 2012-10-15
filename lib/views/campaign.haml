@@ -47,7 +47,7 @@
             %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
             %label.all-label{for: 'all1'}= "All #{@ringer_count}"
             %input#new1{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
-            %label.new-label{for: 'new1'}= "#{@campaign.new_memberships.count} New"
+            %label.new-label{for: 'new1'}= "#{@campaign.new_rings.count} New"
             %input#country1{type: 'radio', name: 'filter', value: 'country:'}
             %label{for: 'country1'} Country
         #filter-options{style: 'display:none'}
@@ -62,7 +62,7 @@
             %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
             %label.all-label{for: 'all2'}= "All #{@ringer_count}"
             %input#new2{type: 'radio', name: 'filter', value: "after:#{@campaign.most_recent_broadcast || @campaign.created_at}"}
-            %label.new-label{for: 'new2'}= "#{@campaign.new_memberships.count} New"
+            %label.new-label{for: 'new2'}= "#{@campaign.new_rings.count} New"
             %input#country2{type: 'radio', name: 'filter', value: 'country:'}
             %label{for: 'country2'} Country
         #filter-options{style: 'display:none'}

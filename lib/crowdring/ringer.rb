@@ -7,10 +7,9 @@ module Crowdring
     property :phone_number, String, unique: true
     property :created_at,   DateTime
 
-    has n, :campaign_memberships, constraint: :destroy
-    has n, :campaigns, through:  :campaign_memberships
-
     has n, :tags, through: Resource, constraint: :skip
+
+    has n, :rings, constraint: :destroy
     
     validates_with_method :phone_number, :valid_phone_number?
 

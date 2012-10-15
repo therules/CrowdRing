@@ -9,9 +9,8 @@ module Crowdring
     property :most_recent_broadcast, DateTime
     property :created_at,   DateTime
 
+    has n, :rings, constraint: :destroy
     has n, :assigned_phone_numbers, constraint: :destroy
-    has n, :memberships, 'CampaignMembership', constraint: :destroy
-    has n, :ringers, through: :memberships
     belongs_to :introductory_response
 
     before :create do
@@ -20,6 +19,17 @@ module Crowdring
 
     before :update do
       introductory_response.save
+    end
+
+    def ringers
+      rings.all.ringer
+    end
+
+    def unique_rings
+      ringers_to_rings = rings.all.reduce({}) do |res, ring|
+        res.merge(res.key?(ring.ringer_id) ? {ring.ringer_id.to_sym => ring} : {})
+      end
+      ringers_to_rings.values
     end
 
     def assigned_phone_numbers=(numbers)
@@ -37,21 +47,12 @@ module Crowdring
       allerrors
     end
 
-    def join(ringer)
-      membership = memberships.first_or_create(ringer: ringer)
-      membership.update(count: membership.count+1)
-    end
-
-    def new_memberships
+    def new_rings
       if most_recent_broadcast.nil?
-        memberships 
+        rings
       else
-        memberships.select { |s| s.created_at > most_recent_broadcast }
+        rings.select { |r| r.created_at > most_recent_broadcast }
       end
-    end
-
-    def ring_count
-      memberships.reduce(0) {|count, m| count + m.count }
     end
 
     def slug

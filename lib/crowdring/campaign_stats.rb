@@ -17,10 +17,10 @@ module Crowdring
 
 	class MemberTotal < CampaignStats
 		def calculate
-			memberships = @campaign.memberships.all(order: [:created_at.asc])  
-      datapoints = memberships.each_with_index.map {|membership, index| [membership.created_at.strftime('%Q').to_i, index + 1] } 
+			unique_rings = @campaign.unique_rings
+      datapoints = unique_rings.each_with_index.map {|ring, index| [ring.created_at.strftime('%Q').to_i, index + 1] } 
       datapoints.unshift([@campaign.created_at.strftime('%Q').to_i, 0])
-      datapoints << [DateTime.now.strftime('%Q').to_i, memberships.size]
+      datapoints << [DateTime.now.strftime('%Q').to_i, unique_rings.size]
     end
 
     register :member_total

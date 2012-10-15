@@ -5,13 +5,13 @@ describe Crowdring::Campaign do
     DataMapper.auto_migrate!
     @number1 = '+18001111111'
     @number2 = '+18002222222'
+    @number3 = '+18003333333'
     @c = Crowdring::Campaign.create(title: 'test', introductory_response: Crowdring::IntroductoryResponse.new(default_message:'default'))
   end
 
   it 'should create a campaign with multiple assigned phone numbers' do
-    
-    @c.assigned_phone_numbers.create(phone_number: @number1)
-    @c.assigned_phone_numbers.create(phone_number: @number2)
+    @c.assigned_phone_numbers = [@number1, @number2]
+    @c.save
 
     @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number1))
     @c.assigned_phone_numbers.should include(Crowdring::AssignedPhoneNumber.get(@number2))
@@ -43,57 +43,45 @@ describe Crowdring::Campaign do
   end
 
   it 'should have many ringers' do
-    @c.ringers.create(phone_number: @number1)
-    @c.ringers.create(phone_number: @number2)
+    @c.assigned_phone_numbers = [@number3]
+    @c.save
+    r1 = Crowdring::Ringer.create(phone_number: @number1)
+    r2 = Crowdring::Ringer.create(phone_number: @number2)
+    @c.rings.create(ringer: r1, number_rang: @c.assigned_phone_numbers.first)
+    @c.rings.create(ringer: r2, number_rang: @c.assigned_phone_numbers.first)
 
     @c.ringers.should include(Crowdring::Ringer.first(phone_number: @number1))
     @c.ringers.should include(Crowdring::Ringer.first(phone_number: @number2))
   end
 
   it 'should track the original date a ringer supported a campaign' do
-    s = Crowdring::Ringer.create(phone_number: @number2)
-    @c.join(s)
+    @c.assigned_phone_numbers = [@number3]
+    @c.save
+    r = Crowdring::Ringer.create(phone_number: @number2)
+    @c.assigned_phone_numbers.first.ring(r)
 
-    @c.memberships.first.created_at.to_date.should eq(Date.today)
+    @c.rings.first.created_at.to_date.should eq(Date.today)
   end
 
-  it 'should track a ringers most recent support of a campaign' do
-    s = Crowdring::Ringer.create(phone_number: @number2)
-    @c.join(s)
-    first_join = @c.memberships.first.updated_at
-    @c.join(s)
+  it 'should track all of the times a ringer rings a campaign' do
+    @c.assigned_phone_numbers = [@number3]
+    @c.save
+    r = Crowdring::Ringer.create(phone_number: @number2)
+    @c.assigned_phone_numbers.first.ring(r)
+    @c.assigned_phone_numbers.first.ring(r)
 
-    membership = @c.memberships.first
-    first_join.should be < membership.updated_at
+    @c.rings.count.should eq(2)
   end
 
-  it 'should track the number of times a ringer calls into a campaign' do
-    s = Crowdring::Ringer.create(phone_number: @number2)
-    @c.join(s)
-    @c.join(s)
-    @c.join(s)
-
-    @c.memberships.first.count.should eq(3)    
-  end
-
-  it 'should remove memberships when a campaign is destroyed' do
-    s = Crowdring::Ringer.create(phone_number: @number2)
-    @c.join(s)
+  it 'should remove rings when a campaign is destroyed' do
+    @c.assigned_phone_numbers = [@number3]
+    @c.save
+    r = Crowdring::Ringer.create(phone_number: @number2)
+    @c.assigned_phone_numbers.first.ring(r)
     @c.destroy
 
-    Crowdring::CampaignMembership.all.should be_empty
+    Crowdring::Ring.all.should be_empty
     Crowdring::Ringer.all.count.should eq(1)
   end
 
-  it 'should give the total number of rings, including non-unique' do
-    r1 = Crowdring::Ringer.create(phone_number: @number1)
-    r2 = Crowdring::Ringer.create(phone_number: @number2)
-
-    @c.join(r1)
-    @c.join(r2)
-    @c.join(r1)
-    @c.join(r1)
-
-    @c.ring_count.should eq(4)
-  end
 end
