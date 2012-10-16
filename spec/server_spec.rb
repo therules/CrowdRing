@@ -179,7 +179,7 @@ module Crowdring
     describe 'message broadcasting' do
       before(:each) do
         @sent_to = []
-        @campaign = Campaign.create(title: @number, message: @intro_response, assigned_phone_numbers: [@number])
+        @campaign = Campaign.create(title: @number, assigned_phone_numbers: [@number])
         fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         fooservice = double('fooservice', build_response: 'fooResponse',
             supports_outgoing?: true,
@@ -236,7 +236,7 @@ module Crowdring
 
     describe 'campaign exporting' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, message: @intro_response, assigned_phone_numbers: [@number])
+        @campaign = Campaign.create(title: @number, assigned_phone_numbers: [@number])
       end
 
       it 'should return a csv file' do

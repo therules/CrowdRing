@@ -6,7 +6,7 @@ describe Crowdring::Campaign do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
-    @c = Crowdring::Campaign.create(title: 'test', message: Crowdring::Message.new(default_message:'default'))
+    @c = Crowdring::Campaign.create(title: 'test')
   end
 
   it 'should create a campaign with multiple assigned phone numbers' do

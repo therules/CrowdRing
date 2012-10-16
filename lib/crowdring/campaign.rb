@@ -11,20 +11,12 @@ module Crowdring
 
     has n, :rings, constraint: :destroy
     has n, :assigned_phone_numbers, constraint: :destroy
-    belongs_to :message
     has n, :asks, through: Resource, constraint: :destroy
 
-    before :create do
-      message.save
-    end 
-
-    before :update do
-      message.save
-    end
-
     def initialize(opts)
+      message = opts.delete('message') || opts.delete(:message)
       super opts
-      ask = Ask.create_double_opt_in(opts[:message])
+      ask = Ask.create_double_opt_in(message)
       asks << ask
       asks << ask.triggered_ask
     end
@@ -57,7 +49,6 @@ module Crowdring
     def all_errors
       allerrors = [errors]
       allerrors += assigned_phone_numbers ? assigned_phone_numbers.map(&:errors) : []
-      allerrors += message ? [message.errors] : []
       allerrors
     end
 

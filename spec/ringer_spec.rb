@@ -6,7 +6,6 @@ describe Crowdring::Ringer do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
-    @intro_response = Crowdring::Message.create(default_message: 'default')
   end
 
   it 'should not create two ringers with the same phone number' do
@@ -19,7 +18,7 @@ describe Crowdring::Ringer do
   end
 
   it 'should destroy all relevant memberships when destroying a ringer' do
-    campaign = Crowdring::Campaign.create(title: 'campaign', message: @intro_response, assigned_phone_numbers: [@number2])
+    campaign = Crowdring::Campaign.create(title: 'campaign', assigned_phone_numbers: [@number2])
     ringer = Crowdring::Ringer.create(phone_number: @number1)
     campaign.assigned_phone_numbers.first.ring(ringer)
     ringer.destroy

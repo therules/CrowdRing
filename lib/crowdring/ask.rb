@@ -12,7 +12,7 @@ module Crowdring
     before :create do
       message.save if message
     end
-
+    
     def self.create_double_opt_in(message)
       offline_ask = OfflineAsk.create
       join_ask = JoinAsk.create(message: message)

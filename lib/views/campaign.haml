@@ -26,7 +26,7 @@
       %h2= @campaign.title
       -@campaign.assigned_phone_numbers.each do |number|
         %h3= number.pretty_phone_number
-      =haml :message, locals: {message: @campaign.message}
+      ** Actions view not implemented **
       #campaign-ringers
         .counts
           %h4.total_count
