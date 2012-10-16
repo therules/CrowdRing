@@ -4,13 +4,13 @@ module Crowdring
 
     property :id, Serial
 
-    has n, :filtered_messages, constraint: :destroy
+    has n, :filtered_messages, through: Resource, constraint: :destroy
 
     validates_presence_of :filtered_messages
     
 
     def filtered_messages=(messages)
-      return super messages if !messages.is_a? Hash
+     return super messages if !messages.is_a? Hash
       messages = messages.values if messages.is_a? Hash
       messages.each_with_index.each {|m, i| filtered_messages.new(m.merge({priority: i})) }
     end
