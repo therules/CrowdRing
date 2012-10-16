@@ -11,17 +11,22 @@ describe Crowdring::Ask do
 
   describe 'offline ask' do
     it 'should tag a ringer as a supporter on a response' do
-      ask = Crowdring::OfflineAsk.create(doubletap: false)
+      ask = Crowdring::OfflineAsk.create
       ask.respond(@ring)
 
       ask.respondents(Crowdring::Ringer.all).should eq([@ringer])
     end
 
     it 'should trigger the join ask upon receiving a response' do
-      ask = Crowdring::OfflineAsk.create(doubletap: true)
+      ask = Crowdring::Ask.create_double_opt_in(nil)
       ask.respond(@ring)
 
       ask.triggered_ask.recipients(Crowdring::Ringer.all).should eq([@ringer])
+    end
+
+    it 'should handle any incoming ring' do
+      ask = Crowdring::OfflineAsk.create
+      ask.handle?(@ring).should be_true
     end
   end
 
@@ -33,6 +38,14 @@ describe Crowdring::Ask do
       ask = Crowdring::JoinAsk.new(message: message)
       ask.trigger_for(@ring)
     end
+
+    it 'should handle an incoming ring that it has sent a join ask to' do
+      ask = Crowdring::JoinAsk.create
+      ask.handle?(@ring).should be_false
+      ask.trigger_for(@ring)
+      ask.handle?(@ring).should be_true
+    end
+
   end
 
 end

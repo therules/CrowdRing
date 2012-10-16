@@ -12,6 +12,7 @@ module Crowdring
     has n, :rings, constraint: :destroy
     has n, :assigned_phone_numbers, constraint: :destroy
     belongs_to :message
+    has n, :asks, through: Resource, constraint: :destroy
 
     before :create do
       message.save
@@ -21,12 +22,21 @@ module Crowdring
       message.save
     end
 
+    def initialize(opts)
+      super opts
+      ask = Ask.create_double_opt_in(opts[:message])
+      asks << ask
+      asks << ask.triggered_ask
+    end
+
     def ringers
       rings.all.ringer
     end
 
     def ring(ringer, number_rang)
-      rings.create(ringer: ringer, number_rang: number_rang)
+      ring = rings.create(ringer: ringer, number_rang: number_rang)
+      ask = asks.reverse.find {|ask| ask.handle?(ring) }
+      ask.respond(ring) if ask
     end
 
     def unique_rings

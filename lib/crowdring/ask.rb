@@ -4,9 +4,29 @@ module Crowdring
 
     property :id, Serial
     property :type, Discriminator
+    property :created_at, DateTime
 
     belongs_to :message, required: false
     belongs_to :triggered_ask, 'Ask', required: false
+
+    before :create do
+      message.save if message
+    end
+
+    def self.create_double_opt_in(message)
+      offline_ask = OfflineAsk.create
+      join_ask = JoinAsk.create(message: message)
+      offline_ask.triggered_ask = join_ask
+      offline_ask
+    end
+
+    def recipient_tag
+      Tag.from_str("#{id}:recipient")
+    end
+
+    def respondent_tag
+      Tag.from_str("#{id}:respondent")
+    end
 
     def respond(ring)
       ring.ringer.tags << respondent_tag
@@ -33,23 +53,14 @@ module Crowdring
 
 
   class OfflineAsk < Ask
-    def initialize(opts={doubletap: true})
-      self.triggered_ask = JoinAsk.create if opts[:doubletap]
-    end
-
-    def respondent_tag
-      Tag.from_str("#{id}:supporter")
+    def handle?(ring)
+      true
     end
   end
 
   class JoinAsk < Ask
-    def recipient_tag
-      Tag.from_str("#{id}:supporter")
+    def handle?(ring)
+      ring.ringer.tags.include? recipient_tag
     end
-
-    def respondent_tag
-      Tag.from_str("#{id}:subscriber")
-    end
-    
   end
 end
