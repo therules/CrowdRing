@@ -35,11 +35,11 @@ module Crowdring
       triggered_ask.trigger_for(ring) if triggered_ask
     end
 
-    def recipients(ringers)
+    def recipients(ringers=Ringer.all)
       ringers.select {|r| r.tags.include?(recipient_tag)}
     end
 
-    def respondents(ringers)
+    def respondents(ringers=Ringer.all)
       ringers.select {|r| r.tags.include?(respondent_tag)}
     end
 
@@ -56,11 +56,19 @@ module Crowdring
     def handle?(ring)
       true
     end
+
+    def typesym
+      :offline_ask
+    end
   end
 
   class JoinAsk < Ask
     def handle?(ring)
       ring.ringer.tags.include? recipient_tag
+    end
+
+    def typesym
+      :join_ask
     end
   end
 end

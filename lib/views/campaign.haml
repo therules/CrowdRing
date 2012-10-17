@@ -13,7 +13,7 @@
   #tabs
     %ul
       %li
-        %a{href: "#campaign-details"}
+        %a{href: "#campaign-overview"}
           %span Campaign Details
       %li
         %a{href: "#broadcast"}
@@ -22,22 +22,27 @@
         %a{href: "#export"}
           %span Export To CSV
 
-    #campaign-details
-      %h2= @campaign.title
-      -@campaign.assigned_phone_numbers.each do |number|
-        %h3= number.pretty_phone_number
-      ** Actions view not implemented **
-      #campaign-ringers
-        .counts
-          %h4.total_count
-            = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
-          %h4.unique_count
-            = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
-        #ringers-numbers
-          %ul.ringers
-            -@ringers.each do |ringer|
-              %li= ringer.pretty_phone_number
-          .number-fade-out 
+    #campaign-overview
+      #campaign-details
+        %h2= @campaign.title
+        -@campaign.assigned_phone_numbers.each do |number|
+          %h3= number.pretty_phone_number
+        ** Actions view not implemented **
+        #campaign-ringers
+          .counts
+            %h4.total_count
+              = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
+            %h4.unique_count
+              = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
+          #ringers-numbers
+            %ul.ringers
+              -@ringers.each do |ringer|
+                %li= ringer.pretty_phone_number
+            .number-fade-out 
+      #asks
+        -@campaign.asks.each do |ask|
+          =haml :ask, locals: {ask: ask, type: ask.typesym}
+
 
     #broadcast.form-box
       %h3 Broadcast
