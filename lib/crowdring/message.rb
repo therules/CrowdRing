@@ -10,8 +10,8 @@ module Crowdring
     
 
     def filtered_messages=(messages)
-     return super messages if !messages.is_a? Hash
-      messages = messages.values if messages.is_a? Hash
+     return super messages unless messages.is_a? Hash
+      messages = messages.values 
       messages.each_with_index.each {|m, i| filtered_messages.new(m.merge({priority: i})) }
     end
 
