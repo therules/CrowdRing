@@ -67,15 +67,11 @@ module Crowdring
     end
 
     def sms_response
-      proc {|to| 
-        []
-      }
+      []
     end
 
     def voice_response
-      proc {|to|
-        [{cmd: :reject}]
-      }
+      [{cmd: :reject}]
     end
 
     def respond(cur_service, request, response)
@@ -86,7 +82,7 @@ module Crowdring
         AssignedPhoneNumber.get(request.to).ring(ringer)
       end
 
-      cur_service.build_response(request.to, response.(from))
+      cur_service.build_response(request.to, response)
     end
 
     def process_request(service_name, request, response)
