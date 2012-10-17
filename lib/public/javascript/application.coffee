@@ -126,18 +126,6 @@ $ ->
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
   
-  
-  $.getJSON('/tags/tags.json', (data) ->
-    $('.tag-name').catcomplete({
-      delay: 0, 
-      source: data,
-      autoFocus: true,
-      minLength: 0,
-      select: (evt, ui) ->
-        addTag($(this).parent(), ui.item, $(this).parent().index())
-        return false
-    }))
-
   window.removeTag = (btn) -> removeTag(btn)
   window.addTag = (div, id) -> addTag(div, id)
   window.removeFilter = (btn) -> removeFilter(btn)

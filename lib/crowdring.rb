@@ -40,6 +40,7 @@ require 'crowdring/campaign_stats'
 require 'crowdring/region_tags'
 
 require 'statsd'
+require 'crowdring/patches'
 require 'crowdring/crowdring'
 
 
