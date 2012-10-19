@@ -12,20 +12,15 @@ module Crowdring
     end
   end
 
-  class LoggingService 
+  class LoggingService < TelephonyService
+    supports :voice, :sms
+    request_handler LoggingRequest
+
     attr_reader :last_sms, :last_broadcast
 
     def initialize(numbers, opts={})
       @numbers = numbers
       @do_output = opts[:output]
-    end
-
-    def supports_outgoing?
-      true
-    end
-
-    def transform_request(request)
-      LoggingRequest.new(request)
     end
 
     def build_response(from, commands)

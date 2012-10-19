@@ -126,7 +126,7 @@ module Crowdring
 
     get '/campaign/new' do
       used_numbers = AssignedPhoneNumber.all.map(&:phone_number)
-      @numbers = Server.service_handler.numbers - used_numbers
+      @numbers = Server.service_handler.voice_numbers - used_numbers
 
       haml :campaign_new
     end
@@ -135,7 +135,7 @@ module Crowdring
       @campaign = Campaign.get(params[:id])
 
       used_numbers = (AssignedPhoneNumber.all - @campaign.assigned_phone_numbers).map(&:phone_number)
-      @numbers = Server.service_handler.numbers - used_numbers      
+      @numbers = Server.service_handler.voice_numbers - used_numbers      
       @campaign_numbers = @campaign.assigned_phone_numbers.map(&:phone_number)
 
       haml :campaign_edit

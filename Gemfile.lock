@@ -98,6 +98,8 @@ GEM
       addressable
     mime-types (1.19)
     multi_json (1.3.6)
+    nexmo (0.4.0)
+      json (~> 1.5)
     nokogiri (1.5.5)
     pusher (0.10.0)
       multi_json (~> 1.0)
@@ -204,6 +206,7 @@ DEPENDENCIES
   foreman
   haml
   lazy_high_charts
+  nexmo
   phone!
   pusher
   pusher-fake

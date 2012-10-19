@@ -9,7 +9,7 @@ describe Crowdring::Message do
     @number2 = '+18002222222'
     @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
     @fooservice = double('fooservice', build_response: 'fooResponse',
-        supports_outgoing?: true,
+        sms?: true,
         transform_request: @fooresponse,
         numbers: [@number],
         send_sms: nil)

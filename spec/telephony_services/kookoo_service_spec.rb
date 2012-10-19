@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Crowdring::KooKooRequest do
   it 'should extract the from parameter' do
@@ -28,8 +28,11 @@ describe Crowdring::KooKooService do
     @service = Crowdring::KooKooService.new('api_key', 'number')
   end   
 
-  it 'should not support outgoing' do
-    @service.supports_outgoing?.should be_false
+  it 'should support voice' do
+    @service.voice?.should be_true
+  end
+  it 'should not support sms' do
+    @service.sms?.should be_false
   end
   
   it 'should transform a http request' do

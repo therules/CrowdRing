@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Crowdring::TropoRequest do
   it 'should extract the from parameter' do
@@ -50,8 +50,12 @@ describe Crowdring::TropoService do
     @service = Crowdring::TropoService.new('msg_token', 'app_id', 'uname', 'pword')
   end
 
-  it 'should support outgoing' do
-    @service.supports_outgoing?.should be_true
+  it 'should support voice' do
+    @service.voice?.should be_true
+  end
+
+  it 'should support sms' do
+    @service.sms?.should be_true
   end
 
   it 'should transform a http requst' do

@@ -24,20 +24,15 @@ module Crowdring
     end
   end
 
-  class TropoService 
+  class TropoService < TelephonyService
+    supports :voice, :sms
+    request_handler TropoRequest
+
     def initialize(msg_token, app_id, username, password)
       @msg_token = msg_token
       @app_id = app_id
       @username = username
       @password = password
-    end
-
-    def supports_outgoing?
-      true
-    end
-
-    def transform_request(request)
-      TropoRequest.new(request)
     end
 
     def process_callback(request)

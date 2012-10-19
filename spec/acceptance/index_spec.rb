@@ -1,7 +1,5 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-require 'crowdring/logging_service'
-
 describe 'Filtering ringers', type: :request, js: true do
 
   before(:all) do

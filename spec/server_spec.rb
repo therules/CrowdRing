@@ -87,12 +87,12 @@ module Crowdring
         @campaign = Campaign.create(title: @number, message: @intro_response, assigned_phone_numbers: [@number])
         @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         @fooservice = double('fooservice', build_response: 'fooResponse',
-            supports_outgoing?: true,
+            sms?: true,
             transform_request: @fooresponse,
             numbers: [@number],
             send_sms: nil)
         @barservice = double('barservice', build_response: 'barResponse',
-            supports_outgoing?: false,
+            sms?: false,
             transform_request: @fooresponse,
             numbers: [@number3],
             send_sms: nil)
@@ -182,7 +182,7 @@ module Crowdring
         @campaign = Campaign.create(title: @number, assigned_phone_numbers: [@number])
         fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         fooservice = double('fooservice', build_response: 'fooResponse',
-            supports_outgoing?: true,
+            sms?: true,
             transform_request: fooresponse,
             numbers: [@number])
         fooservice.stub(:broadcast) {|_,_,to_nums| @sent_to.concat to_nums}

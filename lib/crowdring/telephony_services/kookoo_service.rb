@@ -15,19 +15,13 @@ module Crowdring
     end
   end
 
-  class KooKooService 
+  class KooKooService < TelephonyService
+    supports :voice
+    request_handler KooKooRequest
 
     def initialize(api_key, number)
       @api_key = api_key
       @number = number
-    end
-
-    def supports_outgoing?
-      false
-    end
-
-    def transform_request(request)
-      KooKooRequest.new(request, @number)
     end
 
     def build_response(from, commands)

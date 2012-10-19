@@ -26,12 +26,16 @@ module Crowdring
       @default_service = nil
     end
 
-    def numbers
-      @services.values.map(&:numbers).flatten
+    def voice_numbers
+      @services.values.select(&:voice?).map(&:numbers).flatten
+    end
+
+    def sms_numbers
+      @services.values.select(&:sms?).map(&:numbers).flatten
     end
 
     def send_sms(params)
-      service = outgoing_service_for(params[:from])
+      service = sms_service_for(params[:from])
       params[:from] = service.numbers.first if service == @default_service
       service.send_sms(params)
     end
@@ -39,7 +43,7 @@ module Crowdring
     def broadcast(from, msg, to_numbers)
       return if to_numbers.empty?
       
-      service = outgoing_service_for(from)
+      service = sms_service_for(from)
       from = service.numbers.first if service == @default_service
 
       to_numbers.each_slice(10) do |numbers|
@@ -49,24 +53,14 @@ module Crowdring
 
     private
 
-    def outgoing_service_for(number)
-      service = @services.values.find {|s| supports_number(s, number) && s.supports_outgoing? } || @default_service
+    def sms_service_for(number)
+      service = @services.values.find {|s| supports_number(s, number) && s.sms? } || @default_service
       raise NoServiceError, "No service handler for #{number}" if service.nil?
       service
     end
 
     def supports_number(service, number)
       service.numbers.include? number
-    end
-  end
-
-  class FakeCompositeService < CompositeService
-    def send_sms(params)
-      p "Sending sms from #{params[:from]} to #{params[:to]} of '#{params[:msg]}'"
-    end
-
-    def broadcast(from, msg, to_numbers)
-      p "Broadcasting from #{from} to #{to_numbers} of '#{msg}'"
     end
   end
 end

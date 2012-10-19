@@ -15,20 +15,14 @@ module Crowdring
     end
   end
 
-  class TwilioService 
+  class TwilioService < TelephonyService
+    supports :voice, :sms
+    request_handler TwilioRequest
 
     def initialize(account_sid, auth_token)
       @account_sid = account_sid
       @auth_token = auth_token
       @client = Twilio::REST::Client.new account_sid, auth_token
-    end
-
-    def supports_outgoing?
-      true
-    end
-
-    def transform_request(request)
-      TwilioRequest.new(request)
     end
 
     def build_response(from, commands)
