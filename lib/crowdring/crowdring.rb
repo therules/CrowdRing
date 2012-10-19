@@ -192,6 +192,11 @@ module Crowdring
       end
     end
 
+    get '/campaign/:id/progress' do
+      campaign = Campaign.get(params[:id])
+      haml :campaign_progress, locals: {campaign: campaign}
+    end
+
     get '/campaign/:id/csv' do
       attachment("#{params[:id]}.csv")
       rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).unique_rings)

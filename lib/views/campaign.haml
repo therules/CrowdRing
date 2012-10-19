@@ -24,6 +24,7 @@
 
     #campaign-overview
       #campaign-details
+        =haml :campaign_progress, locals: {campaign: @campaign}
         %h2= @campaign.title
         -@campaign.assigned_phone_numbers.each do |number|
           %h3= number.pretty_phone_number

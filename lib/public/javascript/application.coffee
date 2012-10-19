@@ -17,6 +17,8 @@ new_ringer = (data) ->
                               .slideDown(250)
                               .animate({opacity: 1.0}, 250, delete_last)
 
+  $('#progress-inner').css('width', "#{data.ringer_count / 100 * 100}%")
+  $('#progress-inner .count').html(data.ringer_count)
 
 setupBroadcastTextArea = ->
   character_limit = 160
@@ -130,7 +132,4 @@ $ ->
   window.addTag = (div, id) -> addTag(div, id)
   window.removeFilter = (btn) -> removeFilter(btn)
   window.addFilter = -> newFilterMessage()
-
-
-
 
