@@ -8,7 +8,6 @@ module Crowdring
 
     belongs_to :campaign
     belongs_to :ringer
-    belongs_to :number_rang, 'AssignedPhoneNumber'
 
     def phone_number
       ringer.phone_number

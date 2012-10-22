@@ -1,6 +1,6 @@
 #new-campaign.rounded-box
   %h2 New Campaign
-  -if @numbers.empty?
+  -if @voice_numbers.empty? || @sms_numbers.empty?
     %h3 Sorry, all numbers are currently in use
   -else
     %form{action: '/campaign/create', method: 'post'}
@@ -8,9 +8,14 @@
         %label Title:
         %input.title-input{type: 'text', name: 'campaign[title]'}
       .field
-        %label Phone Number:
-        %select{name: 'campaign[assigned_phone_numbers][]'}
-          -@numbers.each do |n|
+        %label Voice Number:
+        %select{name: 'campaign[voice_number]'}
+          -@voice_numbers.each do |n|
+            %option #{n}
+      .field
+        %label SMS Number:
+        %select{name: 'campaign[sms_number]'}
+          -@sms_numbers.each do |n|
             %option #{n}
       %h3 Introductory Message
       #filtered-messages

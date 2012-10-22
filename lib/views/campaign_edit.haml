@@ -6,13 +6,23 @@
         Title:
         =@campaign.title
     .field
-      %label Phone Number:
-      %select{name: 'campaign[assigned_phone_numbers][]'}
-        -@numbers.each do |n|
-          -if @campaign_numbers.include? n
+      %label Voice Number:
+      %select{name: 'campaign[voice_number]'}
+        -@voice_numbers.each do |n|
+          = n
+          -if @campaign.voice_number.phone_number == n
             %option{selected: 'selected'} #{n}
           -else
             %option #{n}
+    .field
+      %label SMS Number:
+      %select{name: 'campaign[sms_number]'}
+        -@sms_numbers.each do |n|
+          -if @campaign.sms_number.phone_number == n
+            %option{selected: 'selected'} #{n}
+          -else
+            %option #{n}
+
     %button{type: 'submit'} Update
 %a{href: "/campaigns##{@campaign.id}"} 
   %button « Back to dashboard

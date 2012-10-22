@@ -25,27 +25,23 @@ module Crowdring
 
     describe 'campaign creation/deletion' do
       it 'should create a new campaign given a valid title, number, and introductory message' do
-        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers, 
-            'message' => {'default_message' => 'default'}}}
+        post '/campaign/create', {'campaign' => {'title' => 'title'}}
         Campaign.first(title: 'title').should_not be_nil
       end
 
       it 'should redirect to campaign view on successful campaign creation' do
-        post '/campaign/create', {'campaign' => {'title' => 'title', 'assigned_phone_numbers' => @numbers,
-          'message' => {'default_message' => 'default'}}}
+        post '/campaign/create', {'campaign' => {'title' => 'title'}}
         last_response.should be_redirect
         last_response.location.should match("campaigns##{Regexp.quote(Campaign.first(title: 'title').id.to_s)}$")
       end
 
       it 'should not create a campaign when given a empty title' do
-        post '/campaign/create', {'campaign' => {'title' => '', 'assigned_phone_numbers' => @numbers,
-          'message' => {'default_message' => 'default'}}}
+        post '/campaign/create', {'campaign' => {'title' => ''}}
         Campaign.first(title: 'title').should be_nil
       end
 
       it 'should not create a campaign when given an extremely long title' do
-        post '/campaign/create', {'campaign' => {'title' => 'foobar'*100, 'assigned_phone_numbers' => @numbers,
-          'message' => {'default_message' => 'default'}}}
+        post '/campaign/create', {'campaign' => {'title' => 'foobar'*100}}
         Campaign.first(title: 'foobar'*100).should be_nil
       end
 
@@ -84,7 +80,7 @@ module Crowdring
 
     describe 'voice/sms response forwarding' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, message: @intro_response, assigned_phone_numbers: [@number])
+        @campaign = Campaign.create(title: @number, message: @intro_response, voice_number: @number, sms_number: @number)
         @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         @fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
@@ -179,7 +175,7 @@ module Crowdring
     describe 'message broadcasting' do
       before(:each) do
         @sent_to = []
-        @campaign = Campaign.create(title: @number, assigned_phone_numbers: [@number])
+        @campaign = Campaign.create(title: @number, voice_number: @number, sms_number: @number)
         fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
@@ -193,8 +189,8 @@ module Crowdring
       it 'should broadcast a message to all ringers of a campaign' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(r1)
-        @campaign.assigned_phone_numbers.first.ring(r2)
+        @campaign.sms_number.ring(r1)
+        @campaign.sms_number.ring(r2)
         
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
         @sent_to.should include(@number2)
@@ -209,12 +205,12 @@ module Crowdring
 
       it 'should broadcast only to the new ringers of a campaign' do
         ringer = Crowdring::Ringer.create(phone_number: @number2)
-        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2, number_rang:@campaign.assigned_phone_numbers.first)
+        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2)
 
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
         newringer = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(newringer)
+        @campaign.sms_number.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
         @sent_to.should eq([@number3])
@@ -222,12 +218,12 @@ module Crowdring
 
       it 'should not have any new ringers after a broadcast' do
         ringer = Crowdring::Ringer.create(phone_number: @number2)
-        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2, number_rang:@campaign.assigned_phone_numbers.first)
+        Crowdring::Ring.create(ringer: ringer, created_at: DateTime.now-2)
 
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
         newringer = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(newringer)
+        @campaign.sms_number.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
         Campaign.get(@campaign.id).new_rings.should be_empty
@@ -236,7 +232,7 @@ module Crowdring
 
     describe 'campaign exporting' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, assigned_phone_numbers: [@number])
+        @campaign = Campaign.create(title: @number, voice_number: @number, sms_number: @number2)
       end
 
       it 'should return a csv file' do
@@ -257,8 +253,8 @@ module Crowdring
       it 'should export all of the ringers numbers and support dates' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(r1)
-        @campaign.assigned_phone_numbers.first.ring(r2)
+        @campaign.voice_number.ring(r1)
+        @campaign.voice_number.ring(r2)
         
         fields = {phone_number: 'yes', created_at: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
@@ -277,9 +273,9 @@ module Crowdring
       it 'should export the ringers country codes' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(r1)
-        @campaign.assigned_phone_numbers.first.ring(r2)
-        
+        @campaign.voice_number.ring(r1)
+        @campaign.voice_number.ring(r2)
+         
         fields = {country_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
         verify_csv(last_response.body, @campaign.new_rings, fields.keys)
@@ -288,8 +284,8 @@ module Crowdring
       it 'should export the ringers area codes' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.assigned_phone_numbers.first.ring(r1)
-        @campaign.assigned_phone_numbers.first.ring(r2)
+        @campaign.voice_number.ring(r1)
+        @campaign.voice_number.ring(r2)
         
         fields = {area_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}

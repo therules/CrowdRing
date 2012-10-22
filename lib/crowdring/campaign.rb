@@ -10,7 +10,10 @@ module Crowdring
     property :created_at,   DateTime
 
     has n, :rings, constraint: :destroy
-    has n, :assigned_phone_numbers, constraint: :destroy
+
+    has 1, :voice_number, 'AssignedPhoneNumber', constraint: :destroy
+    has 1, :sms_number, 'AssignedPhoneNumber', constraint: :destroy
+    
     has n, :asks, through: Resource, constraint: :destroy
 
     def initialize(opts)
@@ -25,10 +28,14 @@ module Crowdring
       rings.all.ringer
     end
 
-    def ring(ringer, number_rang)
-      ring = rings.create(ringer: ringer, number_rang: number_rang)
-      ask = asks.reverse.find {|ask| ask.handle?(ring) }
-      ask.respond(ring) if ask
+    def response_numbers
+      ResponseNumbers.new(voice_number: voice_number.phone_number, sms_number: sms_number.phone_number)
+    end
+
+    def ring(ringer)
+      r = rings.create(ringer: ringer)
+      ask = asks.reverse.find {|ask| ask.handle?(ringer) }
+      ask.respond(ringer, response_numbers) if ask
     end
 
     def unique_rings
@@ -38,17 +45,25 @@ module Crowdring
       ringers_to_rings.values
     end
 
-    def assigned_phone_numbers=(numbers)
-      if !numbers.empty? and numbers.first.is_a? String
-        numbers = numbers.map {|n| AssignedPhoneNumber.new(phone_number: n) }
+    def voice_number=(number)
+      if number.is_a? String
+        number = AssignedVoiceNumber.new(phone_number: number)
       end
-
-      super numbers
+      super number
     end
+
+    def sms_number=(number)
+      if number.is_a? String
+        number = AssignedSMSNumber.new(phone_number: number)
+      end
+      super number
+    end
+
 
     def all_errors
       allerrors = [errors]
-      allerrors += assigned_phone_numbers ? assigned_phone_numbers.map(&:errors) : []
+      allerrors << voice_number.errors if voice_number
+      allerrors << sms_number.errors if sms_number
       allerrors
     end
 

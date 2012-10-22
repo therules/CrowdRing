@@ -28,11 +28,11 @@ module Crowdring
       Tag.from_str("#{id}:respondent")
     end
 
-    def respond(ring)
-      ring.ringer.tags << respondent_tag
-      ring.ringer.save
+    def respond(ringer, response_numbers)
+      ringer.tags << respondent_tag
+      ringer.save
 
-      triggered_ask.trigger_for(ring) if triggered_ask
+      triggered_ask.trigger_for(ringer, response_numbers) if triggered_ask
     end
 
     def recipients(ringers=Ringer.all)
@@ -43,17 +43,17 @@ module Crowdring
       ringers.select {|r| r.tags.include?(respondent_tag)}
     end
 
-    def trigger_for(ring)
-      ring.ringer.tags << recipient_tag
-      ring.ringer.save
+    def trigger_for(ringer, response_numbers)
+      ringer.tags << recipient_tag
+      ringer.save
 
-      message.send_message(to: ring.ringer, from: ring.number_rang.phone_number) if message
+      message.send_message(to: ringer, from: response_numbers.sms_number) if message
     end
   end
 
 
   class OfflineAsk < Ask
-    def handle?(ring)
+    def handle?(ringer)
       true
     end
 
@@ -63,8 +63,8 @@ module Crowdring
   end
 
   class JoinAsk < Ask
-    def handle?(ring)
-      ring.ringer.tags.include? recipient_tag
+    def handle?(ringer)
+      ringer.tags.include? recipient_tag
     end
 
     def typesym

@@ -26,8 +26,18 @@
       #campaign-details
         =haml :campaign_progress, locals: {campaign: @campaign}
         %h2= @campaign.title
-        -@campaign.assigned_phone_numbers.each do |number|
-          %h3= number.pretty_phone_number
+        %label Voice Number
+        %h3
+          -if @campaign.voice_number
+            =@campaign.voice_number.pretty_phone_number
+          -else
+            No voice number selected
+        %label SMS Number
+        %h3
+          -if @campaign.sms_number
+            =@campaign.sms_number.pretty_phone_number
+          -else
+            No SMS number selected
         ** Actions view not implemented **
         #campaign-ringers
           .counts

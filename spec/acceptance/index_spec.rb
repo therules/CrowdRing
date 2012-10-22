@@ -17,15 +17,16 @@ describe 'Filtering ringers', type: :request, js: true do
     @campaign = Crowdring::Campaign.create(
       title: 'title', 
       message: Crowdring::Message.new(default_message:'default'),
-      assigned_phone_numbers: [@number])
+      voice_number: @number,
+      sms_number: @number)
   end
 
   it 'Filtering ringers based on who has joined since the most recent broadcast' do
     origRinger = Crowdring::Ringer.create(phone_number: @number2)
-    @campaign.rings.create(ringer: origRinger, created_at: DateTime.now-2, number_rang: @campaign.assigned_phone_numbers.first)
+    @campaign.rings.create(ringer: origRinger, created_at: DateTime.now-2)
     @campaign.most_recent_broadcast = DateTime.now - 1
     newRinger = Crowdring::Ringer.create(phone_number: @number3)
-    @campaign.assigned_phone_numbers.first.ring(newRinger)
+    @campaign.voice_number.ring(newRinger)
    
     visit "/campaign/#{@campaign.id}"
     page.find("label[for=new1]").text.should match('1')

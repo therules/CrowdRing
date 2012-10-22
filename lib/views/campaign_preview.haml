@@ -1,9 +1,10 @@
 .campaign-preview
-	%a{href: "/campaigns##{campaign.id}"}
-		%h1=campaign.title
-
-	- campaign.assigned_phone_numbers.each do |number|
-		%h2= number.pretty_phone_number
-		%h2= "#{campaign.ringers.count} " + (campaign.ringers.count !=1 ? "Ringers" : "Ringer")
+  %a{href: "/campaigns##{campaign.id}"}
+    %h1=campaign.title
+    %label Voice Number
+    %h2= campaign.voice_number.pretty_phone_number
+    %label SMS Number
+    %h2= campaign.sms_number.pretty_phone_number
+    %h2= "#{campaign.ringers.count} " + (campaign.ringers.count !=1 ? "Ringers" : "Ringer")
 
 

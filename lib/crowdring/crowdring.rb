@@ -115,6 +115,11 @@ module Crowdring
     get '/' do  
       @campaigns = Campaign.all
 
+      @campaigns.each do |c|
+        p c.voice_number.class
+        p c.sms_number.class
+      end
+      
       haml :index
     end
 
@@ -125,26 +130,29 @@ module Crowdring
     end
 
     get '/campaign/new' do
-      used_numbers = AssignedPhoneNumber.all.map(&:phone_number)
-      @numbers = Server.service_handler.voice_numbers - used_numbers
+      used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
+      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers
+
+      used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
+      @sms_numbers = Server.service_handler.sms_numbers - used_sms_numbers
 
       haml :campaign_new
     end
 
     get '/campaign/:id/edit' do
       @campaign = Campaign.get(params[:id])
+      used_voice_numbers = AssignedVoiceNumber.all - [@campaign.voice_number]
+      used_sms_numbers = AssignedSMSNumber.all - [@campaign.sms_number]
 
-      used_numbers = (AssignedPhoneNumber.all - @campaign.assigned_phone_numbers).map(&:phone_number)
-      @numbers = Server.service_handler.voice_numbers - used_numbers      
-      @campaign_numbers = @campaign.assigned_phone_numbers.map(&:phone_number)
-
+      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers.map(&:phone_number)      
+      @sms_numbers = Server.service_handler.sms_numbers - used_sms_numbers.map(&:phone_number)      
       haml :campaign_edit
     end
 
     post '/campaign/create' do
       campaign = Campaign.new(params[:campaign])
       if campaign.save
-        flash[:notice] = "Campaign updated"
+        flash[:notice] = "Campaign created"
         redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
@@ -154,9 +162,11 @@ module Crowdring
 
     post '/campaign/:id/update' do
       campaign = Campaign.get(params[:id])
-      campaign.assigned_phone_numbers.destroy
+      campaign.voice_number.destroy
+      campaign.sms_number.destroy
+      
       if campaign.update(params[:campaign])
-        flash[:notice] = "Campaign created"
+        flash[:notice] = "Campaign updated"
         redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
@@ -210,7 +220,7 @@ module Crowdring
 
     post '/campaign/:id/broadcast' do
       campaign = Campaign.get(params[:id])
-      from = params[:from] || campaign.assigned_phone_numbers.first.phone_number
+      from = params[:from] || campaign.sms_number.phone_number
       message = params[:message]
       rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).rings)
       to = rings.map(&:ringer).map(&:phone_number)

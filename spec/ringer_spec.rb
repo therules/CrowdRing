@@ -18,9 +18,13 @@ describe Crowdring::Ringer do
   end
 
   it 'should destroy all relevant memberships when destroying a ringer' do
-    campaign = Crowdring::Campaign.create(title: 'campaign', assigned_phone_numbers: [@number2])
+    campaign = Crowdring::Campaign.create(title: 'campaign')
+    campaign.voice_number = @number1
+    campaign.save
+    
     ringer = Crowdring::Ringer.create(phone_number: @number1)
-    campaign.assigned_phone_numbers.first.ring(ringer)
+
+    campaign.voice_number.ring(ringer)
     ringer.destroy
 
     Crowdring::Ringer.all.count.should eq(0)
