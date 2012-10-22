@@ -20,6 +20,7 @@ describe Crowdring::Ringer do
   it 'should destroy all relevant memberships when destroying a ringer' do
     campaign = Crowdring::Campaign.create(title: 'campaign')
     campaign.voice_number = @number1
+    campaign.sms_number = @number2
     campaign.save
     
     ringer = Crowdring::Ringer.create(phone_number: @number1)

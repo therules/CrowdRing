@@ -25,6 +25,7 @@ describe 'Filtering ringers', type: :request, js: true do
     origRinger = Crowdring::Ringer.create(phone_number: @number2)
     @campaign.rings.create(ringer: origRinger, created_at: DateTime.now-2)
     @campaign.most_recent_broadcast = DateTime.now - 1
+    @campaign.save
     newRinger = Crowdring::Ringer.create(phone_number: @number3)
     @campaign.voice_number.ring(newRinger)
    

@@ -11,10 +11,20 @@ module Crowdring
 
     has n, :rings, constraint: :destroy
 
-    has 1, :voice_number, 'AssignedPhoneNumber', constraint: :destroy
-    has 1, :sms_number, 'AssignedPhoneNumber', constraint: :destroy
+    belongs_to :voice_number, 'AssignedPhoneNumber', required: false
+    belongs_to :sms_number, 'AssignedPhoneNumber', required: false
     
     has n, :asks, through: Resource, constraint: :destroy
+
+    before :create do
+      voice_number.save if voice_number
+      sms_number.save if sms_number
+    end
+
+    after :destroy do
+      voice_number.destroy if voice_number
+      sms_number.destroy if sms_number
+    end
 
     def initialize(opts)
       message = opts.delete('message') || opts.delete(:message)
@@ -46,17 +56,21 @@ module Crowdring
     end
 
     def voice_number=(number)
+      self.voice_number.destroy if self.voice_number
       if number.is_a? String
-        number = AssignedVoiceNumber.new(phone_number: number)
+        self.voice_number = AssignedVoiceNumber.new(phone_number: number)
+      else
+        super number
       end
-      super number
     end
 
     def sms_number=(number)
+      self.sms_number.destroy if self.sms_number
       if number.is_a? String
-        number = AssignedSMSNumber.new(phone_number: number)
+        self.sms_number = AssignedSMSNumber.new(phone_number: number)
+      else
+        super number
       end
-      super number
     end
 
 

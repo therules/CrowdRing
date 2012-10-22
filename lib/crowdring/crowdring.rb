@@ -77,9 +77,9 @@ module Crowdring
     def respond(cur_service, request, response)
       from = Phoner::Phone.normalize request.from
 
-      if AssignedPhoneNumber.get(request.to)
+      if AssignedPhoneNumber.from_number(request.to)
         ringer = Ringer.first_or_create(phone_number: from)
-        AssignedPhoneNumber.get(request.to).ring(ringer)
+        AssignedPhoneNumber.from_number(request.to).ring(ringer)
       end
 
       cur_service.build_response(request.to, response)
@@ -162,8 +162,7 @@ module Crowdring
 
     post '/campaign/:id/update' do
       campaign = Campaign.get(params[:id])
-      campaign.voice_number.destroy
-      campaign.sms_number.destroy
+      p params[:campaign]
       
       if campaign.update(params[:campaign])
         flash[:notice] = "Campaign updated"
