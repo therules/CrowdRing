@@ -75,11 +75,9 @@ module Crowdring
     end
 
     def respond(cur_service, request, response)
-      from = Phoner::Phone.normalize request.from
-
-      if AssignedPhoneNumber.from_number(request.to)
-        ringer = Ringer.first_or_create(phone_number: from)
-        AssignedPhoneNumber.from_number(request.to).ring(ringer)
+      if AssignedPhoneNumber.from(request.to)
+        ringer = Ringer.from(request.from)
+        AssignedPhoneNumber.from(request.to).ring(ringer)
       end
 
       cur_service.build_response(request.to, response)

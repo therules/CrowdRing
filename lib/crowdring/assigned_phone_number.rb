@@ -7,8 +7,9 @@ module Crowdring
     property :phone_number, String
     property :type, Discriminator
 
-    def self.from_number(number)
-      self.first(phone_number: number)
+    def self.from(number)
+      norm_number = Phoner::Phone.parse(number).to_s
+      self.first(phone_number: norm_number)
     end
 
     def ring(ringer)

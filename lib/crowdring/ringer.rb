@@ -24,6 +24,11 @@ module Crowdring
 
     after :create, :add_tags
 
+    def self.from(number)
+      norm_number = Phoner::Phone.parse(number).to_s
+      self.first(phone_number: norm_number) || self.create(phone_number: norm_number)
+    end
+
     def add_tags
       tags << Tag.from_str('area code:' + area_code)
       tags << Tag.from_str('country:' + country_name)

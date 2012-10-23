@@ -44,4 +44,22 @@ describe Crowdring::Ringer do
 
     ringer.tags.should include(Crowdring::Tag.from_str('country:united states'))
   end
+
+  it 'should interpret numbers with and without a + sign as being the same' do
+    r1 = Crowdring::Ringer.from('+18001111111')
+    r2 = Crowdring::Ringer.from('18001111111')
+
+    Crowdring::Ringer.count.should eq(1)
+    r2.should eq(r1)
+  end
+
+  it 'should assume a number without a country code is a US number' do
+    r1 = Crowdring::Ringer.from('+18001111111')
+    r2 = Crowdring::Ringer.from('8001111111')
+
+    Crowdring::Ringer.count.should eq(1)
+    r2.should eq(r1)
+  end
+
+
 end
