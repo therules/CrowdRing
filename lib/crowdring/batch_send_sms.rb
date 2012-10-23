@@ -33,4 +33,14 @@ module Crowdring
       to_numbers.each {|to| service.send_sms from: from, to: to, msg: msg }
     end
   end
+
+  class RoutoBatchSendSms
+    @queue = :send_sms
+
+    def self.perform(params, from, msg, to_numbers)
+      service = RoutoService.new(params['username'], params['password'], params['number'])
+      to_numbers.each {|to| service.send_sms  to: to, msg: msg }
+    end
+  end
+  
 end
