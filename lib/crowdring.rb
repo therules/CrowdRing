@@ -20,6 +20,7 @@ require 'crowdring/telephony_services/tropo_service'
 require 'crowdring/telephony_services/nexmo_service'
 require 'crowdring/telephony_services/logging_service'
 require 'crowdring/telephony_services/routo_service'
+require 'crowdring/telephony_services/voxeo_service'
 
 require 'crowdring/telephony_services/composite_service'
 require 'crowdring/batch_send_sms'

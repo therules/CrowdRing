@@ -43,7 +43,7 @@ module Crowdring
     end
 
     def ring(ringer)
-      r = rings.create(ringer: ringer)
+      return unless rings.create(ringer: ringer).saved?
       ask = asks.reverse.find {|ask| ask.handle?(ringer) }
       ask.respond(ringer, response_numbers) if ask
     end
