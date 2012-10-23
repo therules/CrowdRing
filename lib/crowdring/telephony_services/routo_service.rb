@@ -12,12 +12,12 @@
       uri = URI('https://smsc5.routotelecom.com/SMSsend')
       back_up_uri = URI('https://smsc6.routotelecom.com/SMSsend')
 
-      uri.query  = parse_params params
-      response = send_out_msg uri
-      p response
+      encoded_params = encode_params(params)
+      uri.query = encoded_params
+      response = send_request(uri)
       if response.body == 'failed' || response.body == 'sys_error' || response.body == 'bad_operator'
-        back_up_uri.query = parse_params parse_params
-        send_out_msg back_up_uri
+        back_up_uri.query = encoded_params
+        send_request(back_up_uri)
       end  
     end
 
@@ -30,22 +30,23 @@
       Resque.enqueue(RoutoBatchSendSms, params, from, msg, to_numbers)
     end
 
-    def parse_params params
+    private 
+
+    def encode_params(params)
       to = params[:to].sub('+','')
       from = params[:from].sub('+','')
       message = params[:msg]
       
       params={ number: to, user: @user_name, pass: @password, message: message, ownnum: from}
-      URI.encode_www_form(params).gsub(/\+/, '%20')
+      URI.encode_www_form(params)
     end
 
-    def send_out_msg uri
-      p uri
+    def send_request(uri)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       request = Net::HTTP::Get.new(uri.request_uri)
-      response = http.request(request)
+      http.request(request)
     end
   end
 end
