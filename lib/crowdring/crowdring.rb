@@ -113,11 +113,6 @@ module Crowdring
     get '/' do  
       @campaigns = Campaign.all
 
-      @campaigns.each do |c|
-        p c.voice_number.class
-        p c.sms_number.class
-      end
-      
       haml :index
     end
 
