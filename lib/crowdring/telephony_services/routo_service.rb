@@ -15,7 +15,7 @@
       encoded_params = encode_params(params)
       uri.query = encoded_params
       response = send_request(uri)
-      if response.body == 'failed' || response.body == 'sys_error' || response.body == 'bad_operator'
+      if ['failed', 'sys_error', 'bad_operator'].include? response.body 
         back_up_uri.query = encoded_params
         send_request(back_up_uri)
       end  
