@@ -12,8 +12,8 @@ module Crowdring
     validates_with_method :ringer, :nonredundant_ring?
 
     def nonredundant_ring?
-      three_seconds_ago = Time.now - 3
-      not Ring.first(ringer: @ringer, :created_at.gt => three_seconds_ago)
+      five_seconds_ago = Time.now - 5
+      not Ring.first(ringer: @ringer, :created_at.gt => five_seconds_ago)
     end
 
     def phone_number
