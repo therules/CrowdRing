@@ -1,0 +1,7 @@
+#voice-numbers
+  %h2 Voice Numbers
+  -if voice_numbers.empty?
+    %h3 No voice number selected
+  -else
+    -voice_numbers.each do |voice_number|
+      %h4= "Phone Number: #{voice_number.pretty_phone_number}, Description: #{voice_number.description}"
