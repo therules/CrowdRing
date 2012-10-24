@@ -46,6 +46,7 @@ require 'crowdring/campaign_stats'
 require 'crowdring/region_tags'
 
 require 'statsd'
+require 'utils/password_generator'
 require 'crowdring/patches'
 require 'crowdring/crowdring'
 

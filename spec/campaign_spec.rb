@@ -74,9 +74,8 @@ describe Crowdring::Campaign do
     it 'should track all of the times a ringer rings a campaign' do
       r = Crowdring::Ringer.create(phone_number: @number2)
       @c.voice_number.ring(r)
-      @c.voice_number.ring(r)
 
-      @c.rings.count.should eq(2)
+      @c.rings.count.should eq(1)
     end
 
     it 'should remove rings when a campaign is destroyed' do
