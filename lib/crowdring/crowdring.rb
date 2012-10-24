@@ -12,6 +12,7 @@ module Crowdring
     set :logging, true
     set :root, File.dirname(__FILE__) + '/..'
     set :sinatra_authentication_view_path, settings.views + "/auth/"
+    set :protection, except: :frame_options
 
     include LazyHighCharts::LayoutHelper
 
@@ -198,6 +199,11 @@ module Crowdring
     get '/campaign/:id/progress' do
       campaign = Campaign.get(params[:id])
       haml :campaign_progress, locals: {campaign: campaign}
+    end
+
+    get '/campaign/:id/progress-embed' do
+      @campaign = Campaign.get(params[:id])
+      haml :campaign_progress_embedded, layout: false
     end
 
     get '/campaign/:id/csv' do

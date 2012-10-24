@@ -1,0 +1,14 @@
+%html(xmlns="http://www.w3.org/1999/xhtml")
+  %head
+    %link{rel: 'stylesheet', type: 'text/css', href: '/stylesheets/embedded.css'}
+    %script{type: 'text/javascript', src: '/javascript/jquery-1.8.1.min.js'}
+    %script{type: 'text/javascript', src: '/javascript/embedded.js'}
+    %script{type: 'text/javascript', src: '/javascript/1.12-pusher.min.js'}
+
+    %script{type: 'text/javascript'}
+      window.pusher_key = '#{ENV['PUSHER_KEY']}';
+      window.campaign_id = '#{@campaign.id}';
+    %link{ref: 'shortcut icon'}
+
+
+  =haml :campaign_progress, locals: {campaign: @campaign}

@@ -1,3 +1,5 @@
+@import "stylesheets/embedded.css";
+
 @body-font: Helvetica, Arial, sans-serif;
 
 @h1-color: #FFCC66;
@@ -183,6 +185,10 @@ body {
 
       #campaign-details {
         float: left;
+
+        #progress-wrapper {
+          height: 50px;
+        }
       }
 
       #asks {
@@ -349,36 +355,4 @@ body {
   .ui-tabs-vertical .ui-tabs-nav li { clear: left; width: 100%;  border-right-width: 0 !important; margin: 0 -1px .2em 0; }
   .ui-tabs-vertical .ui-tabs-nav li a { display:block; }
   .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; }
-
-  #progress {
-    #progress-outer {
-      width: 300px;
-      height: 50px;
-      line-height: 50px;
-      background-color: #e5f6f7;
-      border: 1px solid #00b1bb;
-      z-index: 0;
-    }
-
-    #progress-inner {
-      max-width: 100%;
-      background-color: red;
-      text-align: right;
-      z-index: 1;
-      background: #17c1cc; /* Old browsers */
-      background: -moz-linear-gradient(top,  #17c1cc 0%, #17c1cc 39%, #00b1bb 70%, #00b1bb 100%); /* FF3.6+ */
-      background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#17c1cc), color-stop(39%,#17c1cc), color-stop(70%,#00b1bb), color-stop(100%,#00b1bb)); /* Chrome,Safari4+ */
-      background: -webkit-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* Chrome10+,Safari5.1+ */
-      background: -o-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* Opera 11.10+ */
-      background: -ms-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* IE10+ */
-      background: linear-gradient(to bottom,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* W3C */
-      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#17c1cc', endColorstr='#00b1bb',GradientType=0 ); /* IE6-9 */
-
-      .count {
-        color: white;
-        margin-right: 5px;
-        margin-left: 5px;
-      }
-    }
-  }
 }

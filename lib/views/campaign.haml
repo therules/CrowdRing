@@ -24,7 +24,8 @@
 
     #campaign-overview
       #campaign-details
-        =haml :campaign_progress, locals: {campaign: @campaign}
+        #progress-wrapper
+          =haml :campaign_progress, locals: {campaign: @campaign}
         %h2= @campaign.title
         %label Voice Number
         %h3
