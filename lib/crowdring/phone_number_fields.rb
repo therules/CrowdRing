@@ -2,7 +2,8 @@ module Crowdring
   module PhoneNumberFields
     def pretty_phone_number
       number = Phoner::Phone.parse phone_number
-      number.format "+%c (%a) %n" + " [" + country.char_3_code + "]"
+      Phoner::Phone.n1_length = 4 if country_code == '91'
+      number.format "+%c (%a) %f-%l" + " [" + country.char_3_code + "]"
     end
 
     def country_code

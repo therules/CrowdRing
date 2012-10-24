@@ -1,6 +1,7 @@
 %html(xmlns="http://www.w3.org/1999/xhtml")
   %head
-    %meta{name: 'viewport', content: 'width=device-width', :'intial-scale' =>1.0} 
+    %meta{name: 'viewport', content: 'width=device-width', :'intial-scale' =>1.0}
+    %meta{:'http-equiv' => 'Cache-control', content: 'public', :'max-age' => 604800} 
     %link{rel: 'stylesheet', type: 'text/css', href: '/stylesheets/chosen.css'}
     %link{rel: 'stylesheet/less', type: 'text/css', href: '/stylesheets/application.less', media: 'screen and (min-width:481px) and (max-width: 1680px)'}
     %link{rel: 'stylesheet/less', type: 'text/css', href: '/stylesheets/max480.less', media: 'screen and (min-width:320px) and (max-width: 480px)'}
@@ -20,18 +21,16 @@
     %script{type: 'text/javascript'}
       window.pusher_key = '#{ENV['PUSHER_KEY']}';
     %link{ref: 'shortcut icon'}
-
-  %body
-    %header
-      %title CROWDRING
-      %a{href: '/'}
-        %img.logo{src: '/crowdringlogo.png'}
-      %a{href: '/'}
-        %h1 CROWDRING
-      =haml :user_header
-    -if flash.has?(:notice)
-      .notice= flash[:notice]
-    -if flash.has?(:errors)
-      .errors= flash[:errors].sub('|', '<br />')
-    #content= yield
- 
+#body
+  %header
+    %title CROWDRING
+    %a{href: '/'}
+      %img.logo{src: '/crowdringlogo.png'}
+    %a{href: '/'}
+      %h1 CROWDRING
+    =haml :user_header
+  -if flash.has?(:notice)
+    .notice= flash[:notice]
+  -if flash.has?(:errors)
+    .errors= flash[:errors].sub('|', '<br />')
+  #content= yield
