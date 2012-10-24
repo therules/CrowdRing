@@ -17,7 +17,7 @@ describe 'Filtering ringers', type: :request, js: true do
     @campaign = Crowdring::Campaign.create(
       title: 'title', 
       message: Crowdring::Message.new(default_message:'default'),
-      voice_number: @number,
+      voice_numbers: [{phone_number: @number, description: 'num1'}],
       sms_number: @number)
   end
 
@@ -27,7 +27,7 @@ describe 'Filtering ringers', type: :request, js: true do
     @campaign.most_recent_broadcast = DateTime.now - 1
     @campaign.save
     newRinger = Crowdring::Ringer.create(phone_number: @number3)
-    @campaign.voice_number.ring(newRinger)
+    @campaign.voice_numbers.first.ring(newRinger)
    
     visit "/campaign/#{@campaign.id}"
     page.find("label[for=new1]").text.should match('1')

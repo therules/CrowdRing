@@ -80,7 +80,7 @@ module Crowdring
 
     describe 'voice/sms response forwarding' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, message: @intro_response, voice_number: @number, sms_number: @number)
+        @campaign = Campaign.create(title: @number, message: @intro_response, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         @fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
@@ -175,7 +175,7 @@ module Crowdring
     describe 'message broadcasting' do
       before(:each) do
         @sent_to = []
-        @campaign = Campaign.create(title: @number, voice_number: @number, sms_number: @number)
+        @campaign = Campaign.create(title: @number, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
         fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
@@ -232,7 +232,7 @@ module Crowdring
 
     describe 'campaign exporting' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, voice_number: @number, sms_number: @number2)
+        @campaign = Campaign.create(title: @number, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number2)
       end
 
       it 'should return a csv file' do
@@ -253,8 +253,8 @@ module Crowdring
       it 'should export all of the ringers numbers and support dates' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.voice_number.ring(r1)
-        @campaign.voice_number.ring(r2)
+        @campaign.voice_numbers.first.ring(r1)
+        @campaign.voice_numbers.first.ring(r2)
         
         fields = {phone_number: 'yes', created_at: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
@@ -273,8 +273,8 @@ module Crowdring
       it 'should export the ringers country codes' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.voice_number.ring(r1)
-        @campaign.voice_number.ring(r2)
+        @campaign.voice_numbers.first.ring(r1)
+        @campaign.voice_numbers.first.ring(r2)
          
         fields = {country_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
@@ -284,8 +284,8 @@ module Crowdring
       it 'should export the ringers area codes' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.voice_number.ring(r1)
-        @campaign.voice_number.ring(r2)
+        @campaign.voice_numbers.first.ring(r1)
+        @campaign.voice_numbers.first.ring(r2)
         
         fields = {area_code: 'yes'}
         get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}

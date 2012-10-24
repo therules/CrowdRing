@@ -77,9 +77,9 @@ module Crowdring
     end
 
     def respond(cur_service, request, response)
-      if AssignedPhoneNumber.from(request.to)
+      if AssignedVoiceNumber.from(request.to)
         ringer = Ringer.from(request.from)
-        AssignedPhoneNumber.from(request.to).ring(ringer)
+        AssignedVoiceNumber.from(request.to).ring(ringer)
       end
 
       cur_service.build_response(request.to, response)
@@ -134,16 +134,6 @@ module Crowdring
       haml :campaign_new
     end
 
-    get '/campaign/:id/edit' do
-      @campaign = Campaign.get(params[:id])
-      used_voice_numbers = AssignedVoiceNumber.all - [@campaign.voice_number]
-      used_sms_numbers = AssignedSMSNumber.all - [@campaign.sms_number]
-
-      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers.map(&:phone_number)      
-      @sms_numbers = Server.service_handler.sms_numbers - used_sms_numbers.map(&:phone_number)      
-      haml :campaign_edit
-    end
-
     post '/campaign/create' do
       campaign = Campaign.new(params[:campaign])
       if campaign.save
@@ -154,17 +144,23 @@ module Crowdring
         redirect to('/campaign/new')
       end
     end
-
-    post '/campaign/:id/update' do
-      campaign = Campaign.get(params[:id])
-      p params[:campaign]
+    
+    get '/campaign/:id/assign_voice_number' do 
+      @campaign = Campaign.get(params[:id])
+      @voice_numbers = Server.service_handler.voice_numbers - AssignedVoiceNumber.all.map(&:phone_number)      
       
-      if campaign.update(params[:campaign])
-        flash[:notice] = "Campaign updated"
-        redirect to("/campaigns##{campaign.id}")
+      haml :campaign_assign_voice_number        
+    end
+
+    post '/campaign/:id/assign_voice_number' do 
+      campaign = Campaign.get(params[:id])
+      campaign.voice_numbers.new(params[:voice_number])
+      if campaign.save
+        flash[:notice] = "Voice number assigned"
+       redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
-        redirect to("campaign/#{campaign.id}/edit")
+        redirect to("/campaign/#{campaign.id}/assign_voice_number")
       end
     end
 

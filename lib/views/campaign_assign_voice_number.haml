@@ -1,0 +1,16 @@
+%h2= "Assign Voice Number for #{@campaign.title}"
+%form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'post'}
+  -if @voice_numbers.empty?
+    %h3 Sorry, no voice numbers currently available.
+  -else 
+    .field
+      %label Voice Number:
+      %select{name: 'voice_number[phone_number]'}
+        -@voice_numbers.each do |n|
+          %option #{n}
+    .field
+      %label Description:
+      %input{type: 'text', name: 'voice_number[description]'}
+    %button{type: 'submit'} Assign
+%form{action: "/campaigns##{@campaign.id}", method: 'get'}
+  %button « Back

@@ -1,10 +1,17 @@
 .campaign-preview
   %a{href: "/campaigns##{campaign.id}"}
     %h1=campaign.title
-  %label Voice Number
-  %h2= campaign.voice_number.pretty_phone_number
+  %label Voice Numbers
+  -if campaign.voice_numbers.empty?
+    %h2 No Voice Numbers
+  -else
+    -campaign.voice_numbers.each do |voice_number|
+      %h2= voice_number.pretty_phone_number
   %label SMS Number
-  %h2= campaign.sms_number.pretty_phone_number
+  -if campaign.sms_number
+    %h2= campaign.sms_number.pretty_phone_number
+  -else
+    %h2 No SMS Number
   %h2= "#{campaign.ringers.count} " + (campaign.ringers.count !=1 ? "Ringers" : "Ringer")
 
 

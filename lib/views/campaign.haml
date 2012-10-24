@@ -1,8 +1,6 @@
 %h1 Campaign Details
 
 #options
-  %form{action: "/campaign/#{@campaign.id}/edit"}
-    %button Edit
   %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
     %button Destroy Campaign 
 #back-to-home
@@ -27,13 +25,16 @@
         #progress-wrapper
           =haml :campaign_progress, locals: {campaign: @campaign}
         %h2= @campaign.title
-        %label Voice Number
+        %h2 Voice Numbers
         %h3
-          -if @campaign.voice_number
-            =@campaign.voice_number.pretty_phone_number
+          -if @campaign.voice_numbers.empty?
+            %h3 No voice number selected
           -else
-            No voice number selected
-        %label SMS Number
+            -@campaign.voice_numbers.each do |voice_number|
+              %h4= voice_number.pretty_phone_number
+              %h3= "Description: #{voice_number.description}"
+          %a{href: "/campaign/#{@campaign.id}/assign_voice_number"} Assign another
+        %h2 SMS Number
         %h3
           -if @campaign.sms_number
             =@campaign.sms_number.pretty_phone_number

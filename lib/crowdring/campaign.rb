@@ -11,20 +11,10 @@ module Crowdring
 
     has n, :rings, constraint: :destroy
 
-    belongs_to :voice_number, 'AssignedPhoneNumber', required: false
-    belongs_to :sms_number, 'AssignedPhoneNumber', required: false
+    has n, :voice_numbers, 'AssignedVoiceNumber', constraint: :destroy
+    has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
     
     has n, :asks, through: Resource, constraint: :destroy
-
-    before :create do
-      voice_number.save if voice_number
-      sms_number.save if sms_number
-    end
-
-    after :destroy do
-      voice_number.destroy if voice_number
-      sms_number.destroy if sms_number
-    end
 
     def initialize(opts)
       message = opts.delete('message') || opts.delete(:message)
@@ -34,12 +24,17 @@ module Crowdring
       asks << ask.triggered_ask
     end
 
+    def sms_number=(number)
+      number = {phone_number: number} if number.is_a? String
+      super number
+    end
+
     def ringers
       rings.all.ringer
     end
 
     def response_numbers
-      ResponseNumbers.new(voice_number: voice_number.phone_number, sms_number: sms_number.phone_number)
+      ResponseNumbers.new(voice_number: voice_numbers.first.phone_number, sms_number: sms_number.phone_number)
     end
 
     def ring(ringer)
@@ -55,30 +50,11 @@ module Crowdring
       ringers_to_rings.values
     end
 
-    def voice_number=(number)
-      self.voice_number.destroy if self.voice_number
-      if number.is_a? String
-        self.voice_number = AssignedVoiceNumber.new(phone_number: number)
-      else
-        super number
-      end
-    end
-
-    def sms_number=(number)
-      self.sms_number.destroy if self.sms_number
-      if number.is_a? String
-        self.sms_number = AssignedSMSNumber.new(phone_number: number)
-      else
-        super number
-      end
-    end
-
-
     def all_errors
       allerrors = [errors]
-      allerrors << voice_number.errors if voice_number
+      allerrors << voice_numbers.map {|n| n.errors}
       allerrors << sms_number.errors if sms_number
-      allerrors
+      allerrors.flatten
     end
 
     def new_rings
