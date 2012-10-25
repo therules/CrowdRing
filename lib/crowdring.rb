@@ -45,6 +45,7 @@ require 'crowdring/high_charts_builder'
 require 'crowdring/campaign_stats'
 require 'crowdring/region_tags'
 
+require 'utils/password_generator'
 require 'statsd'
 require 'crowdring/patches'
 require 'crowdring/crowdring'

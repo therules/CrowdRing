@@ -28,20 +28,24 @@ module Sinatra
         end
 
         app.post '/newuser' do
-          @user = User.set(params[:user])
-          if @user.valid && @user.id
-            if Rack.const_defined?('Flash')
-              flash[:notice] = "Account created."
-            end
-            redirect '/users'
+          if params[:email] != params[:email_confirmation]
+            flash[:errors] = "Email and confirmation email do not match"
+            redirect '/newuser?' + hash_to_query_string(params)
           else
-            if Rack.const_defined?('Flash')
+            password = PasswordGenerator.generate
+            p password
+            @user = User.set(email: params[:email], password: password, password_confirmation: password)
+            if @user.valid && @user.id
+              flash[:notice] = "Account created."
+              redirect '/users'
+            else
               flash[:errors] = "#{@user.errors}"
+              redirect '/newuser?' + hash_to_query_string(params)
             end
-            redirect '/newuser?' + hash_to_query_string(params['user'])
           end
         end
       end
+      
     end
   end
 end
