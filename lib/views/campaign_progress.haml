@@ -1,4 +1,7 @@
-#progress
+-color||='blue'
+#progress{class: color}
   #progress-outer
-    #progress-inner{style: "height: 100%; width: #{(campaign.ringers.count / 100.0)*100}%;"}
+    #progress-inner{style: "height: 100%; width: #{5+(campaign.ringers.count / 200.0) * 100}%;"}
       .count= campaign.ringers.count
+    .goalcount="200"
+

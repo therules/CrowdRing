@@ -21,10 +21,10 @@
           %span Export To CSV
 
     #campaign-overview
+      #progress-wrapper
+        =haml :campaign_progress, locals: {campaign: @campaign}
       #campaign-details
         %h2= "Title: #{@campaign.title}"
-        #progress-wrapper
-          =haml :campaign_progress, locals: {campaign: @campaign}
         #voice-number
           =haml :voice_numbers, locals:{voice_numbers: @campaign.voice_numbers}
           %a{href: "/campaign/#{@campaign.id}/assign_voice_number"} Assign another

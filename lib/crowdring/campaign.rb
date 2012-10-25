@@ -15,7 +15,7 @@ module Crowdring
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
     
     has n, :asks, through: Resource, constraint: :destroy
-
+    
     def initialize(opts)
       message = opts.delete('message') || opts.delete(:message)
       super opts

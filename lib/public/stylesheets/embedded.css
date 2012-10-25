@@ -1,28 +1,104 @@
-#progress #progress-outer {
+#progress-outer {
+  position:relative;
   width: 100%;
-  height: 100%;
-  background-color: #e5f6f7;
-  border: 1px solid #00b1bb;
+  height: 50px;
   z-index: 0;
+  background: #fefefe; /* Old browsers */
+  line-height: 48px;
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  border:1px solid #333 ;
+  -webkit-box-shadow: -2px 0px 1px #333;
+  -moz-box-shadow:    -2px 0px 1px #333;
+  box-shadow:         -2px 0px 1px #333;
 }
 
-#progress #progress-inner {
+.goalcount {
+  display:inline;
+  position: absolute;
+  top:10px;
+  right:7px;
+  font-family: Futura, Helvetica;
+  font-size:14px;
+  font-weight: bold;
+  color: #1b85c0;
+}
+
+#progress-inner {
   max-width: 100%;
-  background-color: red;
+  background-color: coral;
+  position:relative;
   text-align: right;
-  z-index: 1;
-  background: #17c1cc; /* Old browsers */
-  background: -moz-linear-gradient(top,  #17c1cc 0%, #17c1cc 39%, #00b1bb 70%, #00b1bb 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#17c1cc), color-stop(39%,#17c1cc), color-stop(70%,#00b1bb), color-stop(100%,#00b1bb)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  #17c1cc 0%,#17c1cc 39%,#00b1bb 70%,#00b1bb 100%); /* W3C */
-  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#17c1cc', endColorstr='#00b1bb',GradientType=0 ); /* IE6-9 */
+  z-index: 2;
+  background: #1b85c0; /* Old browsers */
+  -webkit-border-radius: 7px;
+  -moz-border-radius: 7px;
+  border-radius: 7px;
+  -webkit-box-shadow: -2px 0px 1px #333;
+  -moz-box-shadow:    -2px 0px 1px #333;
+  box-shadow:         -2px 0px 1px #333;
 }
 
-#progress .count {
-  color: white;
-  margin-right: 5px;
-  margin-left: 5px;
+#progress-inner::before {
+  z-index: 4;
+  content: ""; 
+  width: 15px; 
+  height: 75px;
+  position: absolute;
+  top:0;
+  right:0;
+  margin-top:-15px;
+  margin-right:-15px;
+  background: #1b85c0; /* Old browsers */
+  -webkit-transform: skew(-30deg); 
+  -moz-transform: skew(-30deg); 
+  -o-transform: skew(-30deg);
+  transform: skew(-30deg);
+  border:1px solid #333 ;
 }
+
+#progress-inner::after {
+  z-index: 3;
+  content: ""; 
+  background: #1b85c0; /* Old browsers */
+  width: 20px; 
+  height: 20px;
+  position: absolute;
+  top:0;
+  right:0;
+  margin-right:-13px;
+}
+
+.count {
+  color: white;
+  margin-right: 10px;
+  margin-left: 5px;
+  font-family: Futura, Helvetica;
+  font-size:32px;
+  font-weight: bold;
+}
+
+.teal #progress-inner, .teal #progress-inner::before, .teal #progress-inner::after{
+  background:#15E0CA;
+}
+
+.teal .goalcount {
+  color:#15E0CA;
+}
+.coral #progress-inner, .coral #progress-inner::before, .coral #progress-inner::after{
+  background:#FF6F54;
+}
+
+.coral .goalcount {
+  color:#FF6F54;
+}
+
+.blue #progress-inner, .blue #progress-inner::before, .blue #progress-inner::after{
+  background:#1b85c0;
+}
+
+.blue .goalcount{
+  color: #1b85c0; 
+}
+

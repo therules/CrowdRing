@@ -192,13 +192,9 @@ module Crowdring
       end
     end
 
-    get '/campaign/:id/progress' do
-      campaign = Campaign.get(params[:id])
-      haml :campaign_progress, locals: {campaign: campaign}
-    end
-
     get '/campaign/:id/progress-embed' do
       @campaign = Campaign.get(params[:id])
+      @color = params[:color]
       haml :campaign_progress_embedded, layout: false
     end
 
