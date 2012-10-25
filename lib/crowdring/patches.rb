@@ -22,7 +22,7 @@ Subject: Welcome to Crowdring!
 
 Hello #{to},
 
-#{created_by} created a Crowdring account for you. Login at campaign dot crowdring dot org
+#{created_by} created a Crowdring account for you. Login at http://campaign.crowdring.org 
 Your username is #{to}
 Your password is #{password}
 
@@ -37,7 +37,6 @@ MESSAGE_END
     end 
   end
 end
-
 
 module Sinatra
   module SinatraAuthentication
