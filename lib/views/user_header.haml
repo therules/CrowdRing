@@ -2,5 +2,5 @@
   -if logged_in?
     -if current_user.admin?
       %a{href: '/users'} Manage users
-    %a{href: "/users/#{current_user.id}/edit"} Manage account
+    %a{href: '/changepassword'} Change password
     %a{href: '/logout'} Logout

@@ -50,12 +50,12 @@ module Sinatra
         orig_registered(app)
         
         app.get '/newuser' do
-          haml get_view_as_string("newuser.haml"), :layout => use_layout?
+          haml get_view_as_string("newuser.haml"), layout: use_layout?
         end
 
         app.post '/newuser' do
           if params[:email] != params[:email_confirmation]
-            flash[:errors] = "Email and confirmation email do not match"
+            flash[:errors] = "Email and confirmation email do not match."
             redirect '/newuser?' + hash_to_query_string(params)
           else
             password = PasswordGenerator.generate
@@ -68,6 +68,26 @@ module Sinatra
               flash[:errors] = "#{@user.errors}"
               redirect '/newuser?' + hash_to_query_string(params)
             end
+          end
+        end
+
+        app.get '/changepassword' do
+          haml get_view_as_string("change_password.haml"), layout: use_layout?
+        end
+
+        app.post '/changepassword' do
+          user = current_user
+          if User.authenticate(user.email, params[:current_password])
+            if user.update(params[:user])
+              flash[:notice] = "Password successfully updated."
+              redirect to('/')
+            else
+              flash[:errors] = "#{user.errors}"
+              redirect '/changepassword'
+            end
+          else
+            flash[:errors] = "Original password is incorrect."
+            redirect '/changepassword'
           end
         end
       end
