@@ -37,6 +37,28 @@ MESSAGE_END
         smtp.send_message message, ENV["SMTP_USER"], to
       end
     end 
+
+
+    def send_reset_password_email(to, password)
+      message = <<MESSAGE_END
+To: <#{to}>
+Subject: Your Crowdring password has been reset.
+
+Hello #{to},
+
+Your Crowdring password has been reset by you or some trickster. Login at https://campaign.crowdring.org 
+
+Your new password is #{password}
+
+Happy campaigning!
+The Crowdring Team
+MESSAGE_END
+
+      Net::SMTP.start(ENV["SMTP_HOST"], ENV["SMTP_PORT"],
+          ENV["SMTP_DOMAIN"], ENV["SMTP_USER"], ENV["SMTP_PASSWORD"], :login) do |smtp|
+        smtp.send_message message, ENV["SMTP_USER"], to
+      end
+    end
   end
 end
 
@@ -72,7 +94,7 @@ module Sinatra
         end
 
         app.get '/changepassword' do
-          haml get_view_as_string("change_password.haml"), layout: use_layout?
+          haml get_view_as_string("change_password.haml")
         end
 
         app.post '/changepassword' do
@@ -90,6 +112,29 @@ module Sinatra
             redirect '/changepassword'
           end
         end
+
+        app.get '/resetpassword' do
+          haml get_view_as_string("reset_password.haml")
+        end
+
+        app.post '/resetpassword' do
+          user = DmUser.first(email: params[:email])
+          if user
+            password = PasswordGenerator.generate
+            if user.update(password: password, password_confirmation: password)
+              send_reset_password_email(params[:email], password)
+              flash[:notice] = "New password emailed to #{params[:email]}"
+              redirect '/'
+            else
+              flash[:errors] = "#{user.errors}"
+              redirect '/resetpassword'
+            end
+          else
+            flash[:errors] = "Failed to reset password for #{params[:email]}"
+            redirect '/resetpassword'
+          end
+        end
+
       end
       
     end

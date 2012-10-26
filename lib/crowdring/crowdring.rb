@@ -61,7 +61,7 @@ module Crowdring
       end
     end
 
-    before /^((?!((voice|sms)response)|login|progress-embed).)*$/ do
+    before /^((?!((voice|sms)response)|login|resetpassword|progress-embed).)*$/ do
       login_required unless settings.environment == :test
     end
 
