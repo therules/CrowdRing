@@ -1,4 +1,5 @@
 require 'net/smtp'
+require 'utils/smtp-tls'
 
 module Sinatra
   module Helpers
@@ -22,7 +23,8 @@ Subject: Welcome to Crowdring!
 
 Hello #{to},
 
-#{created_by} created a Crowdring account for you. Login at http://campaign.crowdring.org 
+#{created_by} created a Crowdring account for you. Login at https://campaign.crowdring.org 
+
 Your username is #{to}
 Your password is #{password}
 
