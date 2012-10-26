@@ -1,4 +1,4 @@
-Ruby-Crowdring
+crowdring
 ==============
 
-Ruby Crowdring, from https://github.com/mbelinsky/Crowdring
+crowdring, from https://github.com/mbelinsky/Crowdring
