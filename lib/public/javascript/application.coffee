@@ -31,6 +31,7 @@ setupBroadcastTextArea = ->
     allowed: character_limit,
     warning: 20,
   })
+
 setupTabs = ->
   $( "#tabs" ).tabs()
 
@@ -116,7 +117,12 @@ newFilterMessage = ->
         return false
     }))
 
-
+  $('.counter', newDiv).remove()
+  $('.msg-text-area', newDiv).charCount({
+    allowed: 160,
+    warning: 20,
+  })
+  
 $ ->
   $('select.campaign-select').chosen()
   setTimeout((->$('.notice').slideUp('medium')), 3000)
@@ -127,6 +133,11 @@ $ ->
   window.onhashchange()
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
+
+  $('.msg-text-area').charCount({
+    allowed: 160,
+    warning: 20,
+  })
   
   window.removeTag = (btn) -> removeTag(btn)
   window.addTag = (div, id) -> addTag(div, id)
