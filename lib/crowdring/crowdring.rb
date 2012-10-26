@@ -179,7 +179,7 @@ module Crowdring
     get '/campaign/:id' do
       @campaign = Campaign.get(params[:id])
       if @campaign
-        @ringers =  @campaign.rings.all(order: [:created_at.desc], limit: 10).ringer
+        @ringers =  @campaign.rings.all(order: [:created_at.desc], limit: 10).map(&:ringer)
         @ring_count = @campaign.rings.count
         @ringer_count = @campaign.ringers.count
         @countries = @campaign.ringers.map(&:country).uniq
