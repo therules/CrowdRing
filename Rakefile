@@ -9,6 +9,16 @@ end
 
 
 namespace :db do 
+  task :migrate, :env do |cmd, args|
+    env = args[:env] || "development"
+    Rake::Task['environment'].invoke(env)
+
+    database_url = ENV["DATABASE_URL"] || "postgres://localhost/crowdring_#{env}"
+    DataMapper.setup(:default, database_url)
+    DataMapper.finalize
+    DataMapper.auto_upgrade!
+  end
+
   task :reset, :env do |cmd, args|
     env = args[:env] || "development"
     Rake::Task['environment'].invoke(env)
