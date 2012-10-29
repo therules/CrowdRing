@@ -12,7 +12,7 @@ module PasswordGenerator
     @@words
   end
 
-  def generate(word_count=3)
+  def generate(word_count=4)
     words = load_words
 
     chosen_words = (1..word_count).reduce([]) do |chosen, _|
