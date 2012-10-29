@@ -3,7 +3,7 @@ module Crowdring
     def pretty_phone_number
       return phone_number unless Phoner::Phone.valid? phone_number
       number = Phoner::Phone.parse phone_number
-      Phoner::Phone.n1_length = 4 if country_code == '91'
+      Phoner::Phone.n1_length = (country_code == '91') ? 4 : 3
       number.format "+%c (%a) %f-%l" + " [" + country.char_3_code + "]"
     end
 
