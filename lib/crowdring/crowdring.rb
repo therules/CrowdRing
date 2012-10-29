@@ -23,6 +23,7 @@ module Crowdring
     configure :development do
       register Sinatra::Reloader
       service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+27114891907'], output: true), default: true)
+      service_handler.add('routo', RoutoService.new(ENV["ROUTO_USERNAME"], ENV["ROUTO_PASSWORD"], ENV["ROUTO_NUMBER"]))
     end
 
     configure :production do
@@ -32,6 +33,7 @@ module Crowdring
         ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
       service_handler.add('voxeo', VoxeoService.new(ENV["VOXEO_APP_ID"], ENV["VOXEO_USERNAME"], ENV["VOXEO_PASSWORD"]))
       service_handler.add('nexmo', NexmoService.new(ENV["NEXMO_KEY"], ENV["NEXMO_SECRET"]))
+      service_handler.add('routo', RoutoService.new(ENV["ROUTO_USERNAME"], ENV["ROUTO_PASWORD"], ENV["ROUTO_NUMBER"]))
     end
 
     configure do

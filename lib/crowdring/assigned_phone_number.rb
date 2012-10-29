@@ -9,7 +9,6 @@ module Crowdring
 
         belongs_to :campaign
 
-        validates_with_method :phone_number, :valid_phone_number?
         validates_uniqueness_of :phone_number
 
         def self.from(number)
@@ -31,6 +30,8 @@ module Crowdring
     property :description, String, required: true, length: 0..64,
       messages: { presence: 'Non-empty description required',
                   length: 'Description must be fewer than 64 letters in length' }
+                  
+    validates_with_method :phone_number, :valid_phone_number?
   end
 
   class AssignedSMSNumber
