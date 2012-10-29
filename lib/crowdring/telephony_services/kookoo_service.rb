@@ -17,7 +17,7 @@ module Crowdring
 
   class KooKooService < TelephonyService
     supports :voice
-    request_handler KooKooRequest
+    request_handler(KooKooRequest) {|inst| [inst.numbers.first]}
 
     def initialize(api_key, number)
       @api_key = api_key
