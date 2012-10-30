@@ -33,7 +33,7 @@ module Crowdring
       service_handler.add('voxeo', VoxeoService.new(ENV["VOXEO_APP_ID"], ENV["VOXEO_USERNAME"], ENV["VOXEO_PASSWORD"]))
       service_handler.add('nexmo', NexmoService.new(ENV["NEXMO_KEY"], ENV["NEXMO_SECRET"]))
       service_handler.add('routo', RoutoService.new(ENV["ROUTO_USERNAME"], ENV["ROUTO_PASSWORD"], ENV["ROUTO_NUMBER"]))
-      service_handler.add('netcore', NetcoreService.new(ENV["NETCORE_NUMBER"]))
+      service_handler.add('netcore', NetcoreService.new(ENV["NETCORE_FEEDID"], ENV['NETCORE_FROM'], ENV['NETCORE_PASSWORD']))
     end
 
     configure do
