@@ -30,13 +30,7 @@ module Crowdring
       uri = URI('https://bulkpush.mytoday.com/BulkSms/SingleMsgApi')
       encoded_params = encode_params(params)
       uri.query = encoded_params
-      p uri
       response = send_request(uri)
-      p response.body
-    end
-
-    def broadcast(from, msg, to_numbers)
-      Resque.enqueue(NexmoBatchSendSms, params, from, msg, to_numbers)
     end
 
     private 
@@ -57,6 +51,3 @@ module Crowdring
     end
   end
 end
-
-
-# https://bulkpush.mytoday.com/BulkSms/SingleMsgApi?feedid=1879&username=9967025255&password=hello&To=919967025255&Text=Hello check2350&time=200812110950&senderid=testSenderID
