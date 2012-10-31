@@ -71,52 +71,53 @@ module Crowdring
       Crowdring.statsd.increment "#{$1}_received.count"
     end
 
-    def sms_response
-      []
-    end
+    module Response
+      module_function
 
-    def voice_response
-      [{cmd: :reject}]
-    end
-
-    def respond(cur_service, request, response)
-      if AssignedVoiceNumber.from(request.to)
-        ringer = Ringer.from(request.from)
-        AssignedVoiceNumber.from(request.to).ring(ringer)
+      def sms
+        []
       end
 
-      cur_service.build_response(request.to, response)
+      def voice
+        [{cmd: :reject}]
+      end
     end
 
-    def process_request(service_name, request, response)
+    def respond(cur_service, request, response_type)
+      AssignedPhoneNumber.handle(response_type, request)
+
+      cur_service.build_response(request.to, Response.send(response_type))
+    end
+
+    def process_request(service_name, request, response_type)
       cur_service = Server.service_handler.get(service_name)
       cur_request = cur_service.transform_request(request)
 
       if cur_request.callback?
         cur_service.process_callback(cur_request)
       else
-        respond(cur_service, cur_request, response)
+        respond(cur_service, cur_request, response_type)
       end
     end
 
     post '/smsresponse/:service' do
-      process_request(params[:service], request, sms_response)
+      process_request(params[:service], request, :sms)
     end
 
     get '/smsresponse/:service' do
-      process_request(params[:service], request, sms_response)
+      process_request(params[:service], request, :sms)
     end
 
     post '/voiceresponse/:service' do
-      process_request(params[:service], request, voice_response)
+      process_request(params[:service], request, :voice)
     end
 
     get '/voiceresponse/:service' do 
-      process_request(params[:service], request, voice_response)
+      process_request(params[:service], request, :voice)
     end
 
     get '/reports/netcore' do
-      process_request('netcore', request, voice_response)
+      process_request('netcore', request, :voice)
     end
 
     get '/' do  

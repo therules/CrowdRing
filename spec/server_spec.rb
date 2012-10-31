@@ -81,7 +81,7 @@ module Crowdring
     describe 'voice/sms response forwarding' do
       before(:each) do
         @campaign = Campaign.create(title: @number, message: @intro_response, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
-        @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
+        @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number, message: 'message')
         @fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
             transform_request: @fooresponse,
@@ -106,7 +106,6 @@ module Crowdring
 
       it 'should forward an POST sms request to the registered service' do
         @fooservice.should_receive(:build_response).once
-        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 
         Server.service_handler.add('foo', @fooservice)
         post '/smsresponse/foo'
@@ -126,7 +125,6 @@ module Crowdring
 
       it 'should forward an GET sms request to the registered service' do
         @fooservice.should_receive(:build_response).once
-        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 
         Server.service_handler.add('foo', @fooservice)
         get '/smsresponse/foo'
@@ -142,7 +140,7 @@ module Crowdring
 
         Server.service_handler.add('foo', @fooservice, default: true)
         Server.service_handler.add('bar', @barservice)
-        get '/smsresponse/bar'
+        get '/voiceresponse/bar'
         last_response.should be_ok
         last_response.body.should eq('barResponse')
       end
@@ -189,8 +187,8 @@ module Crowdring
       it 'should broadcast a message to all ringers of a campaign' do
         r1 = Crowdring::Ringer.create(phone_number: @number2)
         r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.sms_number.ring(r1)
-        @campaign.sms_number.ring(r2)
+        @campaign.voice_numbers.first.ring(r1)
+        @campaign.voice_numbers.first.ring(r2)
         
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
         @sent_to.should include(@number2)
@@ -210,7 +208,7 @@ module Crowdring
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
         newringer = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.sms_number.ring(newringer)
+        @campaign.voice_numbers.first.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
         @sent_to.should eq([@number3])
@@ -223,7 +221,7 @@ module Crowdring
         @campaign.most_recent_broadcast = DateTime.now - 1
         @campaign.save
         newringer = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.sms_number.ring(newringer)
+        @campaign.voice_numbers.first.ring(newringer)
 
         post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: "after:#{@campaign.most_recent_broadcast}"}
         Campaign.get(@campaign.id).new_rings.should be_empty

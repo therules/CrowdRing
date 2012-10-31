@@ -10,6 +10,7 @@ module Crowdring
     property :created_at,   DateTime
 
     has n, :rings, constraint: :destroy
+    has n, :texts, constraint: :destroy
 
     has n, :voice_numbers, 'AssignedVoiceNumber', constraint: :destroy
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
@@ -41,6 +42,10 @@ module Crowdring
       return unless rings.create(ringer: ringer).saved?
       ask = asks.reverse.find {|ask| ask.handle?(ringer) }
       ask.respond(ringer, response_numbers) if ask
+    end
+
+    def text(ringer, message)
+      texts.create(ringer: ringer, message: message)
     end
 
     def unique_rings

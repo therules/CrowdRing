@@ -49,6 +49,10 @@ module Crowdring
 
       message.send_message(to: ringer, from: response_numbers.sms_number) if message
     end
+
+    def trigger(ringers, response_numbers)
+      ringers.each {|ringer| trigger_for(ringer, response_numbers) }
+    end
   end
 
 

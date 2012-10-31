@@ -6,7 +6,9 @@ describe Crowdring::Ask do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
+    @number3 = '+18004444444'
     @ringer = Crowdring::Ringer.create(phone_number:@number2)
+    @ringer2 = Crowdring::Ringer.create(phone_number:@number4)
     @response_numbers = Crowdring::ResponseNumbers.new(voice_number: @number1, sms_number: @number3)
   end
 
@@ -47,4 +49,5 @@ describe Crowdring::Ask do
       ask.handle?(@ringer).should be_true
     end
   end
+
 end
