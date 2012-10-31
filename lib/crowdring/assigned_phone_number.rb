@@ -11,6 +11,10 @@ module Crowdring
 
         validates_uniqueness_of :phone_number
 
+        def phone_number=(number)
+          super Phoner::Phone.parse(number).to_s
+        end
+
         def self.from(number)
           norm_number = Phoner::Phone.parse(number).to_s
           self.first(phone_number: norm_number)
