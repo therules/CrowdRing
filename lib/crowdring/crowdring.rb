@@ -252,6 +252,10 @@ module Crowdring
 
       Tag.all.map {|tag| {category: tag.type, visible_label: tag.value, label: tag.to_s} }.to_json
     end
+    
+    not_found do
+      haml :not_found
+    end
 
     run! if app_file == $0
   end
