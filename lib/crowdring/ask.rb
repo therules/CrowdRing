@@ -20,6 +20,10 @@ module Crowdring
       offline_ask
     end
 
+    def handle?(type, ringer)
+      ringer.tags.include? recipient_tag
+    end
+
     def recipient_tag
       Tag.from_str("#{id}:recipient")
     end
@@ -57,8 +61,8 @@ module Crowdring
 
 
   class OfflineAsk < Ask
-    def handle?(ringer)
-      true
+    def handle?(type, ringer)
+      type == :voice
     end
 
     def typesym
@@ -67,12 +71,31 @@ module Crowdring
   end
 
   class JoinAsk < Ask
-    def handle?(ringer)
-      ringer.tags.include? recipient_tag
+    def handle?(type, ringer)
+      type == :voice && super(type, ringer)
     end
 
     def typesym
       :join_ask
+    end
+  end
+
+  class TextAsk < Ask
+    has n, :texts, through: Resource
+
+    def handle?(type, ringer)
+      type == :sms && super(type, ringer)
+    end
+
+    def text(ringer, text, response_numbers)
+      texts << text
+      self.save
+
+      respond(ringer, response_numbers)
+    end
+
+    def typesym
+      :text_ask
     end
   end
 end

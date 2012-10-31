@@ -1,10 +1,11 @@
 module Crowdring
   class LoggingRequest
-    attr_reader :from, :to
+    attr_reader :from, :to, :message
 
     def initialize(request)
       @to = request.GET['to']
       @from = request.GET['from']
+      @message = request.GET['msg'] if request.GET['msg']
     end
 
     def callback?

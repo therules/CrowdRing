@@ -49,7 +49,7 @@
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
           =haml :ask, locals: {ask: ask, type: ask.typesym}
-
+      
 
     #broadcast.form-box
       %h3 Broadcast

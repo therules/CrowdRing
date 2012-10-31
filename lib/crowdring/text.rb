@@ -7,7 +7,7 @@ module Crowdring
     property :created_at, DateTime
     property :message, String, length: 160
 
-    belongs_to :campaign
+    belongs_to :campaign, required: false
     belongs_to :ringer
 
     def phone_number

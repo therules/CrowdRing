@@ -23,13 +23,12 @@ describe Crowdring::Ask do
     it 'should trigger the join ask upon receiving a response' do
       ask = Crowdring::Ask.create_double_opt_in(nil)
       ask.respond(@ringer, @response_numbers)
-
       ask.triggered_ask.recipients(Crowdring::Ringer.all).should eq([@ringer])
     end
 
     it 'should handle any incoming ring' do
       ask = Crowdring::OfflineAsk.create
-      ask.handle?(@ringer).should be_true
+      ask.handle?(:voice, @ringer).should be_true
     end
   end
 
@@ -44,10 +43,23 @@ describe Crowdring::Ask do
 
     it 'should handle an incoming ring that it has sent a join ask to' do
       ask = Crowdring::JoinAsk.create
-      ask.handle?(@ringer).should be_false
+      ask.handle?(:voice, @ringer).should be_false
       ask.trigger_for(@ringer, @response_numbers)
-      ask.handle?(@ringer).should be_true
+      ask.handle?(:voice, @ringer).should be_true
     end
   end
 
+  describe 'text ask' do
+    it 'should record response from ringer' do
+      message = Crowdring::Message.new(default_message: 'blah')
+      text = Crowdring::Text.new(message: 'BLAH', ringer: @ringer)
+      ask = Crowdring::TextAsk.new(message: message)
+
+      ask.trigger_for(@ringer, @response_numbers)
+      ask.text(@ringer, text, @response_numbers)
+
+      ask.texts.count.should eq(1)
+      ask.texts.first.should eq(text)
+    end
+  end
 end
