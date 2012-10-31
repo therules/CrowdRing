@@ -2,11 +2,12 @@ require 'nexmo'
 
 module Crowdring
   class NexmoRequest
-    attr_reader :from, :to
+    attr_reader :from, :to, :message
 
     def initialize(request)
       @from = request.GET['msisdn']
       @to = request.GET['to']
+      @message = request.GET['text']
     end
 
     def callback?
@@ -26,6 +27,10 @@ module Crowdring
 
     def numbers
       @client.get_account_numbers(size:100).object[:numbers].map {|n| n[:msisdn] }
+    end
+
+    def build_response(from, commands)
+      ''
     end
 
     def send_sms(params)
