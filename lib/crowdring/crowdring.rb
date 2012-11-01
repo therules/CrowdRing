@@ -70,19 +70,7 @@ module Crowdring
     before /(voice|sms)response/ do
       Crowdring.statsd.increment "#{$1}_received.count"
     end
-
-    module Response
-      module_function
-
-      def sms
-        []
-      end
-
-      def voice
-        [{cmd: :reject}]
-      end
-    end
-
+    
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       cur_service.build_response(request.to, response)

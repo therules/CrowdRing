@@ -104,7 +104,7 @@ module Crowdring
   class VoicemailAsk < Ask
     property :prompt, String, length: 250
 
-    has n, :voicemails, through: Resource
+    has n, :voicemails, through: Resource, constraint: :destroy
 
 
     def handle?(type, ringer)
