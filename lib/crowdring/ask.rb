@@ -15,7 +15,7 @@ module Crowdring
     
     def self.create_double_opt_in(message)
       offline_ask = OfflineAsk.create
-      join_ask = JoinAsk.create(message: message)
+      join_ask = VoicemailAsk.create(message: message, prompt: 'Give me your best wookie impression!')
       offline_ask.triggered_ask = join_ask
       offline_ask
     end
@@ -37,6 +37,8 @@ module Crowdring
       ringer.save
 
       triggered_ask.trigger_for(ringer, response_numbers) if triggered_ask
+
+      [{cmd: :reject}]
     end
 
     def recipients(ringers=Ringer.all)
@@ -96,6 +98,27 @@ module Crowdring
 
     def typesym
       :text_ask
+    end
+  end
+
+  class VoicemailAsk < Ask
+    property :prompt, String, length: 250
+
+    has n, :voicemails, through: Resource
+
+
+    def handle?(type, ringer)
+      type == :voice && super(type, ringer)
+    end
+
+    def respond(ringer, response_numbers)
+      voicemail = voicemails.create(ringer: ringer)
+      super(ringer, response_numbers)
+      [{cmd: :record, prompt: prompt, filename: voicemail.filename}]
+    end
+
+    def typesym
+      :voicemail_ask
     end
   end
 end

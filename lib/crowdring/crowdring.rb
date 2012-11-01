@@ -84,9 +84,8 @@ module Crowdring
     end
 
     def respond(cur_service, request, response_type)
-      AssignedPhoneNumber.handle(response_type, request)
-
-      cur_service.build_response(request.to, Response.send(response_type))
+      response = AssignedPhoneNumber.handle(response_type, request)
+      cur_service.build_response(request.to, response)
     end
 
     def process_request(service_name, request, response_type)
