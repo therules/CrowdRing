@@ -29,7 +29,7 @@ module Crowdring
         when :reject
           '<Hangup reason="busy">'
         when :record
-          "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}'>"
+          "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}'/>"
         end
       end.join('') + '</Response>'
     end
