@@ -242,7 +242,6 @@ module Crowdring
     end
 
     post '/voicemails/:id/plivo' do
-      p params
       voicemail = Voicemail.get(params[:id])
       voicemail.update(filename: params[:RecordUrl])
     end
