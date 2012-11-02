@@ -12,7 +12,7 @@ module Crowdring
     end
 
     def plivo_callback
-      "#{ENV['SERVER_NAME']}/voicemails/#{id}/plivo/"
+      "#{ENV['SERVER_NAME']}/voicemails/#{id}/plivo"
     end
   end
 end
