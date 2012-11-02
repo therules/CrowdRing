@@ -240,6 +240,11 @@ module Crowdring
 
       Tag.all.map {|tag| {category: tag.type, visible_label: tag.value, label: tag.to_s} }.to_json
     end
+
+    post '/voicemails/:id/plivo' do
+      voicemail = Voicemail.get(params[:id])
+      voicemail.update(filename: params[:RecordUrl])
+    end
     
     not_found do
       haml :not_found

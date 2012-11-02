@@ -47,7 +47,8 @@ describe Crowdring::VoxeoService do
   end
 
   it 'should build a record response using the correct filename and prompt' do
-    response = @service.build_response('from', [{cmd: :record, prompt: 'prompt', filename: 'filename'}])
+    voicemail = double('voicemail', filename: 'filename')
+    response = @service.build_response('from', [{cmd: :record, prompt: 'prompt', voicemail: voicemail}])
     response.should match("<answer><do><prompt value='prompt'/><recordaudio value='filename' format='audio/wav' /></do></answer>")
   end
 

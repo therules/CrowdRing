@@ -114,7 +114,7 @@ module Crowdring
     def respond(ringer, response_numbers)
       voicemail = voicemails.create(ringer: ringer)
       super(ringer, response_numbers)
-      [{cmd: :record, prompt: prompt, filename: voicemail.filename}]
+      [{cmd: :record, prompt: prompt, voicemail: voicemail}]
     end
 
     def typesym

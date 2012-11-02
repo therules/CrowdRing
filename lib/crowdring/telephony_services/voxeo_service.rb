@@ -32,7 +32,7 @@ module Crowdring
           '<reject />'
         when :record
           prompt = c[:prompt] || 'Please leave a message'
-          "<answer><do><prompt value='#{prompt}'/><recordaudio value='#{c[:filename]}' format='audio/wav' /></do></answer>"
+          "<answer><do><prompt value='#{prompt}'/><recordaudio value='#{c[:voicemail].filename}' format='audio/wav' /></do></answer>"
         end
       end.join('') + '</callxml>'
     end

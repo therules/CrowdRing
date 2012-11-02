@@ -28,6 +28,8 @@ module Crowdring
         case c[:cmd]
         when :reject
           '<Hangup reason="busy">'
+        when :record
+          "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}'>"
         end
       end.join('') + '</Response>'
     end

@@ -44,4 +44,11 @@ describe Crowdring::PlivoService do
     response = @service.build_response('from', [{cmd: :reject}])
     response.should match('<Hangup reason="busy">')
   end
+
+  it 'should be able to record a voicemail' do
+    voicemail = double('voicemail', plivo_callback: 'callback')
+    response = @service.build_response('from', [{cmd: :record, prompt: 'prompt', voicemail: voicemail}])
+    response.should match('<Speak>prompt</Speak>')
+    response.should match("<Record action='callback'>")
+  end
 end
