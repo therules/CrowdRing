@@ -49,6 +49,6 @@ describe Crowdring::PlivoService do
     voicemail = double('voicemail', plivo_callback: 'callback')
     response = @service.build_response('from', [{cmd: :record, prompt: 'prompt', voicemail: voicemail}])
     response.should match('<Speak>prompt</Speak>')
-    response.should match("<Record action='callback'/>")
+    response.should match("<Record action='callback' callbackUrl='callback'/>")
   end
 end
