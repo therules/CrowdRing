@@ -5,17 +5,16 @@ module Crowdring
     module_function
 
     def default_prices
-      return {}
-      # return @@prices unless @@prices.nil?
+      return @@prices unless @@prices.nil?
 
-      # data_file = File.join(File.dirname(__FILE__), '../..', 'data', 'sms_prices.yml')
-      # @@prices = YAML.load(File.read(data_file))
+      data_file = File.join(File.dirname(__FILE__), '../..', 'data', 'sms_prices.yml')
+      @@prices = YAML.load(File.read(data_file))
     end
 
     def price_for(service, number, opts={})
       prices = opts[:prices] || default_prices
 
-      prices[service][number.country.char_3_code]
+      prices[service] && prices[service][number.country.char_3_code]
     end
   end
 end
