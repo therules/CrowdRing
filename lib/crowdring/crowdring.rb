@@ -224,6 +224,17 @@ module Crowdring
       haml :tag_new
     end
 
+    post '/campaign/:id/update' do
+      params.delete(params[:splat])
+      params.delete(params[:captures])
+      campaign = Campaign.get(params[:id])
+      if params[:voice_number_id]
+        campaign.voice_numbers.get(params[:voice_number_id]).destroy
+        flash[:notice] = "Voice number has been removed"
+      end  
+      redirect to("/campaigns##{campaign.id}")
+    end
+
     post '/tags/create' do
       tag = Tag.from_str(params[:type] + ':' + params[:value])
       if tag.saved?
@@ -245,7 +256,7 @@ module Crowdring
       voicemail = Voicemail.get(params[:id])
       voicemail.update(filename: params[:RecordUrl])
     end
-    
+
     not_found do
       haml :not_found
     end

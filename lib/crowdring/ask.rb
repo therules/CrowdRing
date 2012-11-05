@@ -106,7 +106,6 @@ module Crowdring
 
     has n, :voicemails, through: Resource, constraint: :destroy
 
-
     def handle?(type, ringer)
       type == :voice && super(type, ringer)
     end

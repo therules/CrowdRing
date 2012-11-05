@@ -1,7 +1,11 @@
 #voice-numbers
   %h2 Voice Numbers
+  -voice_numbers = campaign.voice_numbers
   -if voice_numbers.empty?
     %h3 No voice number selected
   -else
     -voice_numbers.each do |voice_number|
       %h4= "Phone Number: #{voice_number.pretty_phone_number}, Description: #{voice_number.description}"
+      %form{action: "/campaign/#{campaign.id}/update", method: 'post'}
+        %input{type: 'hidden', name: 'voice_number_id', value: "#{voice_number.id}"}
+        %button{type: 'submit'} Remove
