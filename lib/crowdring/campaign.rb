@@ -12,7 +12,7 @@ module Crowdring
     has n, :rings, constraint: :destroy
     has n, :texts, constraint: :destroy
 
-    has n, :voice_numbers, 'AssignedVoiceNumber', constraint: :destroy
+    has n, :voice_numbers, 'AssignedCampaignVoiceNumber', constraint: :destroy
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
     
     has n, :asks, through: Resource, constraint: :destroy

@@ -24,7 +24,7 @@ describe Crowdring::Campaign do
       @c.save
 
       @c.destroy.should be_true
-      Crowdring::AssignedVoiceNumber.all.should be_empty
+      Crowdring::AssignedCampaignVoiceNumber.all.should be_empty
       Crowdring::AssignedSMSNumber.all.should be_empty
     end
 

@@ -4,10 +4,8 @@ module Crowdring
       base.class_eval do
         include DataMapper::Resource
 
-        property :id, DataMapper::Property::Serial
-        property :phone_number, DataMapper::Property::String
+        property :phone_number, DataMapper::Property::String, key: true
 
-        belongs_to :campaign
 
         validates_uniqueness_of :phone_number
 
@@ -28,20 +26,35 @@ module Crowdring
     include AssignedPhoneNumberFields
     include PhoneNumberFields
 
-    property :description, String, required: true, length: 0..64,
-      messages: { presence: 'Non-empty description required',
-                  length: 'Description must be fewer than 64 letters in length' }
-                  
+    property :type, Discriminator
+    property :description, String
+
+    belongs_to :campaign, required: false
+
     validates_with_method :phone_number, :valid_phone_number?
+  end
+
+  class AssignedCampaignVoiceNumber < AssignedVoiceNumber
+    validates_presence_of :campaign
+    validates_presence_of :description
+    validates_length_of :description, max: 64
 
     def ring(ringer)
       campaign.ring(ringer)
     end
   end
 
+  class AssignedUnsubscribeVoiceNumber < AssignedVoiceNumber
+    def ring(ringer)
+      #ringer rang an unsubscribe number
+    end
+  end
+
   class AssignedSMSNumber
     include AssignedPhoneNumberFields
     include PhoneNumberFields
+
+    belongs_to :campaign
 
     def text(ringer, message)
       campaign.text(ringer, message)
