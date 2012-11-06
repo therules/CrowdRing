@@ -29,6 +29,10 @@ module Crowdring
       prioritized_messages.find {|fm| fm.send_message(params) }
     end
 
+    def for(ringer)
+      prioritized_messages.find {|fm| fm.accept?(ringer) }
+    end
+
     def default_message
       if default_filtered_message.nil?
         nil

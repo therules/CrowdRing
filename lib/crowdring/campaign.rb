@@ -34,20 +34,16 @@ module Crowdring
       rings.all.ringer
     end
 
-    def response_numbers
-      ResponseNumbers.new(voice_number: voice_numbers.first.phone_number, sms_number: sms_number.phone_number)
-    end
-
     def ring(ringer)
       return unless rings.create(ringer: ringer).saved?
       ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
-      ask.respond(ringer, response_numbers) if ask
+      ask.respond(ringer, sms_number.phone_number) if ask
     end
 
     def text(ringer, message)
       text = texts.create(ringer: ringer, message: message)
       ask = asks.reverse.find {|ask| ask.handle?(:sms, ringer) }
-      ask.text(ringer, text, response_numbers) if ask
+      ask.text(ringer, text, sms_number.phone_number) if ask
     end
 
     def unique_rings

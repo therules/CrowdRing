@@ -32,11 +32,11 @@ module Crowdring
       Tag.from_str("#{id}:respondent")
     end
 
-    def respond(ringer, response_numbers)
+    def respond(ringer, sms_number)
       ringer.tags << respondent_tag
       ringer.save
 
-      triggered_ask.trigger_for(ringer, response_numbers) if triggered_ask
+      triggered_ask.trigger_for(ringer, sms_number) if triggered_ask
 
       [{cmd: :reject}]
     end
@@ -49,15 +49,26 @@ module Crowdring
       ringers.select {|r| r.tags.include?(respondent_tag)}
     end
 
-    def trigger_for(ringer, response_numbers)
+    def trigger_for(ringer, sms_number)
       ringer.tags << recipient_tag
       ringer.save
 
-      message.send_message(to: ringer, from: response_numbers.sms_number) if message
+      message.send_message(to: ringer, from: sms_number) if message
     end
 
-    def trigger(ringers, response_numbers)
-      ringers.each {|ringer| trigger_for(ringer, response_numbers) }
+    def trigger(ringers, sms_number)
+      ringers.each {|ringer| trigger_for(ringer, sms_number) }
+    end
+
+    def initial_price_estimate(ringers=Ringer.all, sms_number)
+      return 0.0 if message.nil?
+
+      smss = ringers.map do |ringer|
+        text = message.for(ringer)
+        text && OutgoingSMS.new(from: sms_number, to: ringer, text: text)
+      end
+
+      PriceEstimate.new(smss)
     end
   end
 
@@ -89,11 +100,11 @@ module Crowdring
       type == :sms && super(type, ringer)
     end
 
-    def text(ringer, text, response_numbers)
+    def text(ringer, text, sms_number)
       texts << text
       self.save
 
-      respond(ringer, response_numbers)
+      respond(ringer, sms_number)
     end
 
     def typesym
@@ -110,9 +121,9 @@ module Crowdring
       type == :voice && super(type, ringer)
     end
 
-    def respond(ringer, response_numbers)
+    def respond(ringer, sms_number)
       voicemail = voicemails.create(ringer: ringer)
-      super(ringer, response_numbers)
+      super(ringer, sms_number)
       [{cmd: :record, prompt: prompt, voicemail: voicemail}]
     end
 

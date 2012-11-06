@@ -9,20 +9,20 @@ describe Crowdring::Ask do
     @number3 = '+18004444444'
     @ringer = Crowdring::Ringer.create(phone_number:@number2)
     @ringer2 = Crowdring::Ringer.create(phone_number:@number4)
-    @response_numbers = Crowdring::ResponseNumbers.new(voice_number: @number1, sms_number: @number3)
+    @sms_number = @number3 
   end
 
   describe 'offline ask' do
     it 'should tag a ringer as a supporter on a response' do
       ask = Crowdring::OfflineAsk.create
-      ask.respond(@ringer, @response_numbers)
+      ask.respond(@ringer, @sms_number)
 
       ask.respondents(Crowdring::Ringer.all).should eq([@ringer])
     end
 
     it 'should trigger the join ask upon receiving a response' do
       ask = Crowdring::Ask.create_double_opt_in(nil)
-      ask.respond(@ringer, @response_numbers)
+      ask.respond(@ringer, @sms_number)
       ask.triggered_ask.recipients(Crowdring::Ringer.all).should eq([@ringer])
     end
 
@@ -38,13 +38,13 @@ describe Crowdring::Ask do
       message.should_receive(:send_message).once.with(from: @number3, to: @ringer)
 
       ask = Crowdring::JoinAsk.new(message: message)
-      ask.trigger_for(@ringer, @response_numbers)
+      ask.trigger_for(@ringer, @sms_number)
     end
 
     it 'should handle an incoming ring that it has sent a join ask to' do
       ask = Crowdring::JoinAsk.create
       ask.handle?(:voice, @ringer).should be_false
-      ask.trigger_for(@ringer, @response_numbers)
+      ask.trigger_for(@ringer, @sms_number)
       ask.handle?(:voice, @ringer).should be_true
     end
   end
@@ -55,8 +55,8 @@ describe Crowdring::Ask do
       text = Crowdring::Text.new(message: 'BLAH', ringer: @ringer)
       ask = Crowdring::TextAsk.new(message: message)
 
-      ask.trigger_for(@ringer, @response_numbers)
-      ask.text(@ringer, text, @response_numbers)
+      ask.trigger_for(@ringer, @sms_number)
+      ask.text(@ringer, text, @sms_number)
 
       ask.texts.count.should eq(1)
       ask.texts.first.should eq(text)

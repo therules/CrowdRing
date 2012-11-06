@@ -45,6 +45,8 @@ require 'crowdring/filtered_message'
 require 'crowdring/message'
 require 'crowdring/csv_fields'
 require 'crowdring/sms_prices'
+require 'crowdring/price_estimate'
+require 'crowdring/outgoing_sms'
 
 require 'crowdring/high_charts_builder'
 require 'crowdring/campaign_stats'

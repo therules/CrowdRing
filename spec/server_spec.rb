@@ -67,7 +67,7 @@ module Crowdring
 
     describe 'campaign fetching' do
       it 'should successfully fetch a campaign at campaign/id' do
-        c = Campaign.create(title: 'title', message: @intro_response)
+        c = Campaign.create(title: 'title', message: @intro_response, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         get "/campaign/#{c.id}"
         last_response.should be_ok
       end

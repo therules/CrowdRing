@@ -12,6 +12,10 @@ module Crowdring
       self.tag_filter = TagFilter.create(tags: tags)
     end
 
+    def accept?(ringer)
+      tag_filter.accept?(ringer)
+    end
+
     def send_message(params)
       if tag_filter.accept?(params[:to])
         CompositeService.instance.send_sms(
