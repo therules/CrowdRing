@@ -1,0 +1,4 @@
+%h4 #{number.pretty_phone_number}
+%form{action: "/unsubscribe_numbers/#{number.phone_number}/destroy", method: 'post'}
+  %button{type: 'submit'} Remove
+  

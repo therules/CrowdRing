@@ -25,6 +25,10 @@ module Crowdring
 
     after :create, :add_tags
 
+    def self.unsubscribed
+      all(subscribed: false)
+    end
+
     def phone_number=(number)
       super Phoner::Phone.parse(number).to_s
     end

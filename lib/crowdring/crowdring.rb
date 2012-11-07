@@ -110,8 +110,40 @@ module Crowdring
 
     get '/' do  
       @campaigns = Campaign.all
+      @unsubscribe_numbers = AssignedUnsubscribeVoiceNumber.all
+      @unsubscribed_count = Ringer.unsubscribed.count
 
       haml :index
+    end
+
+    
+    get '/unsubscribe_numbers/new' do
+      used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
+      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers
+
+      haml :assign_unsubscribe_number
+    end
+
+    post '/unsubscribe_numbers/create' do
+      unsubscribe_number = AssignedUnsubscribeVoiceNumber.new(phone_number: params[:voice_number])
+      if unsubscribe_number.save
+        flash[:notice] = "Unsubscribe number assigned"
+        redirect to("/")
+      else
+        flash[:errors] = unsubscribe_number.errors.full_messages.join('|')
+        redirect to('/unsubscribe_numbers/new')
+      end
+    end
+    
+    post '/unsubscribe_numbers/:phone_number/destroy' do
+      unsubscribe_number = AssignedUnsubscribeVoiceNumber.get(params[:phone_number])
+      if unsubscribe_number.destroy
+        flash[:notice] = "Unsubscribe number removed"
+      else
+        flash[:errors] = "Failed to remove number|" + unsubscribe_number.errors.full_messages.join('|')
+      end
+
+      redirect to('/')
     end
 
     get '/campaigns' do

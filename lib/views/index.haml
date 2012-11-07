@@ -1,6 +1,11 @@
 #new-campaign
-  %form{action: 'campaign/new', method: 'get'}
+  %form{action: '/campaign/new', method: 'get'}
     %button New Campaign
-
+  %form{action: '/unsubscribe_numbers/new', method: 'get'}
+    %button Assign unsubscribe number
+  %h3 Unsubscribe numbers
+  -@unsubscribe_numbers.each do |n|
+    = haml :unsubscribe_number, locals: {number: n}
+  %h3= "Unsubscribe Count: #{@unsubscribed_count}"
   -@campaigns.each do |campaign|
     = haml :campaign_preview, locals: {campaign: campaign}

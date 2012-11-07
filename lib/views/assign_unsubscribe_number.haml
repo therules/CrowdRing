@@ -1,0 +1,10 @@
+%h2 Assign unsubscribe voice number 
+-if @voice_numbers.empty?
+  %h3 Sorry, no voice numbers currently available.
+-else
+  %form{action: '/unsubscribe_numbers/create', method: 'post'}
+    %select{name: 'voice_number'}
+      -@voice_numbers.each do |n|
+        %option #{n}
+    %button{type: 'submit'} Assign    
+
