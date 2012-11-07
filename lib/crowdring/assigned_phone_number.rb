@@ -5,8 +5,6 @@ module Crowdring
         include DataMapper::Resource
 
         property :phone_number, DataMapper::Property::String, key: true
-
-
         validates_uniqueness_of :phone_number
 
         def phone_number=(number)
@@ -17,7 +15,6 @@ module Crowdring
           norm_number = Phoner::Phone.parse(number).to_s
           self.first(phone_number: norm_number)
         end
-
       end
     end
   end
@@ -46,7 +43,7 @@ module Crowdring
 
   class AssignedUnsubscribeVoiceNumber < AssignedVoiceNumber
     def ring(ringer)
-      #ringer rang an unsubscribe number
+      ringer.unsubscribe
     end
   end
 
@@ -74,6 +71,7 @@ module Crowdring
     def self.handle(type, request)
       number = from(type, request.to)
       ringer = Ringer.from(request.from)
+      ringer.subscribe
 
       case number
       when AssignedVoiceNumber

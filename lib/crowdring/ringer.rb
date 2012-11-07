@@ -14,6 +14,7 @@ module Crowdring
     property :id,           Serial
     property :phone_number, String, unique: true
     property :created_at,   DateTime
+    property :subscribed,  Boolean, default: true
 
     has n, :ringer_taggings, constraint: :destroy
     has n, :tags, through: :ringer_taggings, constraint: :skip
@@ -38,6 +39,22 @@ module Crowdring
       tags << Tag.from_str('country:' + country_name)
       tags.concat(RegionTags.tags_for(number))
       save
+    end
+
+    def unsubscribe
+      update(subscribed: false)
+    end
+    
+    def subscribe
+      update(subscribed: true)
+    end
+
+    def subscribed?
+      subscribed
+    end
+
+    def unsubscribed?
+      !subscribed
     end
   end
 end

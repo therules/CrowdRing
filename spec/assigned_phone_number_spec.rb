@@ -69,4 +69,30 @@ describe Crowdring::AssignedPhoneNumber do
   end
 end
 
+describe Crowdring::AssignedUnsubscribeVoiceNumber do
+  before(:each) do
+    DataMapper.auto_migrate!
+    Crowdring::AssignedUnsubscribeVoiceNumber.create(phone_number: '+18002222222')
+  end
 
+  it 'should unsubscribe a ringer when calls' do
+    Crowdring::Ringer.create(phone_number: '+18000000000')
+    request = double('request', from: '+18000000000', to:'+18002222222')
+    Crowdring::AssignedPhoneNumber.handle(:voice, request)
+
+    Crowdring::Ringer.first.unsubscribed?.should be_true
+  end
+
+  it 'should re-subscribe a ringer when calls after unsubscribing' do
+    @campaign = Crowdring::Campaign.create(title: 'test')
+    @campaign.voice_numbers.new(phone_number: '+18001111111', description: 'desc')
+    @campaign.sms_number = Crowdring::AssignedSMSNumber.new(phone_number: '+18002222222')
+    @campaign.save
+
+    Crowdring::Ringer.create(phone_number: '+18000000000', subscribed: false)
+    request = double('request', from: '+18000000000', to:'+18001111111')
+    Crowdring::AssignedPhoneNumber.handle(:voice, request)
+
+    Crowdring::Ringer.first.subscribed?.should be_true
+  end
+end

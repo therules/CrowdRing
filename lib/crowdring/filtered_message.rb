@@ -13,7 +13,7 @@ module Crowdring
     end
 
     def accept?(ringer)
-      tag_filter.accept?(ringer)
+      tag_filter.accept?(ringer) && ringer.subscribed?
     end
 
     def send_message(params)
@@ -26,6 +26,5 @@ module Crowdring
         false
       end
     end
-
   end
 end
