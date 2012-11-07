@@ -224,10 +224,10 @@ module Crowdring
       haml :tag_new
     end
 
-    post '/campaign/:id/update' do
+    post '/campaign/:id/assigned_voice_number/destroy' do
       campaign = Campaign.get(params[:id])
-        campaign.voice_numbers.get(params[:voice_number]).destroy
-        flash[:notice] = "Voice number has been removed"
+      campaign.voice_numbers.get(params[:voice_number]).destroy
+      flash[:notice] = "Voice number has been removed"
       redirect to("/campaigns##{campaign.id}")
     end
 
