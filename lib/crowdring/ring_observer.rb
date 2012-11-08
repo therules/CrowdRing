@@ -21,8 +21,7 @@ module Crowdring
     def self.push_notify(m)
       data = {  number: m.ringer.pretty_phone_number,
           ringer_count: m.campaign.ringers.count,
-          ring_count: m.campaign.rings.count,
-          new_ringer_count: m.campaign.new_rings.count }
+          ring_count: m.campaign.rings.count }
 
       begin
         Pusher[m.campaign.id].trigger('new', data) 

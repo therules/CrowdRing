@@ -21,7 +21,7 @@ module Crowdring
     end
 
     def handle?(type, ringer)
-      ringer.tags.include? recipient_tag
+      ringer.tagged?(recipient_tag)
     end
 
     def recipient_tag
@@ -41,12 +41,16 @@ module Crowdring
       [{cmd: :reject}]
     end
 
+    def potential_recipients(ringers)
+      ringers.reject {|r| r.tagged?(recipient_tag) }
+    end
+
     def recipients(ringers=Ringer.all)
-      ringers.select {|r| r.tags.include?(recipient_tag)}
+      ringers.select {|r| r.tagged?(recipient_tag)}
     end
 
     def respondents(ringers=Ringer.all)
-      ringers.select {|r| r.tags.include?(respondent_tag)}
+      ringers.select {|r| r.tagged?(respondent_tag)}
     end
 
     def trigger_for(ringer, sms_number)

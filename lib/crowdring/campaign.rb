@@ -60,14 +60,6 @@ module Crowdring
       allerrors.flatten
     end
 
-    def new_rings
-      if most_recent_broadcast.nil?
-        rings
-      else
-        rings.select { |r| r.created_at > most_recent_broadcast }
-      end
-    end
-
     def slug
       title.gsub(/\s/, '_').gsub(/[^a-zA-Z_]/, '').downcase
     end

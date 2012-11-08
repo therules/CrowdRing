@@ -45,6 +45,10 @@ module Crowdring
       save
     end
 
+    def tagged?(tag)
+      tags.include?(tag)
+    end
+
     def unsubscribe
       update(subscribed: false)
     end

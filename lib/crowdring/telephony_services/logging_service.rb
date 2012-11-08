@@ -43,6 +43,5 @@ module Crowdring
       @last_broadcast = {from: from, msg: msg, to_numbers: to_numbers }
       p "Broadcast: from: #{from}, msg: '#{msg}', to: #{to_numbers}" if @do_output
     end
-
   end
 end

@@ -5,7 +5,6 @@ new_ringer = (data) ->
     data.ringer_count + " Unique Ringer" + (if data.ringer_count != 1 then "s" else ""))
   $("#campaign-ringers .counts").effect("highlight", {color: '#63DB00'}, 500)
   $(".all-label .ui-button-text").text('All ' + data.ringer_count)
-  $(".new-label .ui-button-text").text(data.new_ringer_count + ' New')
   
   delete_last = -> 
     if $('#ringers-numbers li').length > 10

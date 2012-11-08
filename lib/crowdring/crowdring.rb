@@ -134,7 +134,7 @@ module Crowdring
         redirect to('/unsubscribe_numbers/new')
       end
     end
-    
+
     post '/unsubscribe_numbers/:phone_number/destroy' do
       unsubscribe_number = AssignedUnsubscribeVoiceNumber.get(params[:phone_number])
       if unsubscribe_number.destroy
