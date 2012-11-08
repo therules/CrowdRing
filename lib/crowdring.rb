@@ -1,6 +1,7 @@
 require 'bundler'
 require 'sinatra/base'
 require 'sinatra/reloader'
+require 'rack/ssl'
 require 'data_mapper'
 require 'dm-observer'
 require 'sinatra-authentication'
