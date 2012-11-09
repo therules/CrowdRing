@@ -1,5 +1,5 @@
 module Crowdring
-  module RegionTags
+  module Regions
     @@region_hash = nil
     module_function
 
@@ -14,6 +14,11 @@ module Crowdring
     def tags_for(number)
       return [] if (regions = region_hash[number.country.name.downcase]).nil?
       regions[number.area_code.to_i].map { |region| Tag.from_str('region:' + region)}
+    end
+
+    def strs_for(number)
+      regions = region_hash[number.country.name.downcase]
+      regions ? regions[number.area_code.to_i] : []
     end
   end
 end
