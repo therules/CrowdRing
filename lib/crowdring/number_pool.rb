@@ -6,9 +6,10 @@ module Crowdring
       NumPool.new.available_summary
     end
 
-    def assign_voice(opts)
-      NumPool.new.assign_voice(opts)
+    def find_numbers(opts)
+      NumPool.new.find_numbers(opts)
     end
+
 
     private
 
@@ -22,6 +23,12 @@ module Crowdring
       end
 
       def available_summary
+        available_summary = available_whole_summary
+        available_summary.map{|summary| summary.delete(:number)}
+        available_summary
+      end
+
+      def available_whole_summary 
         region_summary = available_numbers.reduce({}) do |summary, number|
           country = number.country.name
           regions = Regions.strs_for(number).join(', ')
@@ -30,6 +37,7 @@ module Crowdring
           unless summary.key?(key)
             summary[key] = {country: country, count: 0}
             summary[key][:region] = regions unless regions.empty?
+            summary[key][:number] = number.to_s
           end
           summary[key][:count] += 1
           summary
@@ -37,6 +45,22 @@ module Crowdring
 
         region_summary.values
       end
+
+      def find_numbers(opts)
+        opts.map{|opt| find_number(opt)}
+      end
+
+      def find_number(opts)
+        number = available_whole_summary.find do |summary|
+          if opts[:region]
+            summary[:country] == opts[:country] && summary[:region] && opts[:region]
+          else
+            summary[:country] == opts[:country]
+          end
+        end
+        number[:number]
+      end
+
     end
   end
 end

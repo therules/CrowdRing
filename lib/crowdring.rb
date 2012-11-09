@@ -51,7 +51,8 @@ require 'crowdring/outgoing_sms'
 
 require 'crowdring/high_charts_builder'
 require 'crowdring/campaign_stats'
-require 'crowdring/region_tags'
+require 'crowdring/regions'
+require 'crowdring/number_pool'
 
 require 'utils/password_generator'
 require 'statsd'

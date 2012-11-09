@@ -41,7 +41,7 @@ module Crowdring
     def add_tags
       tags << Tag.from_str('area code:' + area_code)
       tags << Tag.from_str('country:' + country_name)
-      tags.concat(RegionTags.tags_for(number))
+      tags.concat(Regions.tags_for(number))
       save
     end
 

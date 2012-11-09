@@ -5,22 +5,25 @@
   -else
     %form{action: '/campaign/create', method: 'post'}
       .field
-        %label Title:
+        %label Title your campaign:
         %input.title-input{type: 'text', name: 'campaign[title]'}
       .field
-        %label SMS Number:
+        %label Select the Voice Number:
         %select{name: 'campaign[sms_number][phone_number]'}
           -@sms_numbers.each do |n|
-            %option #{n}
-      %h3 Introductory Message
-      #filtered-messages
-      %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
+            %option= "#{n[:country]}-#{n[:region] || 'General'}"
       .field
-        %label Default Message:
-        %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
-      %button{type: 'submit'} Create
+        %input#missed-call{type: 'radio', name:'init_ask', value: 'missed_call'}
+        %label#init-ask{for: 'missed-call'} Missed call only (FREE)
+        %input#sms-back{type: 'radio', name:'init_ask', value: 'sms_back'}
+        %label#init-ask{for: 'sms_back'} Missed call with SMS back
+        %input#double-opt-in{type: 'radio', name:'init_ask', value: 'double_opt_in'}
+        %label#init-ask{for: 'missed-call'} Double opt in
+    %button{type: 'submit'} Start creating campaign
 %a{href: '/'} 
   %button « Back to Home 
 
 #original-filtered-message-template-container{style: 'display:none'}
   =haml :filtered_message_template 
+
+

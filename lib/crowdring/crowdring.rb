@@ -22,7 +22,7 @@ module Crowdring
 
     configure :development do
       register Sinatra::Reloader
-      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+917353764614','+27114891907'], output: true), default: true)
+      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+919102764614','+27114891907'], output: true), default: true)
     end
 
     configure :production do
@@ -154,11 +154,8 @@ module Crowdring
     end
 
     get '/campaign/new' do
-      used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
-      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers
+      @sms_numbers = NumberPool.available_summary
 
-      used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
-      @sms_numbers = Server.service_handler.sms_numbers - used_sms_numbers
 
       haml :campaign_new
     end
