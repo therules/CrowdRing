@@ -38,7 +38,7 @@ module Crowdring
     def encode_params(params)
       to = params[:to].sub('+', '')
       message = params[:text]
-      request_params = { feedid: @feedid, password: @password, text: message, from: @from, to: to}
+      request_params = { feedid: @feedid, password: @password, text: message, username: @from, to: to}
       URI.encode_www_form(request_params)
     end
 
