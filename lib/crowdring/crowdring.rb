@@ -154,10 +154,28 @@ module Crowdring
     end
 
     get '/campaign/new' do
-      @sms_numbers = NumberPool.available_summary
-
+      @voice_numbers = NumberPool.available_summary
 
       haml :campaign_new
+    end
+
+    get '/campaign/new/missed_call' do
+      @title = params[:campaign][:title]
+      unless params[:campaign][:regions]
+        flash[:errors] = "Region can not be empty"
+        redirect to('campaign/new')
+      end
+
+      @regions = params[:campaign][:regions].map do |str|
+        country, region = str.split('|')
+        res = {country: country}
+        res[:region] = region if region
+        res
+      end
+      @numbers = NumberPool.find_numbers(@regions)
+      @sms_number = NumberPool.find_number(@regions.first, :sms)
+
+      haml :campaign_new_missed_call
     end
 
     post '/campaign/create' do

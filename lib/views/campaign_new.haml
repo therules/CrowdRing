@@ -1,29 +1,35 @@
+%script{type: 'text/javascript'}
+  window.numbers = $.parseJSON('#{@voice_numbers.to_json}')
+
 #new-campaign.rounded-box
   %h2 New Campaign
-  -if @sms_numbers.empty?
+  -if @voice_numbers.empty?
     %h3 Sorry, no SMS numbers currently available.
   -else
-    %form{action: '/campaign/create', method: 'post'}
+    %form{action: '/campaign/new/missed_call', method: 'get'}
       .field
         %label Title your campaign:
         %input.title-input{type: 'text', name: 'campaign[title]'}
+      #selected-regions
       .field
         %label Select the Voice Number:
-        %select{name: 'campaign[sms_number][phone_number]'}
-          -@sms_numbers.each do |n|
+        %select.region-select
+          %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
+          -@voice_numbers.each_with_index do |n, i|
             %option= "#{n[:country]}-#{n[:region] || 'General'}"
       .field
-        %input#missed-call{type: 'radio', name:'init_ask', value: 'missed_call'}
+        %input#missed-call{type: 'radio', name:'init_ask', value: 'missed_call', checked: 'checked'}
         %label#init-ask{for: 'missed-call'} Missed call only (FREE)
         %input#sms-back{type: 'radio', name:'init_ask', value: 'sms_back'}
         %label#init-ask{for: 'sms_back'} Missed call with SMS back
         %input#double-opt-in{type: 'radio', name:'init_ask', value: 'double_opt_in'}
         %label#init-ask{for: 'missed-call'} Double opt in
-    %button{type: 'submit'} Start creating campaign
+      %button{type: 'submit'} Start creating campaign
 %a{href: '/'} 
   %button « Back to Home 
 
 #original-filtered-message-template-container{style: 'display:none'}
   =haml :filtered_message_template 
 
+%script{type: 'text/coffeescript', src: '/javascript/campaign_new.coffee'}
 

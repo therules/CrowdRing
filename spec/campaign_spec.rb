@@ -34,11 +34,11 @@ describe Crowdring::Campaign do
     end
 
     it 'should not allow assigning the same number to multiple campaigns' do
-      c1 = Crowdring::Campaign.create(title: 'test', message: Crowdring::Message.create(default_message:'intro msg'))
+      c1 = Crowdring::Campaign.create(title: 'test')
       c1.voice_numbers.new(@number1)
       c1.save
 
-      c2 = Crowdring::Campaign.create(title: 'test2', message: Crowdring::Message.create(default_message:'intro msg'))
+      c2 = Crowdring::Campaign.create(title: 'test2')
       c2.voice_numbers.new(@number1)
       
       c2.save.should be_false   

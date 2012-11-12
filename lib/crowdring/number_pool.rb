@@ -2,34 +2,43 @@ module Crowdring
   module NumberPool
     module_function
 
-    def available_summary
-      NumPool.new.available_summary
+    def available_summary(type=:voice)
+      NumPool.new.summary(type)
     end
 
-    def find_numbers(opts)
-      NumPool.new.find_numbers(opts)
+    def find_number(opts, type=:voice)
+      NumPool.new.find_number(opts, type)
+    end
+
+    def find_numbers(opts, type=:voice)
+      NumPool.new.find_numbers(opts, type)
     end
 
 
     private
 
     class NumPool
-      attr_accessor :available_numbers
+      attr_accessor :voice_numbers, :sms_numbers
 
       def initialize
         used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
-        avail_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
-        @available_numbers = avail_numbers.map {|n| Phoner::Phone.parse n }
+        avail_voice_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
+        @voice_numbers = avail_voice_numbers.map {|n| Phoner::Phone.parse n }
+
+        used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
+        avail_sms_numbers = CompositeService.instance.sms_numbers - used_sms_numbers
+        @sms_numbers = avail_sms_numbers.map{|n| Phoner::Phone.parse n}
       end
 
-      def available_summary
-        available_summary = available_whole_summary
-        available_summary.map{|summary| summary.delete(:number)}
-        available_summary
+      def summary(type)
+        summary = summary_with_numbers(type)
+        summary.map {|entry| entry.delete(:numbers); entry}
       end
 
-      def available_whole_summary 
-        region_summary = available_numbers.reduce({}) do |summary, number|
+
+      def summary_with_numbers(type)
+        numbers = numbers_of_type(type)
+        region_summary = numbers.reduce({}) do |summary, number|
           country = number.country.name
           regions = Regions.strs_for(number).join(', ')
           key = country + regions
@@ -37,8 +46,9 @@ module Crowdring
           unless summary.key?(key)
             summary[key] = {country: country, count: 0}
             summary[key][:region] = regions unless regions.empty?
-            summary[key][:number] = number.to_s
+            summary[key][:numbers] = []
           end
+          summary[key][:numbers] << number.to_s
           summary[key][:count] += 1
           summary
         end      
@@ -46,21 +56,43 @@ module Crowdring
         region_summary.values
       end
 
-      def find_numbers(opts)
-        opts.map{|opt| find_number(opt)}
+      def find_numbers(opts, type)
+        avail_numbers = summary_with_numbers(type)
+        found_numbers = []
+        opts.each do |opt|
+          region = find_matching(opt, avail_numbers)
+          found_number = region && region[:numbers].first
+          found_numbers << found_number
+          region[:numbers].delete(found_number)
+        end
+        found_numbers
       end
 
-      def find_number(opts)
-        number = available_whole_summary.find do |summary|
+      def find_number(opts, type)
+        region = find_matching(opts, summary_with_numbers(type))
+        region && region[:numbers].first
+      end
+
+      private
+
+      def numbers_of_type(type)
+        case type
+        when :voice
+          @voice_numbers
+        when :sms
+          @sms_numbers
+        end
+      end
+
+      def find_matching(opts, numbers)
+        numbers.find do |summary|
           if opts[:region]
-            summary[:country] == opts[:country] && summary[:region] && opts[:region]
+            summary[:country] == opts[:country] && summary[:region] && summary[:region] == opts[:region]
           else
             summary[:country] == opts[:country]
           end
         end
-        number[:number]
       end
-
     end
   end
 end

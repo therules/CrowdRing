@@ -6,7 +6,7 @@ describe Crowdring::NumberPool do
     Crowdring::CompositeService.instance.reset
 
     Crowdring::CompositeService.instance.add('logger', Crowdring::LoggingService.new([
-      '+18001111111', '+18002222222', '+917353764614', '+919000764614', '+919010764614', '+27114891907']))
+      '+18001111111', '+18002222222', '+919000764614', '+919010764614', '+27114891907', '+917353764614']))
   end
 
   it 'should return an array summarizing the available numbers' do
@@ -39,5 +39,12 @@ describe Crowdring::NumberPool do
   it 'should return phone number that comes from required country and region' do
     opts = [{country: 'India', region: 'Karnataka'}]
     Crowdring::NumberPool.find_numbers(opts).should eq(['+917353764614'])
+  end
+
+  it 'should return unique numbers from same criteria' do
+    opts = [{country: 'United States'},{country: 'United States'}]
+    numbers = Crowdring::NumberPool.find_numbers(opts)
+    numbers.should include('+18001111111')
+    numbers.should include('+18002222222')
   end
 end

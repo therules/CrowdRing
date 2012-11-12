@@ -52,13 +52,13 @@ module Crowdring
       end
 
       it 'should be able to destroy a campaign' do
-        c = Campaign.create(title: 'title', message: @intro_response)
+        c = Campaign.create(title: 'title')
         post "/campaign/#{c.id}/destroy"
         Campaign.get(c.id).should be_nil
       end
 
       it 'should redirect back to / after destroying a campaign' do
-        c = Campaign.create(title: 'title', message: @intro_response)
+        c = Campaign.create(title: 'title')
         post "/campaign/#{c.id}/destroy"
         last_response.should be_redirect
         last_response.location.should match('/$')
@@ -67,7 +67,7 @@ module Crowdring
 
     describe 'campaign fetching' do
       it 'should successfully fetch a campaign at campaign/id' do
-        c = Campaign.create(title: 'title', message: @intro_response, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
+        c = Campaign.create(title: 'title', voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         get "/campaign/#{c.id}"
         last_response.should be_ok
       end
@@ -80,7 +80,7 @@ module Crowdring
 
     describe 'voice/sms response forwarding' do
       before(:each) do
-        @campaign = Campaign.create(title: @number, message: @intro_response, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
+        @campaign = Campaign.create(title: @number, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number, message: 'message')
         @fooservice = double('fooservice', build_response: 'fooResponse',
             sms?: true,
@@ -96,7 +96,6 @@ module Crowdring
 
       it 'should forward a POST voice request to the registered service' do
         @fooservice.should_receive(:build_response).once
-        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 
         Server.service_handler.add('foo', @fooservice)
         post '/voiceresponse/foo'
@@ -115,7 +114,6 @@ module Crowdring
 
       it 'should forward a GET voice request to the registered service' do
         @fooservice.should_receive(:build_response).once
-        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
 
         Server.service_handler.add('foo', @fooservice)
         get '/voiceresponse/foo'
@@ -133,10 +131,8 @@ module Crowdring
       end
 
       it 'should respond on the sending service and reply on the default service if the sending service doesnt support outgoing' do
-        @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
         @fooservice.should_not_receive(:build_response)
         @barservice.should_receive(:build_response).once
-        @barservice.should_not_receive(:send_sms)
 
         Server.service_handler.add('foo', @fooservice, default: true)
         Server.service_handler.add('bar', @barservice)
@@ -148,7 +144,6 @@ module Crowdring
       it 'should respond without error to a number not currently associated with a campaign' do
         @fooresponse.stub(to: @number3)
         @fooservice.should_receive(:build_response).once
-        @fooservice.should_not_receive(:send_sms)
 
         Server.service_handler.add('foo', @fooservice)
         get '/voiceresponse/foo'
@@ -161,7 +156,6 @@ module Crowdring
         @fooservice.stub(process_callback: 'foocallback')
         @fooservice.should_receive(:process_callback).once
         @fooservice.should_not_receive(:build_response)
-        @fooservice.should_not_receive(:send_sms)
 
         Server.service_handler.add('foo', @fooservice)
         get '/voiceresponse/foo'

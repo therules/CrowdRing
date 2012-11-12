@@ -18,11 +18,8 @@ module Crowdring
     has n, :asks, through: Resource, constraint: :destroy
     
     def initialize(opts)
-      message = opts.delete('message') || opts.delete(:message)
       super opts
-      ask = Ask.create_double_opt_in(message)
-      asks << ask
-      asks << ask.triggered_ask
+      asks << OfflineAsk.create
     end
 
     def sms_number=(number)

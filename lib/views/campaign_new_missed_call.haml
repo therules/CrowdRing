@@ -1,0 +1,10 @@
+%h1 Create Campaign > Campaign Settings
+%form{action: '/campaign/create', method: 'post'}
+  %input{type: 'hidden', name: 'campaign[title]', value: @title}
+  -@numbers.each do |number|
+    %h2= number
+    %input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: number}
+    %input{type: 'text', name: 'campaign[voice_numbers][][description]'}
+  %input{type: 'hidden', name: 'campaign[sms_number]', value: @sms_number}
+  %button{type: 'submit'} 
+    BIG RED BUTTON
