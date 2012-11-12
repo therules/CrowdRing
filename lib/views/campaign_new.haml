@@ -8,22 +8,26 @@
   -else
     %form{action: '/campaign/new/missed_call', method: 'get'}
       .field
-        %label Title your campaign:
+        %h3 Title your campaign:
         %input.title-input{type: 'text', name: 'campaign[title]'}
-      #selected-regions
       .field
-        %label Select the Voice Number:
+        %h3 Select a region for each voice number
+        #selected-regions
         %select.region-select
           %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
           -@voice_numbers.each_with_index do |n, i|
-            %option= "#{n[:country]}-#{n[:region] || 'General'}"
+            %option= "#{n[:country]} - #{n[:region] || 'General'}"
       .field
-        %input#missed-call{type: 'radio', name:'init_ask', value: 'missed_call', checked: 'checked'}
-        %label#init-ask{for: 'missed-call'} Missed call only (FREE)
-        %input#sms-back{type: 'radio', name:'init_ask', value: 'sms_back'}
-        %label#init-ask{for: 'sms_back'} Missed call with SMS back
-        %input#double-opt-in{type: 'radio', name:'init_ask', value: 'double_opt_in'}
-        %label#init-ask{for: 'missed-call'} Double opt in
+        %h3 Select the initial ask
+        %div
+          %input{type: 'radio', name:'init_ask', id: 'missed_call', value: 'missed_call', checked: 'checked'} 
+          %label{for: 'missed_call'} Missed call only (FREE)
+        %div
+          %input{type: 'radio', name:'init_ask', id: 'sms_back', value: 'sms_back'}
+          %label{for: 'sms_back'} Missed call with SMS back
+        %div
+          %input{type: 'radio', name:'init_ask', id: 'double_opt_in', value: 'double_opt_in'}
+          %label{for: 'double_opt_in'} Double opt in
       %button{type: 'submit'} Start creating campaign
 %a{href: '/'} 
   %button « Back to Home 
