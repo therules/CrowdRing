@@ -87,6 +87,16 @@ module Crowdring
     end
   end
 
+  class SendSMSAsk < Ask
+    def handle?(type, ringer)
+      false
+    end
+
+    def typesym
+      :send_sms_ask
+    end
+  end
+
   class JoinAsk < Ask
     def handle?(type, ringer)
       type == :voice && super(type, ringer)

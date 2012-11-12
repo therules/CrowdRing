@@ -14,7 +14,7 @@ module Crowdring
 
     def tags=(tags)
       return if tags.nil?
-      tags = tags.map {|str| Tag.from_str(str)}
+      tags = tags.map {|str| Tag.from_str(str)} if !tags.empty? && tags.first.is_a?(String)
       super tags
     end
 
@@ -25,7 +25,7 @@ module Crowdring
     private
 
     def grouped_tags
-      tags.reduce(Hash.new {|h,k| h[k] = []}) {|hash, tag| hash[tag.type] << tag; hash}.values
+      tags.reduce(Hash.new {|h,k| h[k] = []}) {|hash, tag| hash[tag.group] << tag; hash}.values
     end
 
     def has_any?(possible_tags, item_tags)

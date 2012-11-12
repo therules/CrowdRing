@@ -5,8 +5,7 @@
       %label When:
       .message
         -fm.tag_filter.tags.each do |tag|
-          -type, value = tag.to_s.split(":")
-          %li= type.capitalize + " : " + value
+          %li= tag
       %label Then:
       .message
         = "\"#{fm.message_text}\""

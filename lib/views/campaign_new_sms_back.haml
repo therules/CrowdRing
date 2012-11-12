@@ -1,6 +1,6 @@
 #new-campaign.rounded-box
   %h2=  "Campaign Settings for #{@title}"
-  %form{action: '/campaign/create/missed_call', method: 'post'}
+  %form{action: '/campaign/create/sms_back', method: 'post'}
     %input{type: 'hidden', name: 'campaign[title]', value: @title}
     -@number_summary.each do |entry|
       %h3= entry[:number].format "+%c (%a) %f-%l" + " [" + entry[:number].country.char_3_code + "]"
@@ -8,8 +8,9 @@
       %h4 Add a description for the number
       %input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: entry[:number]}
       %input.title-input{type: 'text', name: 'campaign[voice_numbers][][description]', placeholder: 'Use this space to describe where the number will be promoted, etc.'}
-      %hr
+      %h3 Add a response sms for callers of this number
+      %input.msg-text-area{type: 'text', name: 'sms_responses[]', placeholder: 'Thank you for calling to support us'}
+      %hr        
     %input{type: 'hidden', name: 'campaign[sms_number]', value: @sms_number}
-
     %button{type: 'submit'}
       Complete Campaign Creation

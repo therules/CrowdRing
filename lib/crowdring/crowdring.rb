@@ -159,7 +159,7 @@ module Crowdring
       haml :campaign_new
     end
 
-    get '/campaign/new/missed_call' do
+    get '/campaign/new/configure' do
       @title = params[:campaign][:title]
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
@@ -181,10 +181,15 @@ module Crowdring
       @number_summary = numbers.zip(regions).map {|s| {number: s.first, region: s.last}}
       @sms_number = NumberPool.find_number(regions.first, :sms)
 
-      haml :campaign_new_missed_call
+      case params[:init_ask]
+      when 'missed_call'
+        haml :campaign_new_missed_call
+      when 'sms_back'
+        haml :campaign_new_sms_back
+      end
     end
 
-    post '/campaign/create' do
+    post '/campaign/create/missed_call' do
       campaign = Campaign.new(params[:campaign])
       if campaign.save
         flash[:notice] = "Campaign created"
@@ -192,6 +197,26 @@ module Crowdring
       else
         flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
         redirect to('/campaign/new')
+      end
+    end
+
+    post '/campaign/create/sms_back' do
+      campaign = Campaign.new(params[:campaign])
+      if campaign.save
+        filtered_messages = params[:sms_responses].zip(campaign.voice_numbers).map do |msg, number|
+          FilteredMessage.new(tags: [number.tag], message_text: msg)
+        end
+        message = Message.create(filtered_messages: filtered_messages)
+        send_sms_ask = SendSMSAsk.create(message: message)
+        campaign.asks.first.triggered_ask = send_sms_ask
+        campaign.asks << send_sms_ask
+        if campaign.save
+          flash[:notice] = "Campaign created"
+          redirect to("/campaigns##{campaign.id}")
+        else
+          flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
+          redirect to('/campaign/new')
+        end
       end
     end
     

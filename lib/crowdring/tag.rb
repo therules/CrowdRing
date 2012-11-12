@@ -2,22 +2,34 @@ module Crowdring
   class Tag
     include DataMapper::Resource
 
-    property :type, String, key: true
+    property :group, String, key: true
     property :value, String, key: true
+    property :type, Discriminator
 
     before :save do |tag|
-      tag.type = tag.type.downcase
+      tag.group = tag.group.downcase
       tag.value = tag.value.downcase
     end
 
     # str of format "type:value"
     def self.from_str(str)
-      type, value = str.split(':')
-      Tag.first_or_create(type: (type || '').downcase, value: (value || '').downcase)
+      group, value = str.split(':')
+      Tag.first_or_create(group: (group || '').downcase, value: (value || '').downcase)
     end
 
     def to_s
-      "#{type}:#{value}"
+      "#{group}:#{value}"
     end
   end
+
+  class RingTag < Tag
+    def self.from_str(id)
+      RingTag.first_or_create(group: 'rang', value: id)
+    end
+
+    def to_s
+      "Rang #{AssignedVoiceNumber.first(id: value).pretty_phone_number}"
+    end
+  end
+
 end

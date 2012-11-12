@@ -6,7 +6,7 @@
   -if @voice_numbers.empty?
     %h3 Sorry, no SMS numbers currently available.
   -else
-    %form{action: '/campaign/new/missed_call', method: 'get'}
+    %form{action: '/campaign/new/configure', method: 'get'}
       .field
         %h3 Title your campaign:
         %input.title-input{type: 'text', name: 'campaign[title]'}
