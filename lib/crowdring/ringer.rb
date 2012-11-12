@@ -45,6 +45,13 @@ module Crowdring
       save
     end
 
+    def tag(tag)
+      unless tags.include?(tag)
+        tags << tag
+        save
+      end
+    end
+
     def tagged?(tag)
       tags.include?(tag)
     end

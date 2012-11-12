@@ -22,7 +22,7 @@ describe Crowdring::Ringer do
     campaign.voice_numbers = [{phone_number: @number1, description: 'num1'}]
     campaign.sms_number = @number2
     campaign.save
-    
+
     ringer = Crowdring::Ringer.create(phone_number: @number1)
 
     campaign.voice_numbers.first.ring(ringer)

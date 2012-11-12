@@ -4,8 +4,13 @@ module Crowdring
       base.class_eval do
         include DataMapper::Resource
 
+        property :id, DataMapper::Property::Serial
         property :phone_number, DataMapper::Property::String, key: true
         validates_uniqueness_of :phone_number
+
+        def tag
+          Tag.from_str("rang:#{id}")
+        end
 
         def phone_number=(number)
           super Phoner::Phone.parse(number).to_s
@@ -40,6 +45,7 @@ module Crowdring
     validates_length_of :description, max: 64
 
     def ring(ringer)
+      ringer.tag(tag)
       campaign.ring(ringer)
     end
   end

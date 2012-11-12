@@ -25,12 +25,12 @@ module Crowdring
 
     describe 'campaign creation/deletion' do
       it 'should create a new campaign given a valid title, number, and introductory message' do
-        post '/campaign/create', {'campaign' => {'title' => 'title'}}
+        post '/campaign/create', {'campaign' => {'title' => 'title', 'voice_numbers' => [{phone_number: @number}]}}
         Campaign.first(title: 'title').should_not be_nil
       end
 
       it 'should redirect to campaign view on successful campaign creation' do
-        post '/campaign/create', {'campaign' => {'title' => 'title'}}
+        post '/campaign/create', {'campaign' => {'title' => 'title', 'voice_numbers' => [{phone_number: @number}]}}
         last_response.should be_redirect
         last_response.location.should match("campaigns##{Regexp.quote(Campaign.first(title: 'title').id.to_s)}$")
       end
@@ -58,7 +58,7 @@ module Crowdring
       end
 
       it 'should redirect back to / after destroying a campaign' do
-        c = Campaign.create(title: 'title')
+        c = Campaign.create(title: 'title', voice_numbers: [{phone_number: @number}])
         post "/campaign/#{c.id}/destroy"
         last_response.should be_redirect
         last_response.location.should match('/$')

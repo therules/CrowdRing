@@ -5,6 +5,7 @@ describe Crowdring::AssignedCampaignVoiceNumber do
     campaign = double('campaign', id: 1)
     ringer = double('ringer')
     campaign.should_receive(:ring).once.with(ringer)
+    ringer.should_receive(:tag).once
 
     number = Crowdring::AssignedCampaignVoiceNumber.new(campaign: campaign, phone_number: '+18001111111')
     number.ring(ringer)    
