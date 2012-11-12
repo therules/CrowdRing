@@ -24,16 +24,19 @@ module Crowdring
     include PhoneNumberFields
 
     property :type, Discriminator
-    property :description, String
+    property :description, String, default: '[No description given]'
 
     belongs_to :campaign, required: false
 
     validates_with_method :phone_number, :valid_phone_number?
+
+    def description=(text)
+      super unless text.empty?
+    end
   end
 
   class AssignedCampaignVoiceNumber < AssignedVoiceNumber
     validates_presence_of :campaign
-    validates_presence_of :description
     validates_length_of :description, max: 64
 
     def ring(ringer)

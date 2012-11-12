@@ -68,6 +68,7 @@ module Crowdring
         found_numbers
       end
 
+
       def find_number(opts, type)
         region = find_matching(opts, summary_with_numbers(type))
         region && region[:numbers].first

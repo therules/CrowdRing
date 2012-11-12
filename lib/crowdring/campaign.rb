@@ -16,7 +16,9 @@ module Crowdring
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
     
     has n, :asks, through: Resource, constraint: :destroy
-    
+
+    validates_with_method :voice_numbers, :at_least_one_assigned_number?
+
     def initialize(opts)
       super opts
       asks << OfflineAsk.create
@@ -59,6 +61,16 @@ module Crowdring
 
     def slug
       title.gsub(/\s/, '_').gsub(/[^a-zA-Z_]/, '').downcase
+    end
+
+    private
+
+    def at_least_one_assigned_number?
+      if @voice_numbers && !@voice_numbers.empty?
+        true
+      else
+        [false, 'Must assign at least one number']
+      end
     end
   end
 end
