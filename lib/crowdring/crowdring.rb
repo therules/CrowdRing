@@ -80,7 +80,7 @@ module Crowdring
     
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
-      cur_service.build_response(request.to, response)
+      cur_service.build_response(request.to, response || [{cmd: :reject}])
     end
 
     def process_request(service_name, request, response_type)
