@@ -333,7 +333,7 @@ module Crowdring
     post '/campaign/:id/assigned_voice_number/destroy' do
       campaign = Campaign.get(params[:id])
       unless campaign.voice_numbers.count == 1
-        campaign.voice_numbers.get(params[:voice_number]).destroy
+        campaign.voice_numbers.first(id: params[:number_id]).destroy
         flash[:notice] = "Voice number has been removed"
         redirect to("/campaigns##{campaign.id}")
       else
