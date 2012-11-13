@@ -27,6 +27,7 @@ module Crowdring
         used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
         avail_sms_numbers = CompositeService.instance.sms_numbers - used_sms_numbers
         @sms_numbers = avail_sms_numbers.map{|n| Phoner::Phone.parse n}
+        @sms_numbers = @sms_numbers.reject(&:nil?)
       end
 
       def summary(type)
@@ -38,6 +39,7 @@ module Crowdring
       def summary_with_numbers(type)
         numbers = numbers_of_type(type).compact
         region_summary = numbers.reduce({}) do |summary, number|
+
           country = number.country.name
           regions = Regions.strs_for(number).join(', ')
           key = country + regions
