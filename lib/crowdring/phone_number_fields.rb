@@ -31,7 +31,17 @@ module Crowdring
       Phoner::Phone.parse phone_number
     end
 
+    module_function
+
+    def pretty_number(number_str)
+      PrettyNumber.new(number_str).pretty_phone_number
+    end
+
     private
+
+    class PrettyNumber < Struct.new(:phone_number)
+      include PhoneNumberFields
+    end
 
     def valid_phone_number?
       if Phoner::Phone.valid? @phone_number

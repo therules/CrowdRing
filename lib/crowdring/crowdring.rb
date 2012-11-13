@@ -63,6 +63,11 @@ module Crowdring
       def content_tag(type, content, options={})
         "<#{type}#{to_attributes(options)}>#{content}</#{type}>"
       end
+
+      def pretty_phone_number(phone_number)
+        PhoneNumberFields.pretty_number(phone_number)
+      end
+
     end
 
     before /^((?!((voice|sms)response)|reports|login|resetpassword|voicemails|progress-embed).)*$/ do
@@ -177,8 +182,8 @@ module Crowdring
         res[:region] = region if region
         res
       end
-      numbers = NumberPool.find_numbers(regions).map {|n| Phoner::Phone.parse n}
-      @number_summary = numbers.zip(regions).map {|s| {number: s.first, region: s.last}}
+      numbers = NumberPool.find_numbers(regions)
+      @number_summary = numbers.zip(regions).map {|number, region| {number: number, region: region}}
       @sms_number = NumberPool.find_number(regions.first, :sms)
 
       case params[:init_ask]

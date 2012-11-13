@@ -2,8 +2,12 @@
   %h2=  "Campaign Settings for #{@title}"
   %form{action: '/campaign/create/sms_back', method: 'post'}
     %input{type: 'hidden', name: 'campaign[title]', value: @title}
+    %h3
+      SMSes for this campaign will be sent from
+      %b= pretty_phone_number(@sms_number)
+    %hr
     -@number_summary.each do |entry|
-      %h3= entry[:number].format "+%c (%a) %f-%l" + " [" + entry[:number].country.char_3_code + "]"
+      %h3= pretty_phone_number(entry[:number])
       %h3= "#{entry[:region][:country]} - #{entry[:region][:region] || 'General'}"
       %h4 Add a description for the number
       %input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: entry[:number]}

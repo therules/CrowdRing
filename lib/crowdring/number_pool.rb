@@ -63,7 +63,7 @@ module Crowdring
           region = find_matching(opt, avail_numbers)
           found_number = region && region[:numbers].first
           found_numbers << found_number
-          region[:numbers].delete(found_number)
+          region[:numbers].delete(found_number) if region
         end
         found_numbers
       end

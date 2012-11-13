@@ -9,6 +9,7 @@
       %label Then:
       .message
         = "\"#{fm.message_text}\""
-    %label Default:
-    .message  
-      = "\"#{message.default_message}\""
+    -if message.default_message && !message.default_message.empty?
+      %label Default:
+      .message
+        = "\"#{message.default_message}\""
