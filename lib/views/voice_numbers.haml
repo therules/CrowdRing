@@ -7,5 +7,6 @@
     -voice_numbers.each do |voice_number|
       %h4= "Phone Number: #{voice_number.pretty_phone_number}, Description: #{voice_number.description}"
       %form{action: "/campaign/#{campaign.id}/assigned_voice_number/destroy", method: 'post'}
-        %input{type: 'hidden', name: 'voice_number', value: "#{voice_number.phone_number}"}
+        %input{type: 'hidden', name: 'phone_nubmer', value: "#{voice_number.phone_number}"}
+        %input{type: 'hidden', name: 'voice_number[id]', value: "#{voice_number.id}"}
         %button{type: 'submit'} Remove

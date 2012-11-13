@@ -136,8 +136,8 @@ module Crowdring
       end
     end
 
-    post '/unsubscribe_numbers/:phone_number/destroy' do
-      unsubscribe_number = AssignedUnsubscribeVoiceNumber.get(params[:phone_number])
+    post '/unsubscribe_numbers/:id/:phone_number/destroy' do
+      unsubscribe_number = AssignedUnsubscribeVoiceNumber.get(params[:id], params[:phone_number])
       if unsubscribe_number.destroy
         flash[:notice] = "Unsubscribe number removed"
       else
@@ -305,9 +305,14 @@ module Crowdring
 
     post '/campaign/:id/assigned_voice_number/destroy' do
       campaign = Campaign.get(params[:id])
-      campaign.voice_numbers.get(params[:voice_number]).destroy
-      flash[:notice] = "Voice number has been removed"
-      redirect to("/campaigns##{campaign.id}")
+      unless campaign.voice_numbers.count == 1
+        campaign.voice_numbers.get(params[:voice_number]).destroy
+        flash[:notice] = "Voice number has been removed"
+        redirect to("/campaigns##{campaign.id}")
+      else
+        flash[:errors] = "Must have at least one voice number"
+        redirect to("/campaigns##{campaign.id}")
+      end
     end
 
     post '/tags/create' do
