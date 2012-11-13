@@ -8,12 +8,10 @@ module Crowdring
     include Singleton
 
     def initialize
-      @default_service_name = nil
       @services = {}
     end
 
-    def add(name, service, opts={})
-      @default_service_name = name if opts[:default]
+    def add(name, service)
       @services[name] = service
     end
 
@@ -23,7 +21,6 @@ module Crowdring
 
     def reset
       @services = {}
-      @default_service_name = nil
     end
 
     def voice_numbers
@@ -37,7 +34,6 @@ module Crowdring
     def send_sms(params)
       service_name = service_for(:sms, params[:from])
       service = @services[service_name]
-      params[:from] = service.numbers.first if service_name == @default_service_name
       service.send_sms(params)
     end
 
@@ -46,7 +42,6 @@ module Crowdring
       
       service_name = service_for(:sms, from)
       service = @services[service_name]
-      from = service.numbers.first if service_name == @default_service_name
 
       to_numbers.each_slice(10) do |numbers|
         service.broadcast(from, msg, numbers)
@@ -55,7 +50,6 @@ module Crowdring
 
     def service_for(type, number)
       @services.each {|name, service| return name if supports_number(service, number) && service.send("#{type}?") }
-      return @default_service_name if @default_service_name
 
       raise NoServiceError, "No service handler for #{number}"
     end

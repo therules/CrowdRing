@@ -65,18 +65,6 @@ describe Crowdring::CompositeService do
 			@service.send_sms(from: 'foo', to: 'bar', msg: 'msg')
 		end
 
-		it 'should send sms using default service' do
-			service1 = double("foo", numbers: ["foo"], sms?: true, send_sms: nil)
-			service1.should_receive(:send_sms).once.with(from: 'foo', to: 'bar', msg: 'msg')
-			@service.add("foo", service1, default: true)
-
-			service2 = double("bar", numbers: ["bar"], sms?: false, send_sms: nil)
-			service2.should_not_receive(:send_sms)
-			@service.add("bar", service2)
-	
-			@service.send_sms(from: 'bar', to: 'bar', msg: 'msg')
-		end
-
 		it 'should raise when no services' do
 			expect { @service.send_sms(from: 'bar', to: 'bar', msg: 'msg') }.to raise_error(Crowdring::NoServiceError)
 		end

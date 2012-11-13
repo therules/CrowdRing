@@ -22,12 +22,12 @@ module Crowdring
 
     configure :development do
       register Sinatra::Reloader
-      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+911111111111', '+919102764614','+27114891907'], output: true), default: true)
+      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+919102764614','+27114891907'], output: true))
     end
 
     configure :production do
       use Rack::SSL
-      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]), default: true)
+      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
       service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
       service_handler.add('tropo.json', TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
         ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"]))
