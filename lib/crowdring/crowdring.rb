@@ -35,7 +35,7 @@ module Crowdring
       service_handler.add('nexmo', NexmoService.new(ENV["NEXMO_KEY"], ENV["NEXMO_SECRET"]))
       service_handler.add('routo', RoutoService.new(ENV["ROUTO_USERNAME"], ENV["ROUTO_PASSWORD"], ENV["ROUTO_NUMBER"]))
       service_handler.add('netcore', NetcoreService.new(ENV["NETCORE_FEEDID"], ENV['NETCORE_FROM'], ENV['NETCORE_PASSWORD']))
-      service_handler.add('plivo', PlivoService.new(ENV["PLIVO_AUTH_ID"], ENV["PLIVO_AUTH_TOKEN"]))
+      # service_handler.add('plivo', PlivoService.new(ENV["PLIVO_AUTH_ID"], ENV["PLIVO_AUTH_TOKEN"]))
     end
 
     configure do
