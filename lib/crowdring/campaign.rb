@@ -25,7 +25,7 @@ module Crowdring
     end
 
     def sms_number=(number)
-      number = {phone_number: number} if number.is_a? String
+      number = AssignedSMSNumber.new(phone_number: number) if number.is_a? String
       super number
     end
 
@@ -36,13 +36,13 @@ module Crowdring
     def ring(ringer)
       return unless rings.create(ringer: ringer).saved?
       ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
-      ask.respond(ringer, sms_number.phone_number) if ask
+      ask.respond(ringer, sms_number.raw_number) if ask
     end
 
     def text(ringer, message)
       text = texts.create(ringer: ringer, message: message)
       ask = asks.reverse.find {|ask| ask.handle?(:sms, ringer) }
-      ask.text(ringer, text, sms_number.phone_number) if ask
+      ask.text(ringer, text, sms_number.raw_number) if ask
     end
 
     def unique_rings

@@ -6,6 +6,7 @@ module Crowdring
 
         property :id, DataMapper::Property::Serial
         property :phone_number, DataMapper::Property::String, key: true
+        property :raw_number, DataMapper::Property::String
         validates_uniqueness_of :phone_number
 
         def tag
@@ -13,6 +14,7 @@ module Crowdring
         end
 
         def phone_number=(number)
+          self.raw_number = number
           super Phoner::Phone.parse(number).to_s
         end
 

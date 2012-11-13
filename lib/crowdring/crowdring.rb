@@ -313,7 +313,7 @@ module Crowdring
 
     post '/campaign/:id/broadcast' do
       campaign = Campaign.get(params[:id])
-      from = params[:from] || campaign.sms_number.phone_number
+      from = params[:from] || campaign.sms_number.raw_number
       message = params[:message]
       rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).rings)
       to = rings.map(&:ringer).map(&:phone_number)
