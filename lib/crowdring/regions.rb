@@ -18,7 +18,7 @@ module Crowdring
 
     def strs_for(number)
       regions = region_hash[number.country.name.downcase]
-      regions ? regions[number.area_code.to_i] : []
+      regions && regions[number.area_code.to_i] || []
     end
   end
 end
