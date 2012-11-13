@@ -141,8 +141,8 @@ module Crowdring
       end
     end
 
-    post '/unsubscribe_numbers/:id/:phone_number/destroy' do
-      unsubscribe_number = AssignedUnsubscribeVoiceNumber.get(params[:id], params[:phone_number])
+    post '/unsubscribe_numbers/:id/destroy' do
+      unsubscribe_number = AssignedUnsubscribeVoiceNumber.first(id: params[:id])
       if unsubscribe_number.destroy
         flash[:notice] = "Unsubscribe number removed"
       else
