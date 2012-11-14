@@ -273,6 +273,48 @@ module Crowdring
       end
     end
 
+    post '/campaign/:id/assigned_voice_number/destroy' do
+      campaign = Campaign.get(params[:id])
+      unless campaign.voice_numbers.count == 1
+        campaign.voice_numbers.first(id: params[:number_id]).destroy
+        flash[:notice] = "Voice number has been removed"
+        redirect to("/campaigns##{campaign.id}")
+      else
+        flash[:errors] = "Must have at least one voice number"
+        redirect to("/campaigns##{campaign.id}")
+      end
+    end
+
+    get '/campaign/:id/add_new_ask' do
+      @campaign = Campaign.get(params[:id])
+      @ask_type = Ask.descendants.reject {|a| [:offline_ask, :join_ask].include?(a.typesym)}
+
+      haml :campaign_add_new_ask
+    end
+
+    post '/campaign/:id/add_new_ask' do
+      campaign = Campaign.get(params[:id])
+      ask_type = params[:ask_type]
+      unless ask_type
+        flash[:errors] = "Ask type can not be empty"
+        redirect to("/campaign/#{campaign.id}/add_new_ask")
+      end
+      ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
+      trigger_by = params[:trigger_by]
+      message = params[:campaign][:message]
+      ask = Ask.create(type: ask_name, message: message)
+
+      campaign.asks.last.triggered_ask = ask
+      campaign.asks << ask
+      if campaign.save
+        flash[:notice] = "New Ask Add"
+        redirect to("/campaigns##{campaign.id}")
+      else
+        flash[:errors] = "Failed to add new ask"
+        redirect to("/campaign/#{campaign.id}/add_new_ask")
+      end
+    end
+
     post '/campaign/:id/destroy' do
       campaign = Campaign.get(params[:id])
       if campaign.destroy
@@ -358,18 +400,6 @@ module Crowdring
 
     get '/tags/new' do
       haml :tag_new
-    end
-
-    post '/campaign/:id/assigned_voice_number/destroy' do
-      campaign = Campaign.get(params[:id])
-      unless campaign.voice_numbers.count == 1
-        campaign.voice_numbers.first(id: params[:number_id]).destroy
-        flash[:notice] = "Voice number has been removed"
-        redirect to("/campaigns##{campaign.id}")
-      else
-        flash[:errors] = "Must have at least one voice number"
-        redirect to("/campaigns##{campaign.id}")
-      end
     end
 
     post '/tags/create' do

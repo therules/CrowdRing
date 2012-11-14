@@ -1,0 +1,25 @@
+%h2 Add new asks
+%h3 What type of ask is this?
+%form{action: "/campaign/#{@campaign.id}/add_new_ask ", method: 'post'}
+  %select{name: "ask_type"}
+    %option{value:"", selected: 'selected', disabled:"disabled"} Select Ask Type
+    -@ask_type. each do |type|
+      -type_view = type.to_s.split(":").last.split("Ask").first
+      %option{value: "#{type.typesym}"}= "#{type_view}"
+  %h3 How to prompt this ask?
+  #filtered-messages
+    %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
+    .field
+      %label Default Message:
+      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
+  %h3 What triggers this ask?
+  %div
+    %input{type: 'radio', name:'[triggered_by]', id: 'user', value: 'user', checked: 'checked'} 
+    %label{for: 'user'}  The Campaigner (that's you!)
+  %div
+    %input{type: 'radio', name:'[triggered_by]', id: 'ask', value: 'previous'}
+    %label{for: 'ask'} The Previous Event
+  %button{type:'submit'} Add new ask
+
+  #original-filtered-message-template-container{style: 'display:none'}
+    =haml :filtered_message_template 

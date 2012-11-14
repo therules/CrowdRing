@@ -49,8 +49,9 @@
       #asks
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
-          =haml :ask, locals: {ask: ask, type: ask.typesym}
-      
+          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+        %form{action: "/campaign/#{@campaign.id}/add_new_ask", method: 'get'} 
+          %button Add new ask
 
     #broadcast.form-box
       %h3 Broadcast

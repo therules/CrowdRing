@@ -82,7 +82,7 @@ module Crowdring
       type == :voice
     end
 
-    def typesym
+    def self.typesym
       :offline_ask
     end
   end
@@ -92,7 +92,7 @@ module Crowdring
       false
     end
 
-    def typesym
+    def self.typesym
       :send_sms_ask
     end
   end
@@ -102,7 +102,7 @@ module Crowdring
       type == :voice && super(type, ringer)
     end
 
-    def typesym
+    def self.typesym
       :join_ask
     end
   end
@@ -121,7 +121,7 @@ module Crowdring
       respond(ringer, sms_number)
     end
 
-    def typesym
+    def self.typesym
       :text_ask
     end
   end
@@ -141,7 +141,7 @@ module Crowdring
       [{cmd: :record, prompt: prompt, voicemail: voicemail}]
     end
 
-    def typesym
+    def self.typesym
       :voicemail_ask
     end
   end

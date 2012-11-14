@@ -1,6 +1,12 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::Campaign do
+
+  def app
+    Crowdring::Server
+  end
+
+
   describe 'campaign creation' do
     before(:each) do
       DataMapper.auto_migrate!
@@ -85,6 +91,25 @@ describe Crowdring::Campaign do
 
       Crowdring::Ring.all.should be_empty
       Crowdring::Ringer.all.count.should eq(1)
+    end
+  end
+  describe 'campaign and asks' do
+    include Rack::Test::Methods
+
+    before(:each) do
+      Crowdring::Server.service_handler.reset
+      DataMapper.auto_migrate!
+      @number1 = '+18001111111'
+      @number2 = '+18002222222'
+      @number3 = '+18003333333'
+      @c = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: @number2, description: 'num1'}], sms_number: @number3)
+    end
+
+    it 'should be able to add new ask after campaign creation' do
+      params = {'ask_type' => 'text_ask', 'trigger_by' => 'user','campaign' => { 'message' => {'default_message' => 'hello'}}}
+      post "/campaign/#{@c.id}/add_new_ask" ,params
+
+      @c.asks.count.should eq(2)
     end
   end
 end
