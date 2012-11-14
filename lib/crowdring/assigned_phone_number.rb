@@ -15,7 +15,7 @@ module Crowdring
 
         def phone_number=(number)
           self.raw_number = number
-          super Phoner::Phone.parse(number).to_s
+          super (Phoner::Phone.parse(number) || number).to_s
         end
 
         def self.from(number)
