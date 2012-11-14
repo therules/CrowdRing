@@ -28,7 +28,6 @@ module Crowdring
         used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
         avail_sms_numbers = CompositeService.instance.sms_numbers - used_sms_numbers
         @sms_numbers = avail_sms_numbers
-        @sms_numbers = @sms_numbers.select {|n| Phoner::Phone.valid? n }
       end
 
       def summary(type)
