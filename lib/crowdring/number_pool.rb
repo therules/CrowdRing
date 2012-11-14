@@ -21,11 +21,11 @@ module Crowdring
       attr_accessor :voice_numbers, :sms_numbers
 
       def initialize
-        used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
+        used_voice_numbers = AssignedVoiceNumber.all.map(&:raw_number)
         avail_voice_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
         @voice_numbers = avail_voice_numbers
 
-        used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
+        used_sms_numbers = AssignedSMSNumber.all.map(&:raw_number)
         avail_sms_numbers = CompositeService.instance.sms_numbers - used_sms_numbers
         @sms_numbers = avail_sms_numbers
       end
