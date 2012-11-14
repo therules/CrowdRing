@@ -130,17 +130,6 @@ module Crowdring
         last_response.body.should eq('fooResponse')
       end
 
-      it 'should respond on the sending service and reply on the default service if the sending service doesnt support outgoing' do
-        @fooservice.should_not_receive(:build_response)
-        @barservice.should_receive(:build_response).once
-
-        Server.service_handler.add('foo', @fooservice, default: true)
-        Server.service_handler.add('bar', @barservice)
-        get '/voiceresponse/bar'
-        last_response.should be_ok
-        last_response.body.should eq('barResponse')
-      end
-
       it 'should respond without error to a number not currently associated with a campaign' do
         @fooresponse.stub(to: @number3)
         @fooservice.should_receive(:build_response).once

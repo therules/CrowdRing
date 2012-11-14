@@ -40,7 +40,7 @@ module Crowdring
       def summary_with_numbers(type)
         numbers = numbers_of_type(type)
         region_summary = numbers.reduce({}) do |summary, raw_number|
-          number = Phoner::Phoner.parse raw_number
+          number = Phoner::Phone.parse raw_number
 
           country = number.country.name
           regions = Regions.strs_for(number).join(', ')
