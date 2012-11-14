@@ -28,7 +28,7 @@
         %h2= "Title: #{@campaign.title}"
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
-          %a{href: "/campaign/#{@campaign.id}/assign_voice_number"} Assign another
+          %a{href: "/campaign/#{@campaign.id}/assign_voice_number"} Need another number?
         %h2 SMS Number
         %h3
           -if @campaign.sms_number
