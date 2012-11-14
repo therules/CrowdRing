@@ -124,7 +124,7 @@ module Crowdring
 
     
     get '/unsubscribe_numbers/new' do
-      used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
+      used_voice_numbers = AssignedVoiceNumber.all.map(&:raw_number)
       @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers
 
       haml :assign_unsubscribe_number
@@ -249,7 +249,7 @@ module Crowdring
     
     get '/campaign/:id/assign_voice_number' do 
       @campaign = Campaign.get(params[:id])
-      @voice_numbers = Server.service_handler.voice_numbers - AssignedVoiceNumber.all.map(&:phone_number)      
+      @voice_numbers = Server.service_handler.voice_numbers - AssignedVoiceNumber.all.map(&:raw_number)      
       
       haml :campaign_assign_voice_number        
     end
