@@ -12,13 +12,17 @@ module Crowdring
     end
 
     def tags_for(number)
-      return [] if (regions = region_hash[number.country.name.downcase]).nil?
-      regions[number.area_code.to_i].map { |region| Tag.from_str('region:' + region)}
+      strs_for(number).map { |region| Tag.from_str('region:' + region)}
     end
 
     def strs_for(number)
       regions = region_hash[number.country.name.downcase]
-      regions && regions[number.area_code.to_i] || []
+      if regions && number.respond_to?(:area_code)
+        regions[number.area_code.to_i] || []
+      else
+        []
+      end
     end
+
   end
 end
