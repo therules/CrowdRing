@@ -23,10 +23,11 @@ module Crowdring
       def initialize
         used_voice_numbers = AssignedVoiceNumber.all.map(&:phone_number)
         avail_voice_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
-        @voice_numbers = avail_voice_numbers.map {|n| Phoner::Phone.parse n }
+        @voice_numbers = avail_voice_numbers
+
         used_sms_numbers = AssignedSMSNumber.all.map(&:phone_number)
         avail_sms_numbers = CompositeService.instance.sms_numbers - used_sms_numbers
-        @sms_numbers = avail_sms_numbers.map{|n| Phoner::Phone.parse n}
+        @sms_numbers = avail_sms_numbers
         @sms_numbers = @sms_numbers.reject(&:nil?)
       end
 
@@ -37,8 +38,9 @@ module Crowdring
 
 
       def summary_with_numbers(type)
-        numbers = numbers_of_type(type).compact
-        region_summary = numbers.reduce({}) do |summary, number|
+        numbers = numbers_of_type(type)
+        region_summary = numbers.reduce({}) do |summary, raw_number|
+          number = Phoner::Phoner.parse raw_number
 
           country = number.country.name
           regions = Regions.strs_for(number).join(', ')
@@ -49,7 +51,7 @@ module Crowdring
             summary[key][:region] = regions unless regions.empty?
             summary[key][:numbers] = []
           end
-          summary[key][:numbers] << number.to_s
+          summary[key][:numbers] << raw_number
           summary[key][:count] += 1
           summary
         end      
