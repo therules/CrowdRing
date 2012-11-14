@@ -23,6 +23,7 @@
     #campaign-overview
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
+        %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"} edit goal
       #campaign-details
         %h2= "Title: #{@campaign.title}"
         #voice-number

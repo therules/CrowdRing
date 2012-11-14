@@ -2,6 +2,7 @@
   %h2=  "Campaign Settings for #{@title}"
   %form{action: '/campaign/create/double_opt_in', method: 'post'}
     %input{type: 'hidden', name: 'campaign[title]', value: @title}
+    %input{type: 'hidden', name: 'campaign[goal]', value: @goal}
     %h3
       SMSes for this campaign will be sent from
       %b= pretty_phone_number(@sms_number)

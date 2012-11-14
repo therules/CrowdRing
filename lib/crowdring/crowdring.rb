@@ -166,6 +166,8 @@ module Crowdring
 
     get '/campaign/new/configure' do
       @title = params[:campaign][:title]
+      @goal = params[:campaign][:goal].to_i
+
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
         redirect to('campaign/new')
@@ -173,6 +175,11 @@ module Crowdring
 
       unless @title 
         flash[:errors] = "Title can not be empty"
+        redirect to('campaign/new')
+      end
+
+      unless @goal
+        flash[:errors] = "Must set a valid goal"
         redirect to('campaign/new')
       end
 
@@ -292,6 +299,29 @@ module Crowdring
         flash[:errors] = "No campaign with id #{params[:id]}"
         404
       end
+    end
+
+    get '/campaign/:id/edit-goal' do
+      @campaign = Campaign.get(params[:id])
+      if @campaign
+        @goal = @campaign.goal
+        haml :campaign_edit_goal
+      else
+        flash[:errors] = "No campaign with id #{params[:id]}"
+        404
+      end
+    end
+
+    post '/campaign/:id/edit-goal' do
+      campaign = Campaign.get(params[:id])
+      if campaign.update(goal: params[:goal])
+        flash[:notice] = "Campaign goal updated"
+        redirect to("/campaigns##{params[:id]}")
+      else
+        flash[:errors] = "Failed to update campaign goal|" + campaign.errors.full_messages.join('|')
+        redirect to("/campaign/#{params[:id]}/edit-goal")
+      end
+
     end
 
     get '/campaign/:id/progress-embed' do

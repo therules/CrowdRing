@@ -6,6 +6,7 @@
       %b= pretty_phone_number(@sms_number)
     %hr
     %input{type: 'hidden', name: 'campaign[title]', value: @title}
+    %input{type: 'hidden', name: 'campaign[goal]', value: @goal}
     -@number_summary.each do |entry|
       %h3= pretty_phone_number(entry[:number])
       %h3= "#{entry[:region][:country]} - #{entry[:region][:region] || 'General'}"

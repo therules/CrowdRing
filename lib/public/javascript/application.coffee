@@ -16,7 +16,7 @@ new_ringer = (data) ->
                               .slideDown(250)
                               .animate({opacity: 1.0}, 250, delete_last)
 
-  $('#progress-inner').css('width', "#{5 + (data.ringer_count / 200 )* 100}%")
+  $('#progress-inner').css('width', "#{5 + (data.ringer_count / data.goal )* 100}%")
   $('#progress-inner .count').html(data.ringer_count)
 
 setupBroadcastTextArea = ->

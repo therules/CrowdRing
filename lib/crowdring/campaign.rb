@@ -8,6 +8,7 @@ module Crowdring
                   length: 'Title must be fewer than 64 letters in length' }
     property :most_recent_broadcast, DateTime
     property :created_at,   DateTime
+    property :goal, Integer, default: 777
 
     has n, :rings, constraint: :destroy
     has n, :texts, constraint: :destroy
