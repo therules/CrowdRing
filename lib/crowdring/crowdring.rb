@@ -350,6 +350,7 @@ module Crowdring
         @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields
         @basic_chart = HighChartsBuilder.basic_stats(@campaign)
+        @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number)
 
         haml :campaign, layout: !request.xhr?
       else

@@ -24,6 +24,7 @@
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
         %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"} edit goal
+        .goal-cost="Cost to reach #{@campaign.goal} ringers: #{@campaign.goal} text messages x $#{@sms_cost} = $#{@campaign.goal * @sms_cost}"
       #campaign-details
         %h2= "Title: #{@campaign.title}"
         #voice-number
@@ -33,6 +34,8 @@
         %h3
           -if @campaign.sms_number
             =@campaign.sms_number.pretty_phone_number
+            %h4="Cost per text message: $#{@sms_cost}"
+            %h5="(Assuming messages are sent to #{@campaign.sms_number.country_abbreviation} numbers)"
           -else
             No SMS number selected
         #campaign-ringers
