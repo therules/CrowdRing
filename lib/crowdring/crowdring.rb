@@ -300,14 +300,15 @@ module Crowdring
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
-      trigger_by = params[:trigger_by]
+      triggered_by = params[:triggered_by]
       message = params[:campaign][:message]
       if params[:prompt]
         ask = Ask.create(type:ask_name,message: message, prompt: params[:prompt])
+      else
+        ask = Ask.create(type: ask_name, message: message)
       end
-      ask = Ask.create(type: ask_name, message: message)
 
-      if trigger_by == 'previous'
+      if triggered_by == 'previous'
         campaign.asks.last.triggered_ask = ask
       end
       campaign.asks << ask
