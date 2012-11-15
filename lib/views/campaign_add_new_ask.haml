@@ -20,6 +20,7 @@
     %input{type: 'radio', name:'[triggered_by]', id: 'ask', value: 'previous'}
     %label{for: 'ask'} The Previous Event
   %button{type:'submit'} Add new ask
-
+%form{action: '/campaigns##{@campaign.id}', method: 'get'}
+  %button « Back
   #original-filtered-message-template-container{style: 'display:none'}
     =haml :filtered_message_template 

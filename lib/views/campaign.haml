@@ -15,7 +15,7 @@
           %span Campaign Details
       %li
         %a{href: "#basic-chart"}
-          %span Statistic Analysis
+          %span Analytics
       %li
         %a{href: "#export"}
           %span Export To CSV
@@ -49,7 +49,7 @@
       #asks
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
-          -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty?
+          -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != @campaign.asks.first
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
               %button{type:'submit'} Launch the Ask
 
