@@ -14,8 +14,8 @@
         %a{href: "#campaign-overview"}
           %span Campaign Details
       %li
-        %a{href: "#broadcast"}
-          %span BroadCast
+        %a{href: "#basic-chart"}
+          %span Statistic Analysis
       %li
         %a{href: "#export"}
           %span Export To CSV
@@ -49,22 +49,14 @@
       #asks
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
-          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
-        %form{action: "/campaign/#{@campaign.id}/add_new_ask", method: 'get'} 
-          %button Add new ask
+          -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty?
+            %form{action: "/campaign/#{@campaign.id}/broadcast", method: "post"}
+              %input{type: 'hidden', name: 'message', value: "#{ask.message}"}
+              %button{type:'submit'} Launch the Ask
 
-    #broadcast.form-box
-      %h3 Broadcast
-      %form{name: 'broadcast', action: "/campaign/#{@campaign.id}/broadcast", method: 'post'}
-        #filter-container
-          #broadcast-filter.filter-buttons
-            %input#all1{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-            %label.all-label{for: 'all1'}= "All #{@ringer_count}"
-            %input#country1{type: 'radio', name: 'filter', value: 'country:'}
-            %label{for: 'country1'} Country
-        #filter-options{style: 'display:none'}
-        %textarea#broadcast-text-area.msg-text-area{name: 'message', placeholder: 'Hello ringers...'}
-        %button#broadcastbutton{disabled: 'disabled'} Broadcast
+          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+        %form{action: "/campaign/#{@campaign.id}/add_new_ask", method: 'get'}
+          %button Add new ask
 
     #export.form-box
       %h3 Export to CSV
@@ -80,7 +72,9 @@
           %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
         %button#exportbutton Export
 
-#basic-chart= high_chart("basic-chart", @basic_chart) 
+    #basic-chart
+      %h3 Statistic Analysis
+      = high_chart("basic-chart", @basic_chart) 
 
 #country-options{style: 'display:none'}
   %form

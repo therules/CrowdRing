@@ -304,7 +304,9 @@ module Crowdring
       message = params[:campaign][:message]
       ask = Ask.create(type: ask_name, message: message)
 
-      campaign.asks.last.triggered_ask = ask
+      if trigger_by == 'previous'
+        campaign.asks.last.triggered_ask = ask
+      end
       campaign.asks << ask
       if campaign.save
         flash[:notice] = "New Ask Add"
@@ -387,12 +389,15 @@ module Crowdring
       campaign = Campaign.get(params[:id])
       from = params[:from] || campaign.sms_number.raw_number
       message = params[:message]
+      unless message
+        flash[:errors] = "Ask needs a prompt to launch"
+        redirect to("/campaigns##{campaign.id}")
+      end
+
       rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).rings)
       to = rings.map(&:ringer).map(&:phone_number)
 
       Server.service_handler.broadcast(from, message, to)
-      campaign.most_recent_broadcast = DateTime.now
-      campaign.save
 
       flash[:notice] = "Message broadcast"
       redirect to("/campaigns##{campaign.id}")
