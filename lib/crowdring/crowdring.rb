@@ -317,6 +317,13 @@ module Crowdring
       end
     end
 
+    post '/campaign/:id/asks/:ask_id/trigger' do
+      campaign = Campaign.get(params[:id])
+      ask = campaign.asks.get(params[:ask_id])
+      ask.trigger(campaign.ringers, campaign.sms_number.raw_number)
+    end
+
+
     post '/campaign/:id/destroy' do
       campaign = Campaign.get(params[:id])
       if campaign.destroy

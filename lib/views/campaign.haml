@@ -50,8 +50,7 @@
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
           -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty?
-            %form{action: "/campaign/#{@campaign.id}/broadcast", method: "post"}
-              %input{type: 'hidden', name: 'message', value: "#{ask.message}"}
+            %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
               %button{type:'submit'} Launch the Ask
 
           =haml :ask, locals: {ask: ask, type: ask.class.typesym}
