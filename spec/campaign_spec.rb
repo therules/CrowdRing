@@ -107,7 +107,7 @@ describe Crowdring::Campaign do
 
     it 'should be able to add new ask after campaign creation' do
       params = {'ask_type' => 'text_ask', 'trigger_by' => 'user','campaign' => { 'message' => {'default_message' => 'hello'}}}
-      post "/campaign/#{@c.id}/add_new_ask" ,params
+      post "/campaign/#{@c.id}/asks/new" ,params
 
       @c.asks.count.should eq(2)
     end

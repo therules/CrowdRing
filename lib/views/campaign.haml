@@ -54,7 +54,7 @@
               %button{type:'submit'} Launch the Ask
 
           =haml :ask, locals: {ask: ask, type: ask.class.typesym}
-        %form{action: "/campaign/#{@campaign.id}/add_new_ask", method: 'get'}
+        %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
           %button Add new ask
 
     #export.form-box

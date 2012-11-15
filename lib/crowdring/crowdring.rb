@@ -285,23 +285,26 @@ module Crowdring
       end
     end
 
-    get '/campaign/:id/add_new_ask' do
+    get '/campaign/:id/asks/new' do
       @campaign = Campaign.get(params[:id])
       @ask_type = Ask.descendants.reject {|a| [:offline_ask, :join_ask].include?(a.typesym)}
 
       haml :campaign_add_new_ask
     end
 
-    post '/campaign/:id/add_new_ask' do
+    post '/campaign/:id/asks/new' do
       campaign = Campaign.get(params[:id])
       ask_type = params[:ask_type]
       unless ask_type
         flash[:errors] = "Ask type can not be empty"
-        redirect to("/campaign/#{campaign.id}/add_new_ask")
+        redirect to("/campaign/#{campaign.id}/asks/new")
       end
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
       trigger_by = params[:trigger_by]
       message = params[:campaign][:message]
+      if params[:prompt]
+        ask = Ask.create(type:ask_name,message: message, prompt: params[:prompt])
+      end
       ask = Ask.create(type: ask_name, message: message)
 
       if trigger_by == 'previous'
@@ -313,14 +316,16 @@ module Crowdring
         redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = "Failed to add new ask"
-        redirect to("/campaign/#{campaign.id}/add_new_ask")
+        redirect to("/campaign/#{campaign.id}/asks/new")
       end
     end
 
     post '/campaign/:id/asks/:ask_id/trigger' do
       campaign = Campaign.get(params[:id])
       ask = campaign.asks.get(params[:ask_id])
-      ask.trigger(campaign.ringers, campaign.sms_number.raw_number)
+      ringers = ask.potential_recipients(campaign.ringers)
+      ask.trigger(ringers, campaign.sms_number.raw_number)
+      redirect to("/campaigns##{campaign.id}")
     end
 
 
