@@ -67,9 +67,11 @@ module Crowdring
 
     describe 'campaign fetching' do
       it 'should successfully fetch a campaign at campaign/id' do
+        CompositeService.instance.add('foo', LoggingService.new([@number]))
         c = Campaign.create(title: 'title', voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         get "/campaign/#{c.id}"
         last_response.should be_ok
+        CompositeService.instance.reset
       end
 
       it 'should redirect back to / on trying to fetch a non-existant campaign' do

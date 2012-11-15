@@ -24,7 +24,11 @@
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
         %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"} edit goal
-        .goal-cost="Cost to reach #{@campaign.goal} ringers: #{@campaign.goal} text messages x $#{@sms_cost} = $#{@campaign.goal * @sms_cost}"
+        .goal-cost
+          -if @sms_cost
+            ="Cost to reach #{@campaign.goal} ringers: #{@campaign.goal} text messages x $#{@sms_cost} = $#{@campaign.goal * @sms_cost}"
+          -else
+            ="Unable to calculate cost to reach goal."
       #campaign-details
         %h2= "Title: #{@campaign.title}"
         #voice-number
