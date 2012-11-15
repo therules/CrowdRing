@@ -1,4 +1,12 @@
 nexmo:
   ZA: .071
+  US: .007
 routo:
   BR: .058
+twilio:
+  US: .01
+tropo:
+  US: .01
+plivo:
+  US: .008
+
