@@ -14,7 +14,7 @@
       %input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: entry[:number]}
       %input.title-input{type: 'text', name: 'campaign[voice_numbers][][description]', placeholder: 'Use this space to describe where the number will be promoted, etc.'}
       %h3 Add a response sms for callers of this number
-      %input.msg-text-area{type: 'text', name: 'sms_responses[]', placeholder: 'Thank you for calling to support us'}
+      %textarea.msg-text-area{name: 'sms_responses[]', placeholder: 'Thank you for calling to support us'}
       %hr        
     %input{type: 'hidden', name: 'campaign[sms_number]', value: @sms_number}
     %button{type: 'submit'}
