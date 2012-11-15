@@ -72,7 +72,7 @@ module Crowdring
         text && OutgoingSMS.new(from: sms_number, to: ringer, text: text)
       end
 
-      PriceEstimate.new(smss)
+      PriceEstimate.new(smss.compact)
     end
   end
 
