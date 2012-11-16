@@ -61,7 +61,6 @@ module Crowdring
   class AssignedSMSNumber
     include AssignedPhoneNumberFields
     include PhoneNumberFields
-
     belongs_to :campaign
 
     def text(ringer, message)

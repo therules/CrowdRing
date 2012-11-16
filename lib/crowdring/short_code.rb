@@ -5,6 +5,7 @@ module Crowdring
     end
 
     def country
+      Phoner::Country.load
       Phoner::Country.find_by_name('Brazil')
     end
   end

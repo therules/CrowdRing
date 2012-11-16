@@ -33,7 +33,6 @@ require 'crowdring/filter'
 
 require 'crowdring/phone_number_fields'
 require 'crowdring/campaign'
-require 'crowdring/response_numbers'
 require 'crowdring/ringer'
 require 'crowdring/ring'
 require 'crowdring/text'

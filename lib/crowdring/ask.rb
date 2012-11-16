@@ -69,7 +69,7 @@ module Crowdring
 
       smss = ringers.map do |ringer|
         text = message.for(ringer, sms_number)
-        text && OutgoingSMS.new(from: sms_number, to: ringer, text: text)
+        text && OutgoingSMS.new(from: sms_number, to: ringer.phone_number, text: text)
       end
 
       PriceEstimate.new(smss.compact)

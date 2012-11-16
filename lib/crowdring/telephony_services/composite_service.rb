@@ -49,8 +49,7 @@ module Crowdring
     end
 
     def service_for(type, number)
-      @services.each {|name, service| return name if supports_number(service, number) && service.send("#{type}?") }
-
+      service =  @services.each {|name, service| return name if supports_number(service, number) && service.send("#{type}?") }
       raise NoServiceError, "No service handler for #{number}"
     end
 

@@ -24,7 +24,8 @@ module Crowdring
     end
 
     def country
-      number.country
+      short_code =  ShortCode.parse(phone_number)
+      short_code ? short_code.country : number.country
     end
 
     def number

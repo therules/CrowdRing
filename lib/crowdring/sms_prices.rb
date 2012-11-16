@@ -13,8 +13,10 @@ module Crowdring
 
     def price_for(service, number, opts={})
       prices = opts[:prices] || default_prices
-
-      prices[service] && prices[service][number.country.char_3_code]
+      if prices[service]
+        short_code = ShortCode.parse(number)
+        short_code ? prices[service][short_code.country.char_3_code] : prices[service][number.country.char_3_code]
+      end
     end
   end
 end

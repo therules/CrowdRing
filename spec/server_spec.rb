@@ -66,8 +66,8 @@ module Crowdring
     end
 
     describe 'campaign fetching' do
-      it 'should successfully fetch a campaign at campaign/id' do
-        CompositeService.instance.add('foo', LoggingService.new([@number]))
+      it 'should successfully fetch a campaign at campaign/id' , focus: true do
+        CompositeService.instance.add('foo', LoggingService.new(@numbers))
         c = Campaign.create(title: 'title', voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         get "/campaign/#{c.id}"
         last_response.should be_ok

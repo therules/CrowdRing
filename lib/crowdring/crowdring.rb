@@ -22,7 +22,8 @@ module Crowdring
 
     configure :development do
       register Sinatra::Reloader
-      service_handler.add('logger', LoggingService.new(['+18001111111', '+18002222222', '+919102764614','+27114891907'], output: true))
+      service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+555130793000', '+18002222222', '+919102764633','+27114891922'], output: true))
+      service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '27800', '+919102764622', '+27114891911'], output: true))
     end
 
     configure :production do
@@ -350,7 +351,7 @@ module Crowdring
         @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields
         @basic_chart = HighChartsBuilder.basic_stats(@campaign)
-        @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number)
+        @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number.raw_number)
 
         haml :campaign, layout: !request.xhr?
       else
