@@ -10,5 +10,8 @@
       %button Add Another
     %h3= "Total Unsubscribes: #{@unsubscribed_count}"
   %h2 Campaigns
-  -@campaigns.each do |campaign|
-    = haml :campaign_preview, locals: {campaign: campaign}
+  -if @campaigns.empty?
+    No campaigns currently running
+  -else
+    -@campaigns.each do |campaign|
+      = haml :campaign_preview, locals: {campaign: campaign}

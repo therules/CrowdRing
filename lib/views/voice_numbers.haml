@@ -1,11 +1,12 @@
 #voice-numbers
   %h2 Voice Numbers
-  -voice_numbers = campaign.voice_numbers
-  -if voice_numbers.empty?
+  -if campaign.voice_numbers.empty?
     %h3 No voice number selected
   -else
-    -voice_numbers.each do |voice_number|
-      %h4= "Phone Number: #{voice_number.pretty_phone_number}, Description: #{voice_number.description}"
-      %form{action: "/campaign/#{campaign.id}/assigned_voice_number/destroy", method: 'post'}
-        %input{type: 'hidden', name: 'number_id', value: "#{voice_number.id}"}
-        %button{type: 'submit'} Remove
+    -campaign.voice_numbers.each do |voice_number|
+      .assigned-number
+      .number=voice_number.pretty_phone_number
+      .description= "Description: #{voice_number.description}"
+      %form{action: "/campaign/#{campaign.id}/assigned_voice_number/#{voice_number.id}/destroy", method: 'post'}
+        %button{type: 'submit'} release
+      %hr

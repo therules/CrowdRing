@@ -274,7 +274,7 @@ module Crowdring
       end
     end
 
-    post '/campaign/:id/assigned_voice_number/destroy' do
+    post '/campaign/:id/assigned_voice_number/:number_id/destroy' do
       campaign = Campaign.get(params[:id])
       unless campaign.voice_numbers.count == 1
         campaign.voice_numbers.first(id: params[:number_id]).destroy
