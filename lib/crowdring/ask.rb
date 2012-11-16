@@ -95,6 +95,10 @@ module Crowdring
     def self.typesym
       :send_sms_ask
     end
+
+    def self.readable_name
+      'Send a text message'
+    end
   end
 
   class JoinAsk < Ask
@@ -105,6 +109,7 @@ module Crowdring
     def self.typesym
       :join_ask
     end
+
   end
 
   class TextAsk < Ask
@@ -123,6 +128,10 @@ module Crowdring
 
     def self.typesym
       :text_ask
+    end
+
+    def self.readable_name
+      'Recieve a text message'
     end
   end
 
@@ -144,5 +153,10 @@ module Crowdring
     def self.typesym
       :voicemail_ask
     end
+
+    def self.readable_name
+      'Receive a voice message'
+    end
+
   end
 end

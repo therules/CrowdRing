@@ -3,16 +3,15 @@
   %h3 What type of ask is this?
   %form{action: "/campaign/#{@campaign.id}/asks/new ", method: 'post'}
     %select.ask-type{name: "ask_type"}
-      %option{value:"", selected: 'selected', disabled:"disabled"} Select Ask Type
+      %option{value:"", selected: 'selected', disabled:"disabled"} Select an ask type
       -@ask_type. each do |type|
-        -type_view = type.to_s.split(":").last.split("Ask").first
+        -type_view = type.readable_name
         %option{value: "#{type.typesym}"}= "#{type_view}"
     #selected-ask-type
-    %h3 How to prompt this ask?
+    %h3 Enter the text users will receive to prompt the ask.
     #filtered-messages
       %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
       .field
-        %label Default Message:
         %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
     %h3 What triggers this ask?
     %div

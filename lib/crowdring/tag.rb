@@ -28,7 +28,12 @@ module Crowdring
     end
 
     def to_s
-      "Rang #{AssignedVoiceNumber.first(id: value).pretty_phone_number}"
+      number = AssignedVoiceNumber.first(id: value)
+      if number
+        "Rang #{AssignedVoiceNumber.first(id: value).pretty_phone_number}"
+      else
+        nil
+      end
     end
   end
 
