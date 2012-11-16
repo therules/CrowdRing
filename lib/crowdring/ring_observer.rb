@@ -25,7 +25,7 @@ module Crowdring
           goal: m.campaign.goal }
 
       begin
-        Pusher[m.campaign.id].trigger('new', data) 
+        Pusher.trigger(m.campaign.id.to_s, 'new', data) 
       rescue SocketError
         p "SocketError: Failed to send message to Pusher"
       end

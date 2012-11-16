@@ -1,4 +1,4 @@
-require 'bundler'
+require 'bundler/setup'
 require 'sinatra/base'
 require 'sinatra/reloader'
 require 'rack/ssl'
@@ -12,6 +12,7 @@ require 'phone'
 require 'resque'
 require 'haml'
 require 'lazy_high_charts'
+require 'statsd'
 require 'json'
 
 require 'crowdring/telephony_services/telephony_service'
@@ -56,7 +57,6 @@ require 'crowdring/short_code'
 require 'crowdring/number_pool'
 
 require 'utils/password_generator'
-require 'statsd'
 require 'crowdring/patches'
 require 'crowdring/crowdring'
 
