@@ -1,7 +1,7 @@
 %h3 Voicemail Ask
 %h4 Initial Cost Estimate
 =haml :price_estimate, locals: {price_estimate: ask.initial_price_estimate(@campaign.ringers, @campaign.sms_number.raw_number)}
-="#{ask.respondents.count} recipients / #{ask.recipients.count} respondents"
+%div="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
 =haml :message, locals: {message: ask.message}
 %h4= "Prompt #{ask.prompt}"
 %h4 Voicemails:

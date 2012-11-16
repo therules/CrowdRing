@@ -7,12 +7,12 @@
       -@ask_type. each do |type|
         -type_view = type.readable_name
         %option{value: "#{type.typesym}"}= "#{type_view}"
-    #selected-ask-type
-    %h3 Enter the text users will receive to prompt the ask.
+    %h3 Enter the text supporter will receive to prompt the ask.
     #filtered-messages
       %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
       .field
         %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
+    #selected-ask-type
     %h3 What triggers this ask?
     %div
       %input{type: 'radio', name:'[triggered_by]', id: 'user', value: 'user', checked: 'checked'}

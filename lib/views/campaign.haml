@@ -60,10 +60,10 @@
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
           %hr
+          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
           -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != @campaign.asks.first
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
-              %button{type:'submit'} Launch the Ask
-          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+              %button{type:'submit'} Launch
         %hr
         %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
           %button Add new ask
