@@ -38,8 +38,11 @@
         %h3
           -if @campaign.sms_number
             =@campaign.sms_number.pretty_phone_number
-            %h4="Cost per text message: $#{@sms_cost}"
-            %h5="(Assuming messages are sent to #{@campaign.sms_number.country_abbreviation} numbers)"
+            -if @sms_cost
+              %h4="Cost per text message: $#{@sms_cost}"
+              %h5="(Assuming messages are sent to #{@campaign.sms_number.country_abbreviation} numbers)"
+            -else
+              %h4 Cost per text message: Unknown.
           -else
             No SMS number selected
         #campaign-ringers
@@ -56,10 +59,12 @@
       #asks
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
+          %hr
           -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != @campaign.asks.first
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
               %button{type:'submit'} Launch the Ask
           =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+        %hr
         %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
           %button Add new ask
 

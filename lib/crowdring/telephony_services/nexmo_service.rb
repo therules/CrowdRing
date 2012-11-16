@@ -26,7 +26,7 @@ module Crowdring
     end
 
     def numbers
-      @client.get_account_numbers(size:100).object[:numbers].map {|n| n[:msisdn] }
+      @client.get_account_numbers(size:100).object["numbers"].map{|n| n["msisdn"]}
     end
 
     def build_response(from, commands)
