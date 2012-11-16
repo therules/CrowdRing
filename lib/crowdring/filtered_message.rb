@@ -12,12 +12,12 @@ module Crowdring
       self.tag_filter = TagFilter.create(tags: tags)
     end
 
-    def accept?(ringer)
-      tag_filter.accept?(ringer) && ringer.subscribed?
+    def accept?(ringer, sms_number)
+      tag_filter.accept?(ringer) && ringer.subscribed? && is_local?(ringer.phone_number, sms_number)
     end
 
     def send_message(params)
-      if tag_filter.accept?(params[:to])
+      if accept?(params[:to], params[:from])
         CompositeService.instance.send_sms(
           from: params[:from], to: params[:to].phone_number, 
           msg: message_text)
@@ -25,6 +25,12 @@ module Crowdring
       else
         false
       end
+    end
+
+    def is_local?(phone_number, sms_number)
+      ringer_number = Phoner::Phone.parse phone_number
+      sms_number = Phoner::Phone.parse sms_number
+      ringer_number.country_code == sms_number.country_code
     end
   end
 end

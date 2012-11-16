@@ -13,7 +13,7 @@ describe Crowdring::Message do
         transform_request: @fooresponse,
         numbers: [@number],
         send_sms: nil)
-    @ringer = double('ringer', phone_number: @number2)
+    @ringer = double('ringer', phone_number: @number2, subscribed?: true)
     Crowdring::CompositeService.instance.reset
     Crowdring::CompositeService.instance.add('foo', @fooservice) 
   end

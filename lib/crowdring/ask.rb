@@ -68,7 +68,7 @@ module Crowdring
       return 0.0 if message.nil?
 
       smss = ringers.map do |ringer|
-        text = message.for(ringer)
+        text = message.for(ringer, sms_number)
         text && OutgoingSMS.new(from: sms_number, to: ringer, text: text)
       end
 
