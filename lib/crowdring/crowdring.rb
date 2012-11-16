@@ -24,6 +24,7 @@ module Crowdring
       register Sinatra::Reloader
       service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+555130793000', '+18002222222', '+919102764633','+27114891922'], output: true))
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '27800', '+919102764622', '+27114891911'], output: true))
+      service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
     end
 
     configure :production do
@@ -351,7 +352,7 @@ module Crowdring
         @countries = @campaign.ringers.map(&:country).uniq
         @all_fields = CsvField.all_fields
         @basic_chart = HighChartsBuilder.basic_stats(@campaign)
-        @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number.raw_number)
+        @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number)
 
         haml :campaign, layout: !request.xhr?
       else

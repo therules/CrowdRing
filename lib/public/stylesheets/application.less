@@ -16,6 +16,18 @@
 }
 
 
+.clearfix {display:block;}
+.clearfix:after {
+  clear: both;
+  content: ' ';
+  display: block;
+  font-size: 0;
+  line-height: 0;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+}
+
 body {
   font-family: @body-font;
   background: @background-dark;
@@ -183,6 +195,10 @@ body {
     display: inline-block;
   }
 
+  #sms-number {
+    margin-top: 40px;
+  }
+
   #selected-regions {
     margin: 10px;
   }
@@ -198,15 +214,22 @@ body {
         height: 50px;
         padding-bottom: 20px;
 
-        .edit-goal-link {
-          padding-top: 15px;
+        .goal-data {
           float: right;
-        }
+          text-align: right;
+          .edit-goal-link {
+            padding-top: 15px;
+          }
 
-        .goal-cost {
-          padding-top: 15px;
-          padding-right: 10px;
-          float: right;
+          .goal-cost {
+            padding-top: 15px;
+            padding-right: 10px;
+
+            .total {
+              display: inline;
+              font-size: 25px;
+            }
+          }
         }
       }
       #campaign-details {

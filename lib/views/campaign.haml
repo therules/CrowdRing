@@ -23,29 +23,33 @@
     #campaign-overview
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
-        %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"} edit goal
-        .goal-cost
-          -if @sms_cost
-            ="Cost to reach #{@campaign.goal} ringers: #{@campaign.goal} text messages x $#{@sms_cost} = $#{@campaign.goal * @sms_cost}"
-          -else
-            ="Unable to calculate cost to reach goal."
+        .goal-data
+          %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
+          .goal-cost
+            -if @sms_cost
+              One cost to text them all
+              .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
+            -else
+              ="unable to calculate cost to reach goal."
       #campaign-details
         %h2= "Title: #{@campaign.title}"
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
-          %a{href: "/campaign/#{@campaign.id}/assign_voice_number"} Need another number?
-        %h2 SMS Number
-        %h3
-          -if @campaign.sms_number
-            =@campaign.sms_number.pretty_phone_number
-            -if @sms_cost
-              %h4="Cost per text message: $#{@sms_cost}"
-              %h5="(Assuming messages are sent to #{@campaign.sms_number.country_abbreviation} numbers)"
+          %form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'post'}
+            %button{type: 'submit'} I need another number
+        #sms-number
+          %h2 Text Number
+          %h3
+            -if @campaign.sms_number
+              =@campaign.sms_number.pretty_phone_number
+              -if @sms_cost
+                %h4="Estimated cost per text message: $#{@sms_cost}"
+              -else
+                %h4 Cost per text message: Unknown.
             -else
-              %h4 Cost per text message: Unknown.
-          -else
-            No SMS number selected
+              No Text number selected
         #campaign-ringers
+          %h2 Ringers
           .counts
             %h4.total_count
               = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')

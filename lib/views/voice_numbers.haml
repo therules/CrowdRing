@@ -5,8 +5,8 @@
   -else
     -campaign.voice_numbers.each do |voice_number|
       .assigned-number
-      .number=voice_number.pretty_phone_number
+      %h3=voice_number.pretty_phone_number
       .description= "Description: #{voice_number.description}"
       %form{action: "/campaign/#{campaign.id}/assigned_voice_number/#{voice_number.id}/destroy", method: 'post'}
-        %button{type: 'submit'} release
+        %button{type: 'submit'} I'm done with this number
       %hr

@@ -2,7 +2,7 @@
   %h3 Messages
   #messages 
     -message.nondefault_messages.each do |fm|
-      %label When:
+      %label If:
       .message
         -fm.tag_filter.tags.each do |tag|
           %li= tag
