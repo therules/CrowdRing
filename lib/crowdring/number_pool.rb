@@ -14,6 +14,9 @@ module Crowdring
       NumPool.new.find_numbers(opts, type)
     end
 
+    def available_voice_with_sms
+      available_summary(:voice).reject {|n| find_number({country: n[:country]}, :sms).nil? }
+    end
 
     private
 
