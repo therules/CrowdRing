@@ -325,7 +325,7 @@ module Crowdring
     post '/campaign/:id/asks/:ask_id/trigger' do
       campaign = Campaign.get(params[:id])
       ask = campaign.asks.get(params[:ask_id])
-      ringers = ask.potential_recipients(campaign.ringers)
+      ringers = ask.potential_recipients(campaign.ringers.subscribed)
       ask.trigger(ringers, campaign.sms_number.raw_number)
       redirect to("/campaigns##{campaign.id}")
     end
