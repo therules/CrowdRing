@@ -29,8 +29,8 @@ namespace :db do
     DataMapper.auto_migrate!
 
     User.set(
-      email: ENV["ADMIN_EMAIL"] || 'nherzing@gmail.com',
-      password: ENV["ADMIN_PASSWORD"] || 'password',
-      password_confirmation: ENV["ADMIN_PASSWORD"] || 'password')
+      email: ENV["ADMIN_EMAIL"] || 'frodo@crowdring.org',
+      password: ENV["ADMIN_PASSWORD"] || 'gAnd0lf',
+      password_confirmation: ENV["ADMIN_PASSWORD"] || 'gAnd0lf')
   end
 end

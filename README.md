@@ -35,6 +35,8 @@
 + To run
   
   + `foreman start -f Procfile.dev`
+
+  + Sign in as frodo@crowdring.org, password `gAnd0lf`
   
   
   
