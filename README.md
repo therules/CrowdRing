@@ -1,7 +1,7 @@
 ##crowdring
 ==============
 
-+ crowdring, from https://github.com/mbelinsky/Crowdring
++ Crowdring, originally from https://github.com/mbelinsky/Crowdring
 
 + Pre Install
   
@@ -21,7 +21,7 @@
       
       + defaults to PostgreSQL ie. postgres://localhost/crowdring_#{ENVIRONMENT}
 
-+ To install. 
++ To Install. 
 
   + `git clone git@github.com:nherzing/crowdring.git`
 
@@ -32,12 +32,12 @@
   + `rake db:reset` 
   
 
-+ To run
++ To Run
   
   + `foreman start -f Procfile.dev`
 
   + Sign in as frodo@crowdring.org, password `gAnd0lf`
   
++ Supported Services
   
-  
-
+  + Plivo, Twilio, Tropo, KooKoo, Voxeo, Nexmo, Routo, Netcore.
