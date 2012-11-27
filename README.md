@@ -28,7 +28,13 @@
   + `cd crowdring`
 
   + `bundle install`
+  
+  + `rake db:reset` 
+  
 
++ To run
+  
+  + `foreman start -f Procfile.dev`
   
   
   
