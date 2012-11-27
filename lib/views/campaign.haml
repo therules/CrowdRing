@@ -55,6 +55,9 @@
               = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
             %h4.unique_count
               = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
+            %h4.subscribed_count
+              -subscribes = @campaign.ringers.subscribed.count 
+              = "#{subscribes} " + (subscribes !=1 ? 'Subscribed Ringers' : 'Subscribed Ringer')
           #ringers-numbers
             %ul.ringers
               -@ringers.each do |ringer|

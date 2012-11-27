@@ -45,11 +45,11 @@ module Crowdring
       ringers.reject {|r| r.tagged?(recipient_tag) }
     end
 
-    def recipients(ringers=Ringer.all)
+    def recipients(ringers=Ringer.subscribed)
       ringers.select {|r| r.tagged?(recipient_tag)}
     end
 
-    def respondents(ringers=Ringer.all)
+    def respondents(ringers=Ringer.subscribed)
       ringers.select {|r| r.tagged?(respondent_tag)}
     end
 

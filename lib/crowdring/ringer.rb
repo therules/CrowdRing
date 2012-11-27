@@ -29,6 +29,10 @@ module Crowdring
       all(subscribed: false)
     end
 
+    def self.subscribed
+      all(subscribed: true)
+    end
+
     def phone_number=(number)
       super Phoner::Phone.parse(number).to_s
     end
