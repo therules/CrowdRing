@@ -16,6 +16,10 @@
       + run `make install`
   
   + Install Ruby 1.9.3
+  
+  + Install database 
+      
+      + defaults to PostgreSQL ie. postgres://localhost/crowdring_#{ENVIRONMENT}
 
 + To install. 
 
