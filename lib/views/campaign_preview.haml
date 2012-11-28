@@ -12,6 +12,6 @@
     %h2= campaign.sms_number.pretty_phone_number
   -else
     %h2 No SMS Number
-  %h2= "#{campaign.ringers.count} " + (campaign.ringers.count !=1 ? "Ringers" : "Ringer")
+  %h2=pluralize(campaign.ringers.count, 'Ringer')
 
 

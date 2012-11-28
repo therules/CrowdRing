@@ -6,8 +6,8 @@ module Crowdring
 			@campaign = campaign
 		end
 
-		def self.calculate(campaign, stat)
-			@@stats[stat].new(campaign).calculate
+		def self.calculate(campaign, stat, *args)
+			@@stats[stat].new(campaign).calculate(*args)
 		end
 
 		def self.register(id)
@@ -16,8 +16,8 @@ module Crowdring
 	end
 
 	class MemberTotal < CampaignStats
-		def calculate
-			unique_rings = @campaign.unique_rings
+		def calculate(assigned_number=nil)
+			unique_rings = @campaign.unique_rings(assigned_number)
       datapoints = unique_rings.each_with_index.map {|ring, index| [ring.created_at.strftime('%Q').to_i, index + 1] } 
       datapoints.unshift([@campaign.created_at.strftime('%Q').to_i, 0])
       datapoints << [DateTime.now.strftime('%Q').to_i, unique_rings.size]

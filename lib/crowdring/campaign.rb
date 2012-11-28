@@ -50,11 +50,15 @@ module Crowdring
       ask.text(ringer, text, sms_number.raw_number) if ask
     end
 
-    def unique_rings
+    def unique_rings(assigned_number=nil)
       ringers_to_rings = rings.all.reduce({}) do |res, ring|
         res.merge(res.key?(ring.ringer_id) ? {} : {ring.ringer_id => ring})
       end
-      ringers_to_rings.values
+      if assigned_number
+        (ringers_to_rings.select {|_,ring| ring.ringer.tagged?(assigned_number.tag) }).values
+      else
+        ringers_to_rings.values
+      end
     end
 
     def all_errors
