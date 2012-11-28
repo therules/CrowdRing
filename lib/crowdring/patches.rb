@@ -62,6 +62,11 @@ MESSAGE_END
   end
 end
 
+# sinatra-authentication incorrectly uses Time as the type of :created_at
+class DmUser
+  property :created_at, DateTime
+end
+
 module Sinatra
   module SinatraAuthentication
     class << self
