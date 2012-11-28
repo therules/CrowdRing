@@ -7,6 +7,7 @@
       .assigned-number
       %h3=voice_number.pretty_phone_number
       .description= "Description: #{voice_number.description}"
+      %h3=pluralize(campaign.ringers_from(voice_number).count, 'ringer')
       %form{action: "/campaign/#{campaign.id}/assigned_voice_number/#{voice_number.id}/destroy", method: 'post'}
         %button{type: 'submit'} I'm done with this number
       %hr

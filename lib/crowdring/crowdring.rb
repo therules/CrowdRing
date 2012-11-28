@@ -69,6 +69,10 @@ module Crowdring
         PhoneNumberFields.pretty_number(phone_number)
       end
 
+      def pluralize(count, noun)
+        "#{count} #{noun}#{count != 1 ? 's' : ''}"
+      end
+
     end
 
     before /^((?!((voice|sms)response)|reports|login|resetpassword|voicemails|progress-embed).)*$/ do

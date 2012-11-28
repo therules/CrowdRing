@@ -52,12 +52,11 @@
           %h2 Ringers
           .counts
             %h4.total_count
-              = "#{@ring_count} " + (@ring_count !=1 ? 'Total Rings' : 'Total Ring')
+              =pluralize(@ring_count, 'Total Ring')
             %h4.unique_count
-              = "#{@ringer_count} " + (@ringer_count !=1 ? 'Unique Ringers' : 'Unique Ringer')
+              =pluralize(@ringer_count, 'Unique Ringer')
             %h4.subscribed_count
-              -subscribes = @campaign.ringers.subscribed.count 
-              = "#{subscribes} " + (subscribes !=1 ? 'Subscribed Ringers' : 'Subscribed Ringer')
+              =pluralize(@campaign.ringers.subscribed.count, 'Subscribed Ringer')
           #ringers-numbers
             %ul.ringers
               -@ringers.each do |ringer|

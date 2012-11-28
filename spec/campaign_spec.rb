@@ -57,6 +57,8 @@ describe Crowdring::Campaign do
       @number1 = '+18001111111'
       @number2 = '+18002222222'
       @number3 = '+18003333333'
+      @number4 = '+18004444444'
+      @number5 = '+18005555555'
       @c = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: @number2, description: 'num1'}], sms_number: @number3)
     end
 
@@ -92,7 +94,20 @@ describe Crowdring::Campaign do
       Crowdring::Ring.all.should be_empty
       Crowdring::Ringer.all.count.should eq(1)
     end
+
+    it 'should be able to provide the ringers of a certain assigned number' do
+      @c.voice_numbers << {phone_number: @number3, description: 'num3'}
+      @c.save
+      r = Crowdring::Ringer.create(phone_number: @number4)
+      r2 = Crowdring::Ringer.create(phone_number: @number5)
+      @c.voice_numbers.first.ring(r)
+      @c.voice_numbers.last.ring(r2)
+
+      @c.ringers_from(@c.voice_numbers.first).should eq([r])
+      @c.ringers_from(@c.voice_numbers.last).should eq([r2])
+    end
   end
+
   describe 'campaign and asks' do
     include Rack::Test::Methods
 
@@ -112,4 +127,5 @@ describe Crowdring::Campaign do
       @c.asks.count.should eq(2)
     end
   end
+
 end

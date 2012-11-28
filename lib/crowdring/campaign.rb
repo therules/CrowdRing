@@ -34,6 +34,10 @@ module Crowdring
       rings.all.ringer
     end
 
+    def ringers_from(assigned_number)
+      ringers.select {|r| r.tagged?(assigned_number.tag) }
+    end
+
     def ring(ringer)
       return unless rings.create(ringer: ringer).saved?
       ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
