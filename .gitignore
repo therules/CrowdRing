@@ -3,3 +3,4 @@ logfile
 .DS_Store
 dump.rdb
 UTF-8
+log_file.log
