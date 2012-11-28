@@ -35,7 +35,7 @@
         %h2= "Title: #{@campaign.title}"
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
-          %form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'post'}
+          %form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'get'}
             %button{type: 'submit'} I need another number
         #sms-number
           %h2 Text Number
@@ -93,7 +93,7 @@
       %h3 Statistic Analysis
       = high_chart("basic-chart", @basic_chart) 
 
-#country-options{style: 'display:none'}
+#country-options{stype: 'display:none' }
   %form
     -if @countries.empty?
       No countries to select from.
