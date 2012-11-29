@@ -129,14 +129,23 @@ module Crowdring
 
     
     get '/unsubscribe_numbers/new' do
-      used_voice_numbers = AssignedVoiceNumber.all.map(&:raw_number)
-      @voice_numbers = Server.service_handler.voice_numbers - used_voice_numbers
+      @voice_numbers = NumberPool.available_summary
 
       haml :assign_unsubscribe_number
     end
 
     post '/unsubscribe_numbers/create' do
-      unsubscribe_number = AssignedUnsubscribeVoiceNumber.new(phone_number: params[:voice_number])
+      unless params[:region]
+        flash[:errors] = 'Please select a number'
+        redirect to('/unsubscribe_numbers/new')
+      end
+
+      country, region = params[:region].split('|')
+      res = {country: country}
+      res[:region] = region if region
+      number = NumberPool.find_number(res)
+
+      unsubscribe_number = AssignedUnsubscribeVoiceNumber.new(phone_number: number)
       if unsubscribe_number.save
         flash[:notice] = "Unsubscribe number assigned"
         redirect to("/")

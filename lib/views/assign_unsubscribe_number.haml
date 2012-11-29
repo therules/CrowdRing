@@ -3,8 +3,11 @@
   %h3 Sorry, no voice numbers currently available.
 -else
   %form{action: '/unsubscribe_numbers/create', method: 'post'}
-    %select{name: 'voice_number'}
-      -@voice_numbers.each do |n|
-        %option #{n}
+    .field
+      %h3 Select a region for your new number
+      %select{name: 'region'}
+        %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
+        -@voice_numbers.each_with_index do |n, i|
+          %option{value: "#{n[:country]}|#{n[:region]}"}= "#{n[:country]} - #{n[:region] || 'General'}"
     %button{type: 'submit'} Assign    
 
