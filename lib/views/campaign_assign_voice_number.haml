@@ -9,8 +9,8 @@
         -@voice_numbers.each do |n|
           %option #{n}
     .field
-      %label Description:
-      %input{type: 'text', name: 'voice_number[description]'}
+      %label Description (Please less than 50 characters):
+      %input{type: 'text', name: 'voice_number[description]', placeholder: 'Billboard, Radio, ...'}
     %button{type: 'submit'} Assign
 %form{action: "/campaigns##{@campaign.id}", method: 'get'}
   %button « Back
