@@ -4,13 +4,14 @@
     %h3 Sorry, no voice numbers currently available.
   -else 
     .field
-      %label Voice Number:
-      %select{name: 'voice_number[phone_number]'}
-        -@voice_numbers.each do |n|
-          %option #{n}
+      %label Select a region for your new number:
+      %select{name: 'region'}
+        %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
+        -@voice_numbers.each_with_index do |n, i|
+          %option{value: "#{n[:country]}|#{n[:region]}"}= "#{n[:country]} - #{n[:region] || 'General'}"
     .field
       %label Description (Please less than 50 characters):
-      %input{type: 'text', name: 'voice_number[description]', placeholder: 'Billboard, Radio, ...'}
+      %input{type: 'text', name: 'description', placeholder: 'Billboard, Radio, ...'}
     %button{type: 'submit'} Assign
 %form{action: "/campaigns##{@campaign.id}", method: 'get'}
   %button « Back

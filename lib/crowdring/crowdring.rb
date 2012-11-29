@@ -270,14 +270,24 @@ module Crowdring
     
     get '/campaign/:id/voice_numbers/new' do
       @campaign = Campaign.get(params[:id])
-      @voice_numbers = Server.service_handler.voice_numbers - AssignedVoiceNumber.all.map(&:raw_number)      
+      @voice_numbers = NumberPool.available_summary
       
       haml :campaign_assign_voice_number        
     end
 
     post '/campaign/:id/voice_numbers/create' do
+      unless params[:region]
+        flash[:errors] = 'Please select a number'
+        redirect to('/unsubscribe_numbers/new')
+      end
+
+      country, region = params[:region].split('|')
+      res = {country: country}
+      res[:region] = region if region
+      number = NumberPool.find_number(res)
+
       campaign = Campaign.get(params[:id])
-      campaign.voice_numbers.new(params[:voice_number])
+      campaign.voice_numbers.new(phone_number: number, description: params[:description])
       if campaign.save
         flash[:notice] = "Voice number assigned"
        redirect to("/campaigns##{campaign.id}")
