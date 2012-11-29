@@ -72,7 +72,6 @@ module Crowdring
       def pluralize(count, noun)
         "#{count} #{noun}#{count != 1 ? 's' : ''}"
       end
-
     end
 
     before /^((?!((voice|sms)response)|reports|login|resetpassword|voicemails|progress-embed).)*$/ do
@@ -180,7 +179,13 @@ module Crowdring
 
     get '/campaign/new/configure' do
       @title = params[:campaign][:title]
-      @goal = params[:campaign][:goal].to_i
+
+      begin
+        @goal = Integer(params[:campaign][:goal])
+      rescue ArgumentError
+        flash[:errors] = "Must set a valid goal"
+        redirect to('campaign/new')
+      end
 
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
@@ -189,11 +194,6 @@ module Crowdring
 
       unless @title 
         flash[:errors] = "Title can not be empty"
-        redirect to('campaign/new')
-      end
-
-      unless @goal
-        flash[:errors] = "Must set a valid goal"
         redirect to('campaign/new')
       end
 
