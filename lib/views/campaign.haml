@@ -41,7 +41,7 @@
       #campaign-details
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
-          %form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'get'}
+          %form{action: "/campaign/#{@campaign.id}/voice_numbers/new", method: 'get'}
             %button{type: 'submit'} I need another number
         #sms-number
           %h2 Text Number

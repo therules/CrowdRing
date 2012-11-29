@@ -1,5 +1,5 @@
 %h2= "Assign Voice Number for #{@campaign.title}"
-%form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'post'}
+%form{action: "/campaign/#{@campaign.id}/voice_numbers/create", method: 'post'}
   -if @voice_numbers.empty?
     %h3 Sorry, no voice numbers currently available.
   -else 

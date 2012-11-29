@@ -268,14 +268,14 @@ module Crowdring
       end
     end
     
-    get '/campaign/:id/assign_voice_number' do 
+    get '/campaign/:id/voice_numbers/new' do
       @campaign = Campaign.get(params[:id])
       @voice_numbers = Server.service_handler.voice_numbers - AssignedVoiceNumber.all.map(&:raw_number)      
       
       haml :campaign_assign_voice_number        
     end
 
-    post '/campaign/:id/assign_voice_number' do 
+    post '/campaign/:id/voice_numbers/create' do
       campaign = Campaign.get(params[:id])
       campaign.voice_numbers.new(params[:voice_number])
       if campaign.save
@@ -283,11 +283,11 @@ module Crowdring
        redirect to("/campaigns##{campaign.id}")
       else
         flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
-        redirect to("/campaign/#{campaign.id}/assign_voice_number")
+        redirect to("/campaign/#{campaign.id}/voice_numbers/new")
       end
     end
 
-    post '/campaign/:id/assigned_voice_number/:number_id/destroy' do
+    post '/campaign/:id/voice_numbers/:number_id/destroy' do
       campaign = Campaign.get(params[:id])
       unless campaign.voice_numbers.count == 1
         campaign.voice_numbers.first(id: params[:number_id]).destroy
