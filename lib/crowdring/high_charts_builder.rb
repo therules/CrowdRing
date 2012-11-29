@@ -16,7 +16,7 @@ module Crowdring
 	      f.series(name: 'Total Calls', data: CampaignStats.calculate(campaign, :member_total), step: true, yAxis: 0, color: 'rgba(67, 142, 204, .5)')
 	      colors = ['rgba(191, 59, 72, .5)', 'rgba(59, 59, 191, .5)', 'rgba(81, 191, 59, .5)']
 	      campaign.voice_numbers.each_with_index do |num, i|
-	      	f.series(name: "#{num.phone_number}", data: CampaignStats.calculate(campaign, :member_total, num), step: true, yAxis: 0, color: colors[i % colors.count])
+					f.series(name: "#{num.description}", data: CampaignStats.calculate(campaign, :member_total, num), step: true, yAxis: 0, color: colors[i % colors.count])
 	      end
       end
 		end
