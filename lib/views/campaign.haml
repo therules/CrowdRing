@@ -31,8 +31,14 @@
               .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
             -else
               ="unable to calculate cost to reach goal."
+      %h1= @campaign.title
+      .counts
+        %h3.unique_count
+          =pluralize(@ringer_count, 'Unique Ringer')
+          ="(#{@campaign.ringers.subscribed.count} subscribed)"
+        %h3.total_count
+          =pluralize(@ring_count, 'Total Ring')
       #campaign-details
-        %h2= "Title: #{@campaign.title}"
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
           %form{action: "/campaign/#{@campaign.id}/assign_voice_number", method: 'get'}
@@ -49,14 +55,7 @@
             -else
               No Text number selected
         #campaign-ringers
-          %h2 Ringers
-          .counts
-            %h4.total_count
-              =pluralize(@ring_count, 'Total Ring')
-            %h4.unique_count
-              =pluralize(@ringer_count, 'Unique Ringer')
-            %h4.subscribed_count
-              =pluralize(@campaign.ringers.subscribed.count, 'Subscribed Ringer')
+          %h2 Recent Ringers
           #ringers-numbers
             %ul.ringers
               -@ringers.each do |ringer|
