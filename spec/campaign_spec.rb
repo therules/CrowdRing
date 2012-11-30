@@ -114,10 +114,23 @@ describe Crowdring::Campaign do
     before(:each) do
       Crowdring::Server.service_handler.reset
       DataMapper.auto_migrate!
-      @number1 = '+18001111111'
-      @number2 = '+18002222222'
-      @number3 = '+18003333333'
-      @c = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: @number2, description: 'num1'}], sms_number: @number3)
+      @voice_num1 = '+18001111111'
+      @voice_num2 = '+18002222222'
+      @voice_num3 = '+18003333333'
+      @sms_num1 = '+18009999999'
+      @sms_num2 = '+18008888888'
+      @number4 = '+18004444444'
+      @number5 = '+18005555555'
+
+      @c = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: @voice_num1, description: 'num1'}], sms_number: @sms_num1)
+
+      @fooservice = double('fooservice', build_response: 'fooResponse',
+        sms?: true,
+        transform_request: @fooresponse,
+        numbers: [@voice_num1, @sms_num1],
+        send_sms: nil)
+      Crowdring::CompositeService.instance.reset
+      Crowdring::CompositeService.instance.add('foo', @fooservice)
     end
 
     it 'should be able to add new ask after campaign creation' do
@@ -126,5 +139,26 @@ describe Crowdring::Campaign do
 
       @c.asks.count.should eq(2)
     end
+
+    it 'should be able to lauch new ask to whole ringers' , focus: true do
+      c2 = Crowdring::Campaign.create(title: 'c2', voice_numbers:[{phone_number: @voice_num2, description: 'num2'}], sms_number:@sms_num2)
+      r1 = Crowdring::Ringer.create(phone_number: @number4)
+      r2 = Crowdring::Ringer.create(phone_number: @number5)
+
+      @c.voice_numbers.first.ring(r1)
+      c2.voice_numbers.first.ring(r2)
+
+      message = Crowdring::Message.create(default_message: 'Blah')
+      new_ask = Crowdring::SendSMSAsk.create(message: message)
+      @c.asks << new_ask
+      @c.save
+      post "/campaign/#{@c.id}/asks/#{new_ask.id}/trigger"
+      r1.reload
+      r2.reload
+
+      r1.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+      r2.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+    end
+
   end
 end

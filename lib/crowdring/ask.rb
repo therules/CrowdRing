@@ -55,7 +55,6 @@ module Crowdring
 
     def trigger_for(ringer, sms_number)
       ringer.tag(recipient_tag)
-
       message.send_message(to: ringer, from: sms_number) if message
     end
 
