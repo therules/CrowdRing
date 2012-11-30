@@ -14,6 +14,7 @@
       %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
       .field
         %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
+    #selected-ask-type
     %button{type:'submit'} Add new ask
   %form{action: '/campaigns##{@campaign.id}', method: 'get'}
     %button « Back
