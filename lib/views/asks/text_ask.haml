@@ -1,6 +1,7 @@
-%h3 Request a text message
+%h3= "#{ask.title} - Request a text message"
 %h4 Initial Cost Estimate
 =haml :price_estimate, locals: {price_estimate: ask.initial_price_estimate(@campaign.ringers, @campaign.sms_number.raw_number)}
 ="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
+=haml :message, locals: {message: ask.message}
 -ask.texts.each do |t|
   %li= t.message
