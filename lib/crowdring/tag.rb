@@ -5,6 +5,7 @@ module Crowdring
 
     property :group, String, key: true
     property :value, String, key: true
+    property :hidden, Boolean, default: false
 
     before :save do |tag|
       tag.group = tag.group.downcase
@@ -12,9 +13,15 @@ module Crowdring
     end
 
     # str of format "type:value"
-    def self.from_str(str)
+    def self.from_str(str, opts={hidden: false})
       group, value = str.split(':')
-      Tag.first_or_create(group: (group || '').downcase, value: (value || '').downcase)
+      group = (group || '').downcase
+      value = (value || '').downcase
+      Tag.first(group: group, value: value) || Tag.create(group: group, value: value, hidden: opts[:hidden])
+    end
+
+    def self.visible
+      all(hidden: false)
     end
 
     def to_s

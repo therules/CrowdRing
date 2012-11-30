@@ -323,6 +323,11 @@ module Crowdring
 
     post '/campaign/:id/asks/create' do
       campaign = Campaign.get(params[:id])
+      if params[:title].nil? || params[:title].empty?
+        flash[:errors] = "Please provide a title for your ask."
+        redirect to("/campaign/#{campaign.id}/asks/new")
+      end
+
       ask_type = params[:ask_type]
       unless ask_type
         flash[:errors] = "Ask type can not be empty"
@@ -468,7 +473,7 @@ module Crowdring
     get '/tags/tags.json' do
       content_type :json
 
-      Tag.all.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.readable_s, value: tag.to_s} }.to_json
+      Tag.visible.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.readable_s, value: tag.to_s} }.to_json
     end
 
     post '/voicemails/:id/plivo' do
