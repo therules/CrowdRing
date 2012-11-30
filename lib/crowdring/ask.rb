@@ -115,7 +115,7 @@ module Crowdring
   end
 
   class TextAsk < Ask
-    has n, :texts, constraint: :destroy
+    has n, :texts, through: Resource
 
     def handle?(type, ringer)
       type == :sms && super(type, ringer)
@@ -140,7 +140,7 @@ module Crowdring
   class VoicemailAsk < Ask
     property :prompt, String, length: 250
 
-    has n, :voicemails, constraint: :destroy
+    has n, :voicemails, through: Resource, constraint: :destroy
 
     def handle?(type, ringer)
       type == :voice && super(type, ringer)
