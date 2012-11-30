@@ -1,7 +1,9 @@
 .rounded-box
   %h2 Add new asks
-  %h3 What type of ask is this?
   %form{action: "/campaign/#{@campaign.id}/asks/create", method: 'post'}
+    %h3 Enter a short name for your ask
+    %input.title-input{type: 'text', name: 'title'}
+    %h3 What type of ask is this?
     %select.ask-type{name: "ask_type"}
       %option{value:"", selected: 'selected', disabled:"disabled"} Select an ask type
       -@ask_type. each do |type|

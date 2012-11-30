@@ -331,9 +331,9 @@ module Crowdring
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
       message = params[:campaign][:message]
       if params[:prompt]
-        ask = Ask.create(type:ask_name,message: message, prompt: params[:prompt])
+        ask = Ask.create(title: params[:title], type:ask_name,message: message, prompt: params[:prompt])
       else
-        ask = Ask.create(type: ask_name, message: message)
+        ask = Ask.create(title: params[:title], type: ask_name, message: message)
       end
 
       campaign.asks << ask
@@ -468,7 +468,7 @@ module Crowdring
     get '/tags/tags.json' do
       content_type :json
 
-      Tag.all.map {|tag| {category: tag.group, visible_label: tag.to_s, label: tag.to_s} }.to_json
+      Tag.all.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.to_s} }.to_json
     end
 
     post '/voicemails/:id/plivo' do

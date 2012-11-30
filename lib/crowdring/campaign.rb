@@ -40,6 +40,7 @@ module Crowdring
 
     def ring(ringer)
       return unless rings.create(ringer: ringer).saved?
+      ringer.tag(Tag.from_str("campaign:#{id}"))
       ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
       ask.respond(ringer, sms_number.raw_number) if ask
     end

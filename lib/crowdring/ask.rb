@@ -3,6 +3,7 @@ module Crowdring
     include DataMapper::Resource
 
     property :id, Serial
+    property :title, String
     property :type, Discriminator
     property :created_at, DateTime
 
@@ -25,16 +26,15 @@ module Crowdring
     end
 
     def recipient_tag
-      Tag.from_str("#{id}:recipient")
+      Tag.from_str("ask_recipient:#{id}")
     end
 
     def respondent_tag
-      Tag.from_str("#{id}:respondent")
+      Tag.from_str("ask_respondent:#{id}")
     end
 
     def respond(ringer, sms_number)
-      ringer.tags << respondent_tag
-      ringer.save
+      ringer.tag(respondent_tag)
 
       triggered_ask.trigger_for(ringer, sms_number) if triggered_ask
 
@@ -54,8 +54,7 @@ module Crowdring
     end
 
     def trigger_for(ringer, sms_number)
-      ringer.tags << recipient_tag
-      ringer.save
+      ringer.tag(recipient_tag)
 
       message.send_message(to: ringer, from: sms_number) if message
     end
@@ -78,6 +77,10 @@ module Crowdring
 
 
   class OfflineAsk < Ask
+    def title
+      'Offline Ask'
+    end
+
     def handle?(type, ringer)
       type == :voice
     end

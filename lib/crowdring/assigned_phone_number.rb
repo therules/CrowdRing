@@ -10,7 +10,7 @@ module Crowdring
         validates_uniqueness_of :phone_number
 
         def tag
-          RingTag.from_str(id)
+          Tag.from_str("rang:#{id}")
         end
 
         def phone_number=(number)
