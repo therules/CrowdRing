@@ -1,7 +1,7 @@
 .rounded-box
   %h2 Add new asks
   %h3 What type of ask is this?
-  %form{action: "/campaign/#{@campaign.id}/asks/new ", method: 'post'}
+  %form{action: "/campaign/#{@campaign.id}/asks/create", method: 'post'}
     %select.ask-type{name: "ask_type"}
       %option{value:"", selected: 'selected', disabled:"disabled"} Select an ask type
       -@ask_type. each do |type|
@@ -12,11 +12,6 @@
       %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
       .field
         %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'Thanks for supporting...'}
-    #selected-ask-type
-    %h3 What triggers this ask?
-    %div
-      %input{type: 'radio', name:'[triggered_by]', id: 'user', value: 'user', checked: 'checked'}
-      %label{for: 'user'}  The Campaigner (that's you!)
     %button{type:'submit'} Add new ask
   %form{action: '/campaigns##{@campaign.id}', method: 'get'}
     %button « Back

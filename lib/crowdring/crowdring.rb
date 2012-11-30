@@ -321,7 +321,7 @@ module Crowdring
       haml :campaign_add_new_ask
     end
 
-    post '/campaign/:id/asks/new' do
+    post '/campaign/:id/asks/create' do
       campaign = Campaign.get(params[:id])
       ask_type = params[:ask_type]
       unless ask_type
@@ -329,7 +329,6 @@ module Crowdring
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
-      triggered_by = params[:triggered_by]
       message = params[:campaign][:message]
       if params[:prompt]
         ask = Ask.create(type:ask_name,message: message, prompt: params[:prompt])
@@ -337,9 +336,6 @@ module Crowdring
         ask = Ask.create(type: ask_name, message: message)
       end
 
-      if triggered_by == 'previous'
-        campaign.asks.last.triggered_ask = ask
-      end
       campaign.asks << ask
       if campaign.save
         flash[:notice] = "New Ask Add"
