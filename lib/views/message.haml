@@ -5,7 +5,7 @@
       %label If:
       .message
         -fm.tag_filter.tags.each do |tag|
-          %li= tag
+          %li= tag.readable_s
       %label Then:
       .message
         = "\"#{fm.message_text}\""

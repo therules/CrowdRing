@@ -29,6 +29,10 @@ module Crowdring
       Tag.readable_value(self)
     end
 
+    def readable_s
+      "#{readable_group}:#{readable_value}"
+    end
+
     def self.readable_group(tag)
       @readable[tag.group] ? @readable[tag.group][:group] : tag.group
     end

@@ -468,7 +468,7 @@ module Crowdring
     get '/tags/tags.json' do
       content_type :json
 
-      Tag.all.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.to_s} }.to_json
+      Tag.all.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.readable_s, value: tag.to_s} }.to_json
     end
 
     post '/voicemails/:id/plivo' do

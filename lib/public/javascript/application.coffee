@@ -77,8 +77,8 @@ loadCampaign = (pusher, campaign, prev_channel) ->
   window.onhashchange = -> loadCampaign(pusher, document.location.hash[1..], channel_name)
 
 
-tagFor = (tagname, id) ->
-  $("<div>#{tagname} <input type='hidden' name='campaign[message][filtered_messages][#{id}]tags[]' value='#{tagname}' /> <button type='button'>Remove</button></div>")
+tagFor = (tagItem, id) ->
+  $("<div>#{tagItem.label} <input type='hidden' name='campaign[message][filtered_messages][#{id}]tags[]' value='#{tagItem.value}' /> <button type='button'>Remove</button></div>")
 removeFilter = (btn) ->
   btn.parent().remove()
 
@@ -86,8 +86,7 @@ removeTag = (btn) ->
   btn.parent().remove()
 
 addTag = (parent, item, id) ->
-  fullTagName = item.label
-  newTag = tagFor(fullTagName, id)
+  newTag = tagFor(item, id)
   $('button', newTag).click ->
     removeTag($(this))
   newTag.appendTo($('#tag-filters', parent))
