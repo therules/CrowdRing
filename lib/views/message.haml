@@ -4,8 +4,8 @@
     -message.nondefault_messages.each do |fm|
       %label If:
       .message
-        -fm.tag_filter.tags.each do |tag|
-          %li= tag.readable_s
+        -fm.tag_filter.constraints.each do |constraint|
+          %li= constraint.to_s
       %label Then:
       .message
         = "\"#{fm.message_text}\""

@@ -11,7 +11,7 @@
     -tags.each do |tag|
       %div
         =tag
-        %input{type: 'hidden', name: "campaign[message][filtered_messages][#{id}]tags[]", value: "#{tag}"}
+        %input{type: 'hidden', name: "campaign[message][filtered_messages][#{id}]constraints[]", value: "#{tag}"}
         %button{type: 'button', onclick: 'window.removeTag($(this));'} Remove
   %textarea.msg-text-area{name: msg_name, placeholder: 'Thanks for supporting...'}
     =message

@@ -78,7 +78,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
 
 tagFor = (tagItem, id) ->
-  $("<div>#{tagItem.label} <input type='hidden' name='campaign[message][filtered_messages][#{id}]tags[]' value='#{tagItem.value}' /> <button type='button'>Remove</button></div>")
+  $("<div>#{tagItem.label} <input type='hidden' name='campaign[message][filtered_messages][#{id}]constraints[]' value='#{tagItem.value}' /> <button type='button'>Remove</button></div>")
 removeFilter = (btn) ->
   btn.parent().remove()
 

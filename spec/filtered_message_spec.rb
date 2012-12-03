@@ -17,9 +17,8 @@ describe Crowdring::FilteredMessage do
   end
 
   it 'should send a message to an accepted recipient' do
-    tag_filter = Crowdring::TagFilter.create
+    tag_filter = Crowdring::TagFilter.create(constraints: ['area code:412'])
     pittsburgh = Crowdring::Tag.from_str('area code:412')
-    tag_filter.tags << pittsburgh
     fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     ringer = double('ringer', tags: [pittsburgh], phone_number: @number2, subscribed?: true)
@@ -29,9 +28,8 @@ describe Crowdring::FilteredMessage do
   end
 
   it 'should return true if it sent a message to the recipient' do
-    tag_filter = Crowdring::TagFilter.create
+    tag_filter = Crowdring::TagFilter.create(constraints: ['area code:412'])
     pittsburgh = Crowdring::Tag.from_str('area code:412')
-    tag_filter.tags << pittsburgh
     fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     ringer = double('ringer', tags: [pittsburgh], phone_number: @number2, subscribed?: true)
@@ -40,10 +38,8 @@ describe Crowdring::FilteredMessage do
   end
 
   it 'should return false if it did not send a message to the recipient' do
-    tag_filter = Crowdring::TagFilter.create
+    tag_filter = Crowdring::TagFilter.create(constraints: ['area code:312'])
     pittsburgh = Crowdring::Tag.from_str('area code:412')
-    chicago = Crowdring::Tag.from_str('area code:312')
-    tag_filter.tags << chicago
     fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     ringer = double('ringer', tags: [pittsburgh], phone_number: @number2, subscribed?: true)
@@ -52,10 +48,8 @@ describe Crowdring::FilteredMessage do
   end
 
   it 'should not send sms to a ringer who is unsubscribed' do
-    tag_filter = Crowdring::TagFilter.create
-    pittsburgh = Crowdring::Tag.from_str('area code:412')
+    tag_filter = Crowdring::TagFilter.create(constraints: ['area code:312'])
     chicago = Crowdring::Tag.from_str('area code:312')
-    tag_filter.tags << chicago
 
     fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
@@ -64,14 +58,12 @@ describe Crowdring::FilteredMessage do
   end
 
   it 'should not send sms to a ringer who has international phone number' ,focus: true do
-    tag_filter = Crowdring::TagFilter.create
+    tag_filter = Crowdring::TagFilter.create(constraints: ['area code: 312'])
     chicago = Crowdring::Tag.from_str('area code:312')
-    tag_filter.tags << chicago
 
     fm = Crowdring::FilteredMessage.create(tag_filter: tag_filter, priority: 1, message_text: 'msg')
 
     ringer = double('ringer', tags: [chicago], phone_number: '+912222222222', subscribed?: true)
     fm.send_message(from: @number, to: ringer).should be_false
   end
-
 end

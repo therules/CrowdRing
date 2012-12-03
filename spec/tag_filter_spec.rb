@@ -5,23 +5,10 @@ describe Crowdring::TagFilter do
     DataMapper.auto_migrate!
   end
 
-  it 'should be able to have many tags' do
-    tag_filter = Crowdring::TagFilter.create
-    pittsburgh = Crowdring::Tag.from_str('area code:412')
-    chicago = Crowdring::Tag.from_str('area code:312')
-    tag_filter.tags << pittsburgh
-    tag_filter.tags << chicago
-
-    tag_filter.tags.should include(Crowdring::Tag.from_str('area code:412'))
-    tag_filter.tags.should include(Crowdring::Tag.from_str('area code:312'))
-  end
-
   it 'should filter out items that dont have all of the provided tags' do
-    tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
-    tag_filter.tags << pittsburgh
-    tag_filter.tags << chicago 
+    tag_filter = Crowdring::TagFilter.create(constraints: [pittsburgh.to_s, chicago.to_s])
 
     item1 = double('take', tags: [pittsburgh])
     item2 = double('drop', tags: [])
@@ -32,12 +19,9 @@ describe Crowdring::TagFilter do
   end
 
   it 'should filter out items that dont have at least one value of every provided tag type' do
-    tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     male = Crowdring::Tag.from_str('gender:male')
-
-    tag_filter.tags << pittsburgh
-    tag_filter.tags << male
+    tag_filter = Crowdring::TagFilter.create(constraints: [pittsburgh.to_s, male.to_s])
 
     take_item = double('take', tags: [pittsburgh, male])
     drop_item = double('drop', tags: [male])
@@ -62,12 +46,9 @@ describe Crowdring::TagFilter do
   end
 
   it 'should accept a single matching item' do
-    tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     male = Crowdring::Tag.from_str('gender:male')
-
-    tag_filter.tags << pittsburgh
-    tag_filter.tags << male
+    tag_filter = Crowdring::TagFilter.create(constraints: [pittsburgh.to_s, male.to_s])
 
     take_item = double('take', tags: [pittsburgh, male])
     drop_item = double('drop', tags: [male])
@@ -77,9 +58,25 @@ describe Crowdring::TagFilter do
   end
 
   it 'should accept a list of string tags' do
-    tag_filter = Crowdring::TagFilter.create(tags: ['foo:bar', 'boo:baz'])
+    tag_filter = Crowdring::TagFilter.create(constraints: ['foo:bar', 'boo:baz'])
     tag_filter.saved?.should be_true
-    tag_filter.tags.count.should eq(2)
+    tag_filter.constraints.count.should eq(2)
+  end
+  
+  it 'should accept an item that does not have a tag specified as has not' do
+    tag_filter = Crowdring::TagFilter.create(constraints: ['!area code:412'])
+
+    take_item = double('take', tags: [])
+
+    tag_filter.accept?(take_item).should be_true
   end
 
+  it 'should not accept an item that has a tag specified as has not' do
+    tag_filter = Crowdring::TagFilter.create(constraints: ['!area code:412'])
+    pittsburgh = Crowdring::Tag.from_str('area code:412')
+
+    take_item = double('take', tags: [pittsburgh])
+
+    tag_filter.accept?(take_item).should be_false
+  end
 end

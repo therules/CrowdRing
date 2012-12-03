@@ -32,7 +32,7 @@ describe Crowdring::Message do
   it 'should allow creation of an empty default message when other messages are provided' do
     intro_response = Crowdring::Message.new(
       default_message: '',
-      filtered_messages: [{tags: ['area code:814'], message_text: 'to 814'}])
+      filtered_messages: [{constraints: ['area code:814'], message_text: 'to 814'}])
     intro_response.save
     intro_response.save.should be_true
     ir = Crowdring::Message.first
@@ -51,10 +51,8 @@ describe Crowdring::Message do
   it 'should send the first matched message to a ringer' do
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
-    fm = Crowdring::TagFilter.create
-    fm.tags << pittsburgh
-    fm2 = Crowdring::TagFilter.create
-    fm2.tags << chicago
+    fm = Crowdring::TagFilter.create(constraints: [pittsburgh.to_s])
+    fm2 = Crowdring::TagFilter.create(constraints: [chicago.to_s])
 
     intro_response = Crowdring::Message.create(default_message:'default')
     intro_response.add_message(fm2, 'chicago')
@@ -69,8 +67,7 @@ describe Crowdring::Message do
   it 'should send the default message if no filters match' do
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
-    fm2 = Crowdring::TagFilter.create
-    fm2.tags << chicago
+    fm2 = Crowdring::TagFilter.create(constraints: [chicago.to_s])
 
     intro_response = Crowdring::Message.create(default_message:'default')
     intro_response.add_message(fm2, 'chicago')

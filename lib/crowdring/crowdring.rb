@@ -237,7 +237,7 @@ module Crowdring
       campaign = Campaign.new(params[:campaign])
       if campaign.save
         filtered_messages = params[:sms_responses].zip(campaign.voice_numbers).map do |msg, number|
-          FilteredMessage.new(tags: [number.tag], message_text: msg)
+          FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end
         message = Message.create(filtered_messages: filtered_messages)
         send_sms_ask = SendSMSAsk.create(message: message)

@@ -43,6 +43,7 @@ require 'crowdring/assigned_phone_number'
 require 'crowdring/tag'
 require 'crowdring/tag_filter'
 
+require 'crowdring/constraint'
 require 'crowdring/asks/ask.rb'
 require 'crowdring/asks/offline_ask.rb'
 require 'crowdring/asks/join_ask.rb'

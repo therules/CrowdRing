@@ -8,8 +8,8 @@ module Crowdring
 
     has 1, :tag_filter, through: Resource, constraint: :destroy
 
-    def tags=(tags)
-      self.tag_filter = TagFilter.create(tags: tags)
+    def constraints=(constraints)
+      self.tag_filter = TagFilter.create(constraints: constraints)
     end
 
     def accept?(ringer, sms_number)

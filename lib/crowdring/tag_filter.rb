@@ -4,7 +4,7 @@ module Crowdring
 
     property :id, Serial
 
-    has n, :tags, through: Resource, constraint: :skip
+    has n, :constraints, constraint: :destroy
 
     def filter(items)
       items.select do |item|
@@ -12,14 +12,16 @@ module Crowdring
       end
     end
 
-    def tags=(tags)
-      return if tags.nil?
-      tags = tags.map {|str| Tag.from_str(str)} if !tags.empty? && tags.first.is_a?(String)
-      super tags
+    def constraints=(constraints)
+      return if constraints.nil?
+
+      constraints = constraints.map {|str| Constraint.from_str(str) } if constraints.first.is_a?(String)
+      super constraints
     end
 
     def accept?(item)
-      tags.reduce(true) {|acc, tag| acc and item.tags.include? tag }
+      constraints.reduce(true) {|acc, con| acc and con.satisfied_by? item }
     end
   end
 end
+
