@@ -19,17 +19,7 @@ module Crowdring
     end
 
     def accept?(item)
-      grouped_tags.reduce(true) {|acc, tags| acc and has_any?(tags, item.tags)}
-    end
-
-    private
-
-    def grouped_tags
-      tags.reduce(Hash.new {|h,k| h[k] = []}) {|hash, tag| hash[tag.group] << tag; hash}.values
-    end
-
-    def has_any?(possible_tags, item_tags)
-      not (possible_tags & item_tags).empty?
+      tags.reduce(true) {|acc, tag| acc and item.tags.include? tag }
     end
   end
 end

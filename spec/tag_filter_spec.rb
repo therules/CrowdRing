@@ -16,19 +16,19 @@ describe Crowdring::TagFilter do
     tag_filter.tags.should include(Crowdring::Tag.from_str('area code:312'))
   end
 
-  it 'should filter out items that dont have at least one value of a provided tag type' do
+  it 'should filter out items that dont have all of the provided tags' do
     tag_filter = Crowdring::TagFilter.create
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
     tag_filter.tags << pittsburgh
     tag_filter.tags << chicago 
 
-    take_item = double('take', tags: [pittsburgh])
-    drop_item = double('drop', tags: [])
+    item1 = double('take', tags: [pittsburgh])
+    item2 = double('drop', tags: [])
 
-    took = tag_filter.filter([take_item, drop_item])
-    took.should include(take_item)
-    took.should_not include(drop_item)
+    took = tag_filter.filter([item1, item2])
+    took.should_not include(item1)
+    took.should_not include(item2)
   end
 
   it 'should filter out items that dont have at least one value of every provided tag type' do
