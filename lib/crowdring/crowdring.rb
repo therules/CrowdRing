@@ -35,7 +35,7 @@ module Crowdring
       use Rack::SSL
       service_handler.add('twilio', TwilioService.new(ENV["TWILIO_ACCOUNT_SID"], ENV["TWILIO_AUTH_TOKEN"]))
       service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"], ENV["KOOKOO_NUMBER"]))
-      service_handler.add('tropo.json', CachingService.new(TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"], 
+      service_handler.add('tropo.json', CachingService.new(TropoService.new(ENV["TROPO_MSG_TOKEN"], ENV["TROPO_APP_ID"],
         ENV["TROPO_USERNAME"], ENV["TROPO_PASSWORD"])))
       service_handler.add('voxeo', VoxeoService.new(ENV["VOXEO_APP_ID"], ENV["VOXEO_USERNAME"], ENV["VOXEO_PASSWORD"]))
       service_handler.add('nexmo', NexmoService.new(ENV["NEXMO_KEY"], ENV["NEXMO_SECRET"]))
@@ -50,7 +50,7 @@ module Crowdring
       Pusher.app_id = ENV["PUSHER_APP_ID"]
       Pusher.key = ENV["PUSHER_KEY"]
       Pusher.secret = ENV["PUSHER_SECRET"]
-      
+
       database_url = ENV["DATABASE_URL"] || "postgres://localhost/crowdring_#{settings.environment}"
       DataMapper.setup(:default, database_url)
       DataMapper.finalize
@@ -65,7 +65,7 @@ module Crowdring
       def to_attributes(options)
         options.map {|k, v| v.nil? ? '' : " #{k}='#{v}'"}.join
       end
-      
+
       def content_tag(type, content, options={})
         "<#{type}#{to_attributes(options)}>#{content}</#{type}>"
       end
@@ -86,7 +86,7 @@ module Crowdring
     before /(voice|sms)response/ do
       Crowdring.statsd.increment "#{$1}_received.count"
     end
-    
+
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       cur_service.build_response(request.to, response || [{cmd: :reject}])
@@ -115,7 +115,7 @@ module Crowdring
       process_request(params[:service], request, :voice)
     end
 
-    get '/voiceresponse/:service' do 
+    get '/voiceresponse/:service' do
       process_request(params[:service], request, :voice)
     end
 
@@ -123,7 +123,7 @@ module Crowdring
       process_request('netcore', request, :voice)
     end
 
-    get '/' do  
+    get '/' do
       @campaigns = Campaign.all
       @unsubscribe_numbers = AssignedUnsubscribeVoiceNumber.all
       @unsubscribed_count = Ringer.unsubscribed.count
@@ -132,7 +132,7 @@ module Crowdring
       haml :index
     end
 
-    
+
     get '/unsubscribe_numbers/new' do
       @voice_numbers = NumberPool.available_summary
 
@@ -198,7 +198,7 @@ module Crowdring
         redirect to('campaign/new')
       end
 
-      unless @title 
+      unless @title
         flash[:errors] = "Title can not be empty"
         redirect to('campaign/new')
       end
@@ -274,13 +274,13 @@ module Crowdring
         end
       end
     end
-    
+
     get '/campaign/:id/voice_numbers/new' do
       @campaign = Campaign.get(params[:id])
       country = @campaign.voice_numbers.first.country.name
       @voice_numbers = NumberPool.available_summary.select {|n| n[:country] == country}
-      
-      haml :campaign_assign_voice_number        
+
+      haml :campaign_assign_voice_number
     end
 
     post '/campaign/:id/voice_numbers/create' do
@@ -371,7 +371,7 @@ module Crowdring
     post '/campaign/:id/asks/:ask_id/update' do
       ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
       params[:ask][:message] ||= nil
-      if ask.update(params[:ask]) && ask.message.save 
+      if ask.update(params[:ask]) && ask.message.save
         flash[:notice] = "#{ask.title} has been updated."
         redirect to("/campaigns##{params[:id]}")
       else
@@ -424,7 +424,7 @@ module Crowdring
       aggregate_campaign = AggregateCampaign.get(params[:name])
       if aggregate_campaign
         result = {count: aggregate_campaign.ringer_count}
-        jsonp result, params[:callback]
+          params[:callback].present? ? jsonp(result, params[:callback]) : json(result)
       end
     end
 
