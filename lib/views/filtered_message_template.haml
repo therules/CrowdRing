@@ -4,7 +4,8 @@
 -msg_name = id.nil? ? 'MESSAGE' : "campaign[message][filtered_messages][#id}][message_text]"
 .filtered-message-template
   Add tag:
-  %input.tag-name{type: 'text'}
+  %select.tag-name{'data-placeholder' => 'Select a constraint'}
+    %option
 
   #tag-filters
     -tags.each do |tag|
@@ -15,4 +16,3 @@
   %textarea.msg-text-area{name: msg_name, placeholder: 'Thanks for supporting...'}
     =message
   %button#remove-filter-button{type: 'button', onclick: "window.removeFilter($(this));"} Remove
-

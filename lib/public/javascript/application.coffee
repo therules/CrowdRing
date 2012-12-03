@@ -97,23 +97,24 @@ newFilterMessage = ->
   newDiv = $('#original-filtered-message-template-container div:first-child').clone()
   $('textarea[name="MESSAGE"]', newDiv).attr('name', "campaign[message][filtered_messages][#{id}][message_text]")
   $('#filtered-messages').prepend(newDiv)
-
-  $('#add-tag-button', newDiv).click ->
-    addTag(newDiv, id)
       
   $('#remove-filter-button', newDiv).click ->
     removeFilter($(this))
 
-  $.getJSON('/tags/tags.json', (data) ->
-    $('.tag-name', newDiv).catcomplete({
-      delay: 0, 
-      source: data,
-      autoFocus: true,
-      minLength: 0,
-      select: (evt, ui) ->
-        addTag($(this).parent(), ui.item, id)
-        return false
-    }))
+  $.getJSON '/tags/grouped_tags.json', (data) ->
+    $.each data, (key, value) ->
+      $('.tag-name', newDiv)
+        .append($("<optgroup></optgroup>")
+          .attr("label", key))
+      $.each value, (_, item) ->
+        $('.tag-name optgroup:last', newDiv)
+          .append($("<option></option>")
+            .attr("value", item.value)
+            .text(item.visible_label))
+    $('.tag-name', newDiv).chosen()
+    $('.tag-name', newDiv).change (evt) ->
+      selected = $(':selected', $(this))
+      addTag $(this).parent(), {label: "#{selected.parent().attr('label')} : #{selected.text()}", value: $(this).val()}, id
 
   $('.counter', newDiv).remove()
   $('.msg-text-area', newDiv).charCount({
@@ -138,7 +139,6 @@ $ ->
   })
   
   window.removeTag = (btn) -> removeTag(btn)
-  window.addTag = (div, id) -> addTag(div, id)
   window.removeFilter = (btn) -> removeFilter(btn)
   window.addFilter = -> newFilterMessage()
 

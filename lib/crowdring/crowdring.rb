@@ -476,6 +476,17 @@ module Crowdring
       Tag.visible.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.readable_s, value: tag.to_s} }.to_json
     end
 
+    get '/tags/grouped_tags.json' do
+      content_type :json
+
+      grouped = Tag.visible.reduce({}) do |grouped, tag|
+        grouped[tag.readable_group] = [] unless grouped.key? tag.readable_group
+        grouped[tag.readable_group] << tag
+        grouped
+      end
+      grouped.each_with_object({}) {|(key, value), grouped| grouped[key] = value.map {|tag| {category: tag.readable_group, visible_label: tag.readable_value, label: tag.readable_s, value: tag.to_s} }}.to_json
+    end
+
     post '/voicemails/:id/plivo' do
       voicemail = Voicemail.get(params[:id])
       voicemail.update(filename: params[:RecordUrl])
