@@ -1,5 +1,5 @@
 .rounded-box
-  %h2 Add new asks
+  %h2 Add new ask
   %form{action: "/campaign/#{@campaign.id}/asks/create", method: 'post'}
     %h3 Enter a short name for your ask
     %input.title-input{type: 'text', name: 'title'}
@@ -9,11 +9,12 @@
       -@ask_type. each do |type|
         -type_view = type.readable_name
         %option{value: "#{type.typesym}"}= "#{type_view}"
-    %h3 Enter the text supporter will receive to prompt the ask.
+    %h3 Add messages below to segment your ringers
     #filtered-messages
-    %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
+    %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add Message
     .field
-      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'This message will be sent to all members not included in your filters. Leave this blank to ignore those members.'}
+      %h3 Message for ringers not covered above
+      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'This message will be sent to all ringers (for all campaigns) not included in your filters. Leave this blank to ignore those ringers.'}
     #selected-ask-type
     %button{type:'submit'} Create Ask
     .note Creating the ask does not send any texts. You need to launch your ask on the next page.
