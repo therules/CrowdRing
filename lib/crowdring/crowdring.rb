@@ -240,7 +240,7 @@ module Crowdring
           FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end
         message = Message.create(filtered_messages: filtered_messages)
-        send_sms_ask = SendSMSAsk.create(title: 'Send SMS back', message: message)
+        send_sms_ask = SendSMSAsk.create(title: "Send SMS back - #{campaign.title}", message: message)
         campaign.asks.first.triggered_ask = send_sms_ask
         campaign.asks << send_sms_ask
         if campaign.save
@@ -260,7 +260,7 @@ module Crowdring
           FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end
         message = Message.create(filtered_messages: filtered_messages)
-        join_ask = JoinAsk.create(title: 'Join', message: message)
+        join_ask = JoinAsk.create(title: "Join - #{campaign.title}", message: message)
         campaign.asks.first.triggered_ask = join_ask
         campaign.asks << join_ask
         if campaign.save

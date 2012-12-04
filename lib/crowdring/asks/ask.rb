@@ -3,7 +3,7 @@ module Crowdring
     include DataMapper::Resource
 
     property :id, Serial
-    property :title, String
+    property :title, String, unique: true
     property :type, Discriminator
     property :created_at, DateTime
 
