@@ -11,8 +11,7 @@ module Crowdring
     property :goal, Integer, default: 777
 
     has n, :rings, constraint: :destroy
-    has n, :texts, constraint: :destroy
-    
+
     has n, :asks, through: Resource, constraint: :destroy
 
     has n, :voice_numbers, 'AssignedCampaignVoiceNumber', constraint: :destroy
@@ -55,7 +54,7 @@ module Crowdring
     end
 
     def text(ringer, message)
-      text = texts.create(ringer: ringer, message: message)
+      text = Text.create(ringer: ringer, message: message)
       ask = asks.reverse.find {|ask| ask.handle?(:sms, ringer) }
       ask.text(ringer, text, sms_number.raw_number) if ask
     end

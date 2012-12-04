@@ -44,9 +44,10 @@ describe Crowdring::AssignedPhoneNumber do
 
   it 'should forward a text to the correct number' do
     request = double('request', from: '+18003333333', to: '+18002222222', message: 'message')
-    Crowdring::AssignedPhoneNumber.handle(:sms, request)
 
-    @campaign.texts.first.ringer.phone_number.should eq('+18003333333')
+    # @campaign.texts.first.ringer.phone_number.should eq('+18003333333')
+    Crowdring::Campaign.any_instance.should_receive(:text)
+    Crowdring::AssignedPhoneNumber.handle(:sms, request)
   end
 
   it 'should forward a ring to the correct number when a voice and sms line share a number' do
@@ -64,9 +65,9 @@ describe Crowdring::AssignedPhoneNumber do
     @campaign.save
 
     request = double('request', from: '+18003333333', to: '+18002222222', message: 'message')
-    Crowdring::AssignedPhoneNumber.handle(:sms, request)
 
-    @campaign.texts.first.ringer.phone_number.should eq('+18003333333')
+    Crowdring::Campaign.any_instance.should_receive(:text)
+    Crowdring::AssignedPhoneNumber.handle(:sms, request)
   end
 end
 

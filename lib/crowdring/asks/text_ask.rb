@@ -1,6 +1,6 @@
 module Crowdring
   class TextAsk < Ask
-    has n, :texts, through: Resource
+    has n, :texts, through: Resource, constraint: :destroy
 
     def handle?(type, ringer)
       type == :sms && super(type, ringer)
