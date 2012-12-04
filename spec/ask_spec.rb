@@ -20,12 +20,6 @@ describe Crowdring::Ask do
       ask.respondents(Crowdring::Ringer.all).should eq([@ringer])
     end
 
-    it 'should trigger the join ask upon receiving a response' do
-      ask = Crowdring::Ask.create_double_opt_in(nil)
-      ask.respond(@ringer, @sms_number)
-      ask.triggered_ask.recipients(Crowdring::Ringer.all).should eq([@ringer])
-    end
-
     it 'should handle any incoming ring' do
       ask = Crowdring::OfflineAsk.create
       ask.handle?(:voice, @ringer).should be_true

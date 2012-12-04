@@ -98,7 +98,11 @@ newFilterMessage = ->
   $('textarea[name="MESSAGE"]', newDiv).attr('name', "campaign[message][filtered_messages][#{id}][message_text]")
   $('input[name="CONSTRAINT_TYPE"]', newDiv).attr('name', "constraint_type#{id}")
 
-  $('#filtered-messages').prepend(newDiv)
+  $('input[id="HAS_ID"]', newDiv).attr('id', "has_#{id}")
+  $('input[id="HAS_NOT_ID"]', newDiv).attr('id', "has_not_#{id}")
+  $('label[for="HAS_ID"]', newDiv).attr('for', "has_#{id}")
+  $('label[for="HAS_NOT_ID"]', newDiv).attr('for', "has_not_#{id}")
+  $('#filtered-messages').append(newDiv)
       
   $('#remove-filter-button', newDiv).click ->
     removeFilter($(this))
@@ -117,8 +121,8 @@ newFilterMessage = ->
     $('.tag-name', newDiv).change (evt) ->
       selected = $(':selected', $(this))
       constraints = $("input[name='constraint_type#{id}']:checked").val()
-      label = if constraints == 'has' then selected.parent().attr('label') else "Has not " + selected.parent().attr('label')
-      value = if constraints == 'has' then $(this).val() else "!" + $(this).val()
+      label = (if constraints == 'has' then '' else 'Has not ') + selected.parent().attr('label')
+      value = (if constraints == 'has' then '' else '!') + $(this).val()
       addTag $(this).parent(), {label: "#{label} : #{selected.text()}", value: "#{value}"}, id
   $('.counter', newDiv).remove()
   $('.msg-text-area', newDiv).charCount({

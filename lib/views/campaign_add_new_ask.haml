@@ -11,9 +11,9 @@
         %option{value: "#{type.typesym}"}= "#{type_view}"
     %h3 Enter the text supporter will receive to prompt the ask.
     #filtered-messages
-      %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
-      .field
-        %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'This message will be sent to all members not included in your filters. Leave this blank to ignore those members.'}
+    %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add filtered message
+    .field
+      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'This message will be sent to all members not included in your filters. Leave this blank to ignore those members.'}
     #selected-ask-type
     %button{type:'submit'} Create Ask
     .note Creating the ask does not send any texts. You need to launch your ask on the next page.

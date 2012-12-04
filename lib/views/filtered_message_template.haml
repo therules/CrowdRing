@@ -3,10 +3,10 @@
 -message ||= ''
 -msg_name = id.nil? ? 'MESSAGE' : "campaign[message][filtered_messages][#id}][message_text]"
 .filtered-message-template
-  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has', id: 'has', checked: 'checked'}
-  %label{for: 'has'} has
-  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has_not', id: 'has_not'}
-  %label{for: 'has_not'} has not
+  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has', id: 'HAS_ID', checked: 'checked'}
+  %label{for: 'HAS_ID'} has
+  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has_not', id: 'HAS_NOT_ID'}
+  %label{for: 'HAS_NOT_ID'} has not
   %select.tag-name{'data-placeholder' => 'Select a constraint'}
     %option
 

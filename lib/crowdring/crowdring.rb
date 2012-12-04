@@ -257,10 +257,10 @@ module Crowdring
       campaign = Campaign.new(params[:campaign])
       if campaign.save
         filtered_messages = params[:sms_responses].zip(campaign.voice_numbers).map do |msg, number|
-          FilteredMessage.new(tags: [number.tag], message_text: msg)
+          FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end
         message = Message.create(filtered_messages: filtered_messages)
-        join_ask = JoinAsk.create(message: message)
+        join_ask = JoinAsk.create(title: 'Join', message: message)
         campaign.asks.first.triggered_ask = join_ask
         campaign.asks << join_ask
         if campaign.save
