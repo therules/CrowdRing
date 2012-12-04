@@ -7,6 +7,9 @@ module Crowdring
     property :value, String, key: true
     property :hidden, Boolean, default: false
 
+    has n, :ringer_taggings, constraint: :destroy
+    has n, :constraints, constraint: :destroy
+
     before :save do |tag|
       tag.group = tag.group.downcase
       tag.value = tag.value.downcase

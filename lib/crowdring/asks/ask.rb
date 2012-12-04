@@ -13,6 +13,11 @@ module Crowdring
     before :create do
       message.save if message
     end
+
+    after :destroy do
+      recipient_tag.destroy
+      respondent_tag.destroy
+    end
     
     def handle?(type, ringer)
       ringer.tagged?(recipient_tag)

@@ -12,13 +12,18 @@ module Crowdring
 
     has n, :rings, constraint: :destroy
     has n, :texts, constraint: :destroy
+    
+    has n, :asks, through: Resource, constraint: :destroy
 
     has n, :voice_numbers, 'AssignedCampaignVoiceNumber', constraint: :destroy
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
     
-    has n, :asks, through: Resource, constraint: :destroy
 
     validates_with_method :voice_numbers, :at_least_one_assigned_number?
+
+    after :destroy do
+      tag.destroy
+    end
 
     def initialize(opts)
       super opts
@@ -38,9 +43,13 @@ module Crowdring
       ringers.select {|r| r.tagged?(assigned_number.tag) }
     end
 
+    def tag
+      Tag.from_str("campaign:#{id}")
+    end
+
     def ring(ringer)
       return unless rings.create(ringer: ringer).saved?
-      ringer.tag(Tag.from_str("campaign:#{id}"))
+      ringer.tag(tag)
       ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
       ask.respond(ringer, sms_number.raw_number) if ask
     end

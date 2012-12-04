@@ -9,6 +9,10 @@ module Crowdring
         property :raw_number, DataMapper::Property::String
         validates_uniqueness_of :phone_number
 
+        after :destroy do
+          tag.destroy
+        end
+
         def tag
           Tag.from_str("rang:#{id}")
         end
