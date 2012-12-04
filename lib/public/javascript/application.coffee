@@ -96,6 +96,8 @@ newFilterMessage = ->
   id = $('.filtered-message-template').length
   newDiv = $('#original-filtered-message-template-container div:first-child').clone()
   $('textarea[name="MESSAGE"]', newDiv).attr('name', "campaign[message][filtered_messages][#{id}][message_text]")
+  $('input[name="CONSTRAINT_TYPE"]', newDiv).attr('name', "constraint_type#{id}")
+
   $('#filtered-messages').prepend(newDiv)
       
   $('#remove-filter-button', newDiv).click ->
@@ -114,14 +116,18 @@ newFilterMessage = ->
     $('.tag-name', newDiv).chosen()
     $('.tag-name', newDiv).change (evt) ->
       selected = $(':selected', $(this))
-      addTag $(this).parent(), {label: "#{selected.parent().attr('label')} : #{selected.text()}", value: $(this).val()}, id
-
+      constraints = $("input[name='constraint_type#{id}']:checked").val()
+      label = if constraints == 'has' then selected.parent().attr('label') else "Has not " + selected.parent().attr('label')
+      value = if constraints == 'has' then $(this).val() else "!" + $(this).val()
+      addTag $(this).parent(), {label: "#{label} : #{selected.text()}", value: "#{value}"}, id
   $('.counter', newDiv).remove()
   $('.msg-text-area', newDiv).charCount({
     allowed: 160,
     warning: 20,
   })
-  
+
+
+
 $ ->
   $('select.campaign-select').chosen()
   setTimeout((->$('.notice').slideUp('medium')), 3000)

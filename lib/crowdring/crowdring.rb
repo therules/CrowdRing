@@ -240,7 +240,7 @@ module Crowdring
           FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end
         message = Message.create(filtered_messages: filtered_messages)
-        send_sms_ask = SendSMSAsk.create(message: message)
+        send_sms_ask = SendSMSAsk.create(title: 'Send SMS back', message: message)
         campaign.asks.first.triggered_ask = send_sms_ask
         campaign.asks << send_sms_ask
         if campaign.save

@@ -15,8 +15,8 @@ module Crowdring
     end
     
     def self.create_double_opt_in(message)
-      offline_ask = OfflineAsk.create
-      join_ask = JoinAsk.create(message: message)
+      offline_ask = OfflineAsk.create(title: 'Offline')
+      join_ask = JoinAsk.create(title: 'Join', message: message)
       offline_ask.triggered_ask = join_ask
       offline_ask
     end

@@ -17,7 +17,7 @@
     #selected-ask-type
     %button{type:'submit'} Create Ask
     .note Creating the ask does not send any texts. You need to launch your ask on the next page.
-  %form{action: '/campaigns##{@campaign.id}', method: 'get'}
+  %form{action: "/campaigns##{@campaign.id}", method: 'get'}
     %button « Back
     #original-filtered-message-template-container{style: 'display:none'}
       =haml :filtered_message_template
