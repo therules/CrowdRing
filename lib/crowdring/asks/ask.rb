@@ -14,6 +14,11 @@ module Crowdring
       message.save if message
     end
 
+    after :create do
+      recipient_tag
+      respondent_tag
+    end
+
     after :destroy do
       recipient_tag.destroy
       respondent_tag.destroy
