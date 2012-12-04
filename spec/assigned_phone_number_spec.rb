@@ -45,7 +45,6 @@ describe Crowdring::AssignedPhoneNumber do
   it 'should forward a text to the correct number' do
     request = double('request', from: '+18003333333', to: '+18002222222', message: 'message')
 
-    # @campaign.texts.first.ringer.phone_number.should eq('+18003333333')
     Crowdring::Campaign.any_instance.should_receive(:text)
     Crowdring::AssignedPhoneNumber.handle(:sms, request)
   end
