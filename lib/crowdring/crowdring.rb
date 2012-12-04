@@ -346,7 +346,7 @@ module Crowdring
         flash[:notice] = "New Ask Add"
         redirect to("/campaigns##{campaign.id}")
       else
-        flash[:errors] = "Failed to add new ask"
+        flash[:errors] = 'Failed to create new ask' 
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
     end

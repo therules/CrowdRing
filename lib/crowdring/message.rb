@@ -7,6 +7,8 @@ module Crowdring
     has n, :filtered_messages, through: Resource, constraint: :destroy
 
     validates_presence_of :filtered_messages
+
+    validates_with_method :filtered_messages, :non_empty_filters?
     
 
     def filtered_messages=(messages)
@@ -57,6 +59,15 @@ module Crowdring
 
     def prioritized_messages
       filtered_messages.all(order: [:priority.asc])
+    end
+
+    def non_empty_filters?
+      nondefault_messages.each do |m| 
+        if m.tag_filter.nil? || m.tag_filter.constraints.empty?
+          return [false, 'All filtered messages must provide at least one constraint'] 
+        end
+      end
+      true
     end
   end
 end
