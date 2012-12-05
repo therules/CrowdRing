@@ -16,5 +16,8 @@
           %h3 What should the ringer hear when they call?
           %textarea.msg-text-area{name: 'ask[prompt]', placeholder: 'Please leave a message of peace after the beep'}=@ask.prompt
     %button{type:'submit'} Update Ask
-    #original-filtered-message-template-container{style: 'display:none'}
-      =haml :filtered_message_template
+  %form{action: "/campaigns##{@campaign_id}", method: 'get'}
+    %button « Back
+
+  #original-filtered-message-template-container{style: 'display:none'}
+    =haml :filtered_message_template

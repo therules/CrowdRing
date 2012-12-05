@@ -283,7 +283,7 @@ module Crowdring
     post '/campaign/:id/voice_numbers/create' do
       unless params[:region]
         flash[:errors] = 'Please select a number'
-        redirect to('/unsubscribe_numbers/new')
+        redirect to("/campaign/#{params[:id]}/voice_numbers/new")
       end
 
       country, region = params[:region].split('|')
