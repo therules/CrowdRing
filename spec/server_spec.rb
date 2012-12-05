@@ -281,15 +281,15 @@ module Crowdring
         c2.voice_numbers.first.ring(r2)
 
         message = Crowdring::Message.create(default_message: 'Blah')
-        new_ask = Crowdring::SendSMSAsk.create(message: message)
+        new_ask = Crowdring::SendSMSAsk.create(title: 'sendsms', message: message)
         @c.asks << new_ask
         @c.save
         post "/campaign/#{@c.id}/asks/#{new_ask.id}/trigger"
         r1.reload
         r2.reload
 
-        r1.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
-        r2.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+        r1.tags.should include(Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+        r2.tags.should include(Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
       end
 
       it 'should be able to remove ask added after campaign creation'  do

@@ -17,7 +17,7 @@ describe Crowdring::Campaign do
     end
 
     it 'should create a campaign with a voice number and a sms number' do
-      @campaign = Crowdring::Campaign.create(title: 'test', voice_numbers: [@number1], sms_number: @number2)
+      @campaign = Crowdring::Campaign.create(title: 'test2', voice_numbers: [@number1], sms_number: @number2)
 
       @campaign.save.should be_true    
       @campaign.voice_numbers.first.should eq(Crowdring::AssignedVoiceNumber.first)
@@ -40,7 +40,7 @@ describe Crowdring::Campaign do
     end
 
     it 'should not allow assigning the same number to multiple campaigns' do
-      c1 = Crowdring::Campaign.create(title: 'test')
+      c1 = Crowdring::Campaign.create(title: 'test1')
       c1.voice_numbers.new(@number1)
       c1.save
 

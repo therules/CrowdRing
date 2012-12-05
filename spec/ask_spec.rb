@@ -14,14 +14,14 @@ describe Crowdring::Ask do
 
   describe 'offline ask' do
     it 'should tag a ringer as a supporter on a response' do
-      ask = Crowdring::OfflineAsk.create
+      ask = Crowdring::OfflineAsk.create(title: 'offline ask')
       ask.respond(@ringer, @sms_number)
 
       ask.respondents(Crowdring::Ringer.all).should eq([@ringer])
     end
 
     it 'should handle any incoming ring' do
-      ask = Crowdring::OfflineAsk.create
+      ask = Crowdring::OfflineAsk.create(title: 'offline ask')
       ask.handle?(:voice, @ringer).should be_true
     end
   end
@@ -47,7 +47,7 @@ describe Crowdring::Ask do
     it 'should record response from ringer' do
       message = Crowdring::Message.new(default_message: 'blah')
       text = Crowdring::Text.new(message: 'BLAH', ringer: @ringer)
-      ask = Crowdring::TextAsk.new()
+      ask = Crowdring::TextAsk.new(title: 'text ask')
 
       ask.trigger_for(@ringer, @sms_number)
       ask.text(@ringer, text, @sms_number)

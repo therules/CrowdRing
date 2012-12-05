@@ -323,10 +323,6 @@ module Crowdring
 
     post '/campaign/:id/asks/create' do
       campaign = Campaign.get(params[:id])
-      if params[:ask][:title].nil? || params[:ask][:title].empty?
-        flash[:errors] = "Please provide a title for your ask."
-        redirect to("/campaign/#{campaign.id}/asks/new")
-      end
 
       ask_type = params[:ask_type]
       unless ask_type
@@ -346,7 +342,7 @@ module Crowdring
         flash[:notice] = "New Ask Add"
         redirect to("/campaigns##{campaign.id}")
       else
-        flash[:errors] = 'Failed to create new ask' 
+        flash[:errors] = "#{ask.errors.full_messages.join('|')}"
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
     end
@@ -372,7 +368,7 @@ module Crowdring
 
     post '/campaign/:id/asks/:ask_id/update' do
       ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
-      if !params[:ask][:title].nil? && !params[:ask][:title].empty? && ask.update(params[:ask]) && ask.message.save 
+      if ask.update(params[:ask]) && ask.message.save 
         flash[:notice] = "#{ask.title} has been updated."
         redirect to("/campaigns##{params[:id]}")
       else

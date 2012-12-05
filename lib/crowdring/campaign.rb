@@ -3,7 +3,7 @@ module Crowdring
     include DataMapper::Resource
 
     property :id,           Serial
-    property :title,        String, required: true, length: 0..64,
+    property :title,        String, required: true, length: 0..64, unique: true,
       messages: { presence: 'Non-empty title required',
                   length: 'Title must be fewer than 64 letters in length' }
     property :most_recent_broadcast, DateTime
@@ -30,7 +30,7 @@ module Crowdring
 
     def initialize(opts)
       super opts
-      asks << OfflineAsk.create
+      asks << OfflineAsk.create(title: "Offline Ask - #{title}")
     end
 
     def sms_number=(number)
