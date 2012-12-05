@@ -69,6 +69,9 @@
           -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != @campaign.asks.first
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
               %button{type:'submit'} Launch
+            %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/destroy", method: "post"}
+              %button{type:'submit'} Remove
+
         %hr
         %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
           %button Add new ask

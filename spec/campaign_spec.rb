@@ -140,7 +140,7 @@ describe Crowdring::Campaign do
       @c.asks.count.should eq(2)
     end
 
-    it 'should be able to lauch new ask to whole ringers' , focus: true do
+    it 'should be able to lauch new ask to whole ringers' do
       c2 = Crowdring::Campaign.create(title: 'c2', voice_numbers:[{phone_number: @voice_num2, description: 'num2'}], sms_number:@sms_num2)
       r1 = Crowdring::Ringer.create(phone_number: @number4)
       r2 = Crowdring::Ringer.create(phone_number: @number5)
@@ -159,6 +159,17 @@ describe Crowdring::Campaign do
       r1.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
       r2.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
     end
+
+    it 'should be able to remove ask added after campaign creation' , focus: true do
+      message = Crowdring::Message.create(default_message: 'Blah')
+      new_ask = Crowdring::SendSMSAsk.create(message: message)
+      @c.asks << new_ask
+      @c.save
+      post "/campaign/#{@c.id}/asks/#{new_ask.id}/destroy"
+      
+      @c.asks.count.should eq(1)
+    end
+
 
   end
 end

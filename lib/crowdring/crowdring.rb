@@ -351,6 +351,18 @@ module Crowdring
       end
     end
 
+    post '/campaign/:id/asks/:ask_id/destroy' do
+      campaign = Campaign.get(params[:id])
+      ask = campaign.asks.get(params[:ask_id])
+      if campaign.asks.delete(ask) && campaign.save && ask.destroy
+        flash[:notice] = 'Ask successfully removed.'
+      else
+        flash[:errors] = 'Failed to remove ask'
+      end
+
+      redirect to("/campaigns##{campaign.id}")
+    end
+
     post '/campaign/:id/asks/:ask_id/trigger' do
       campaign = Campaign.get(params[:id])
       ask = campaign.asks.get(params[:ask_id])
