@@ -21,8 +21,12 @@ module Crowdring
       item.tags.include? tag
     end
 
+    def to_readable
+      "#{tag.readable_s}"
+    end
+
     def to_s
-      "has #{tag.readable_s}"
+      "#{tag}"
     end
   end
 
@@ -31,8 +35,12 @@ module Crowdring
       not item.tags.include? tag
     end
 
-    def to_s
+    def to_readable
       "has not #{tag.readable_s}"
+    end
+
+    def to_s
+      "!#{tag}"
     end
   end
 end

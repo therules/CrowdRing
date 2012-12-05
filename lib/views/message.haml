@@ -5,7 +5,7 @@
       %label If:
       .message
         -fm.tag_filter.constraints.each do |constraint|
-          %li= constraint.to_s
+          %li= constraint.to_readable
       %label Then:
       .message
         = "\"#{fm.message_text}\""

@@ -2,7 +2,7 @@
   %h2 Add new ask
   %form{action: "/campaign/#{@campaign.id}/asks/create", method: 'post'}
     %h3 Enter a short name for your ask
-    %input.title-input{type: 'text', name: 'title'}
+    %input.title-input{type: 'text', name: 'ask[title]'}
     %h3 What type of ask is this?
     %select.ask-type{name: "ask_type"}
       %option{value:"", selected: 'selected', disabled:"disabled"} Select an ask type
@@ -14,13 +14,13 @@
     %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add Message
     .field
       %h3 Message for ringers not covered above
-      %textarea.msg-text-area{name: 'campaign[message][default_message]', placeholder: 'This message will be sent to all ringers (for all campaigns) not included in your filters. Leave this blank to ignore those ringers.'}
+      %textarea.msg-text-area{name: 'ask[message][default_message]', placeholder: 'This message will be sent to all ringers (for all campaigns) not included in your filters. Leave this blank to ignore those ringers.'}
     #selected-ask-type
     %button{type:'submit'} Create Ask
     .note Creating the ask does not send any texts. You need to launch your ask on the next page.
   %form{action: "/campaigns##{@campaign.id}", method: 'get'}
     %button « Back
-    #original-filtered-message-template-container{style: 'display:none'}
-      =haml :filtered_message_template
+  #original-filtered-message-template-container{style: 'display:none'}
+    =haml :filtered_message_template
 
 %script{type: 'text/coffeescript', src: '/javascript/ask_new.coffee'}

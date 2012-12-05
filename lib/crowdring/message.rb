@@ -9,6 +9,7 @@ module Crowdring
     validates_presence_of :filtered_messages
 
     validates_with_method :filtered_messages, :non_empty_filters?
+    validates_with_method :filtered_messages, :at_least_one_message?
     
 
     def filtered_messages=(messages)
@@ -58,16 +59,21 @@ module Crowdring
     end
 
     def prioritized_messages
-      filtered_messages.all(order: [:priority.asc])
+      filtered_messages.all.sort {|a,b| a.priority <=> b.priority }
     end
 
     def non_empty_filters?
       nondefault_messages.each do |m| 
         if m.tag_filter.nil? || m.tag_filter.constraints.empty?
+          p 'empty filter'
           return [false, 'All filtered messages must provide at least one constraint'] 
         end
       end
       true
+    end
+
+    def at_least_one_message? 
+      filtered_messages.empty? ? [false, 'At least one message required'] : true
     end
   end
 end

@@ -323,7 +323,7 @@ module Crowdring
 
     post '/campaign/:id/asks/create' do
       campaign = Campaign.get(params[:id])
-      if params[:title].nil? || params[:title].empty?
+      if params[:ask][:title].nil? || params[:ask][:title].empty?
         flash[:errors] = "Please provide a title for your ask."
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
@@ -334,11 +334,11 @@ module Crowdring
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
-      message = params[:campaign][:message]
+      message = params[:ask][:message]
       if params[:prompt]
-        ask = Ask.create(title: params[:title], type:ask_name,message: message, prompt: params[:prompt])
+        ask = Ask.create(title: params[:ask][:title], type: ask_name, message: message, prompt: params[:prompt])
       else
-        ask = Ask.create(title: params[:title], type: ask_name, message: message)
+        ask = Ask.create(title: params[:ask][:title], type: ask_name, message: message)
       end
 
       campaign.asks << ask
@@ -362,6 +362,25 @@ module Crowdring
 
       redirect to("/campaigns##{campaign.id}")
     end
+
+    get '/campaign/:id/asks/:ask_id/edit' do
+      @campaign_id = params[:id]
+      @ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
+
+      haml :campaign_edit_ask
+    end
+
+    post '/campaign/:id/asks/:ask_id/update' do
+      ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
+      if !params[:ask][:title].nil? && !params[:ask][:title].empty? && ask.update(params[:ask]) && ask.message.save 
+        flash[:notice] = "#{ask.title} has been updated."
+        redirect to("/campaigns##{params[:id]}")
+      else
+        flash[:errors] = "#{ask.errors.full_messages.join('|')}"
+        redirect to("/campaign/#{params[:id]}/asks/#{params[:ask_id]}/edit")
+      end
+    end
+
 
     post '/campaign/:id/asks/:ask_id/trigger' do
       campaign = Campaign.get(params[:id])

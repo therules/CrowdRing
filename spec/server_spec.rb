@@ -240,5 +240,93 @@ module Crowdring
         verify_csv(last_response.body, @campaign.ringers, fields.keys)
       end
     end
+    describe 'campaign and asks' do
+      include Rack::Test::Methods
+
+      before(:each) do
+        Crowdring::Server.service_handler.reset
+        DataMapper.auto_migrate!
+        @voice_num1 = '+18001111111'
+        @voice_num2 = '+18002222222'
+        @voice_num3 = '+18003333333'
+        @sms_num1 = '+18009999999'
+        @sms_num2 = '+18008888888'
+        @number4 = '+18004444444'
+        @number5 = '+18005555555'
+
+        @c = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: @voice_num1, description: 'num1'}], sms_number: @sms_num1)
+
+        @fooservice = double('fooservice', build_response: 'fooResponse',
+          sms?: true,
+          transform_request: @fooresponse,
+          numbers: [@voice_num1, @sms_num1],
+          send_sms: nil)
+        Crowdring::CompositeService.instance.reset
+        Crowdring::CompositeService.instance.add('foo', @fooservice)
+      end
+
+      it 'should be able to add new ask after campaign creation' do
+        params = {'ask_type' => 'text_ask', 'trigger_by' => 'user','ask' => { 'title' => 'title', 'message' => {'default_message' => 'hello'}}}
+        post "/campaign/#{@c.id}/asks/create" ,params
+
+        Crowdring::Campaign.first.asks.count.should eq(2)
+      end
+
+      it 'should be able to lauch new ask to whole ringers' do
+        c2 = Crowdring::Campaign.create(title: 'c2', voice_numbers:[{phone_number: @voice_num2, description: 'num2'}], sms_number:@sms_num2)
+        r1 = Crowdring::Ringer.create(phone_number: @number4)
+        r2 = Crowdring::Ringer.create(phone_number: @number5)
+
+        @c.voice_numbers.first.ring(r1)
+        c2.voice_numbers.first.ring(r2)
+
+        message = Crowdring::Message.create(default_message: 'Blah')
+        new_ask = Crowdring::SendSMSAsk.create(message: message)
+        @c.asks << new_ask
+        @c.save
+        post "/campaign/#{@c.id}/asks/#{new_ask.id}/trigger"
+        r1.reload
+        r2.reload
+
+        r1.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+        r2.tags.should include (Crowdring::Tag.from_str("ask_recipient:#{new_ask.id}"))
+      end
+
+      it 'should be able to remove ask added after campaign creation'  do
+        message = Crowdring::Message.create(default_message: 'Blah')
+        new_ask = Crowdring::SendSMSAsk.create(title: 'Support the SpiderMan please', message: message)
+        @c.asks << new_ask
+        @c.save
+        post "/campaign/#{@c.id}/asks/#{new_ask.id}/destroy"
+        
+        @c.asks.count.should eq(1)
+      end
+
+      it 'should be able to edit ask title' do
+        message = Crowdring::Message.create(default_message: 'Blah')
+        new_ask = Crowdring::SendSMSAsk.create(title: 'Do you like pre-open bananas?', message: message)
+        @c.asks << new_ask
+        @c.save
+        
+        params = {'ask' => {'title' => 'Do not open bananas!'}}
+        post "/campaign/#{@c.id}/asks/#{new_ask.id}/update", params
+
+        new_ask.reload
+        new_ask.title.should eq('Do not open bananas!')
+      end
+
+      it 'should be able to edit ask message' , focus: true do
+        message = Crowdring::Message.create(default_message: 'Blah')
+        new_ask = Crowdring::SendSMSAsk.create(title: 'Do you like pre-open bananas?', message: message)
+        @c.asks << new_ask
+        @c.save
+        
+        params = {'ask' => {'title' => 'Do you like pre-open bananas?', 'message' => {'default_message' => 'BlahBlah'}}}
+        post "/campaign/#{@c.id}/asks/#{new_ask.id}/update", params
+
+        new_ask.reload
+        new_ask.message.default_message.should eq('BlahBlah')
+      end
+    end
   end
 end

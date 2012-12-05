@@ -1,20 +1,23 @@
 -tags ||= []
 -id ||= nil
 -message ||= ''
--msg_name = id.nil? ? 'MESSAGE' : "campaign[message][filtered_messages][#id}][message_text]"
+-msg_name = id.nil? ? 'MESSAGE' : "ask[message][filtered_messages][#{id}][message_text]"
+-constraint_type = id.nil? ? 'CONSTRAINT_TYPE' : "constraint_type#{id}"
+-has_id = id.nil? ? 'HAS_ID' : "has_#{id}"
+-has_not_id = id.nil? ? 'HAS_NOT_ID' : "has_not_#{id}"
 .filtered-message-template
-  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has', id: 'HAS_ID', checked: 'checked'}
-  %label{for: 'HAS_ID'} has
-  %input{type: 'radio', name: 'CONSTRAINT_TYPE', value: 'has_not', id: 'HAS_NOT_ID'}
-  %label{for: 'HAS_NOT_ID'} has not
+  %input{type: 'radio', name: constraint_type, value: 'has', id: has_id, checked: 'checked'}
+  %label{for: has_id} has
+  %input{type: 'radio', name: constraint_type, value: 'has_not', id: has_not_id}
+  %label{for: has_not_id} has not
   %select.tag-name{'data-placeholder' => 'Select a constraint'}
     %option
 
   #tag-filters
     -tags.each do |tag|
       %div
-        =tag
-        %input{type: 'hidden', name: "campaign[message][filtered_messages][#{id}]constraints[]", value: "#{tag}"}
+        =tag.to_readable
+        %input{type: 'hidden', name: "ask[message][filtered_messages][#{id}]constraints[]", value: "#{tag}"}
         %button{type: 'button', onclick: 'window.removeTag($(this));'} Remove
   %textarea.msg-text-area{name: msg_name, placeholder: 'Thanks for supporting...'}
     =message

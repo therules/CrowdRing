@@ -47,7 +47,7 @@ describe Crowdring::Ask do
     it 'should record response from ringer' do
       message = Crowdring::Message.new(default_message: 'blah')
       text = Crowdring::Text.new(message: 'BLAH', ringer: @ringer)
-      ask = Crowdring::TextAsk.new(message: message)
+      ask = Crowdring::TextAsk.new()
 
       ask.trigger_for(@ringer, @sms_number)
       ask.text(@ringer, text, @sms_number)

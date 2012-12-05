@@ -78,7 +78,7 @@ loadCampaign = (pusher, campaign, prev_channel) ->
 
 
 tagFor = (tagItem, id) ->
-  $("<div>#{tagItem.label} <input type='hidden' name='campaign[message][filtered_messages][#{id}]constraints[]' value='#{tagItem.value}' /> <button type='button'>Remove</button></div>")
+  $("<div>#{tagItem.label} <input type='hidden' name='ask[message][filtered_messages][#{id}]constraints[]' value='#{tagItem.value}' /> <button type='button'>Remove</button></div>")
 removeFilter = (btn) ->
   btn.parent().remove()
 
@@ -95,7 +95,7 @@ addTag = (parent, item, id) ->
 newFilterMessage = ->
   id = $('.filtered-message-template').length
   newDiv = $('#original-filtered-message-template-container div:first-child').clone()
-  $('textarea[name="MESSAGE"]', newDiv).attr('name', "campaign[message][filtered_messages][#{id}][message_text]")
+  $('textarea[name="MESSAGE"]', newDiv).attr('name', "ask[message][filtered_messages][#{id}][message_text]")
   $('input[name="CONSTRAINT_TYPE"]', newDiv).attr('name', "constraint_type#{id}")
 
   $('input[id="HAS_ID"]', newDiv).attr('id', "has_#{id}")
@@ -107,23 +107,7 @@ newFilterMessage = ->
   $('#remove-filter-button', newDiv).click ->
     removeFilter($(this))
 
-  $.getJSON '/tags/grouped_tags.json', (data) ->
-    $.each data, (key, value) ->
-      $('.tag-name', newDiv)
-        .append($("<optgroup></optgroup>")
-          .attr("label", key))
-      $.each value, (_, item) ->
-        $('.tag-name optgroup:last', newDiv)
-          .append($("<option></option>")
-            .attr("value", item.value)
-            .text(item.visible_label))
-    $('.tag-name', newDiv).chosen()
-    $('.tag-name', newDiv).change (evt) ->
-      selected = $(':selected', $(this))
-      constraints = $("input[name='constraint_type#{id}']:checked").val()
-      label = (if constraints == 'has' then '' else 'Has not ') + selected.parent().attr('label')
-      value = (if constraints == 'has' then '' else '!') + $(this).val()
-      addTag $(this).parent(), {label: "#{label} : #{selected.text()}", value: "#{value}"}, id
+  fillTags(newDiv, id)
   $('.counter', newDiv).remove()
   $('.msg-text-area', newDiv).charCount({
     allowed: 160,
@@ -131,6 +115,24 @@ newFilterMessage = ->
   })
 
 
+fillTags = (div, id) ->
+  $.getJSON '/tags/grouped_tags.json', (data) ->
+    $.each data, (key, value) ->
+      $('.tag-name', div)
+        .append($("<optgroup></optgroup>")
+          .attr("label", key))
+      $.each value, (_, item) ->
+        $('.tag-name optgroup:last', div)
+          .append($("<option></option>")
+            .attr("value", item.value)
+            .text(item.visible_label))
+    $('.tag-name', div).chosen()
+    $('.tag-name', div).change (evt) ->
+      selected = $(':selected', $(this))
+      constraints = $("input[name='constraint_type#{id}']:checked").val()
+      label = (if constraints == 'has' then '' else 'Has not ') + selected.parent().attr('label')
+      value = (if constraints == 'has' then '' else '!') + $(this).val()
+      addTag $(this).parent(), {label: "#{label} : #{selected.text()}", value: "#{value}"}, id
 
 $ ->
   $('select.campaign-select').chosen()
@@ -147,6 +149,8 @@ $ ->
     allowed: 160,
     warning: 20,
   })
+
+  $('#filtered-messages .filtered-message-template').each (index) -> fillTags($(this), index)
   
   window.removeTag = (btn) -> removeTag(btn)
   window.removeFilter = (btn) -> removeFilter(btn)
