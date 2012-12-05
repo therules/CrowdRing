@@ -17,6 +17,7 @@
 
 
 .clearfix {display:block;}
+
 .clearfix:after {
   clear: both;
   content: ' ';
@@ -248,10 +249,12 @@ body {
       #asks {
         float: right;
         min-width: 40%;
-        #ask-title{
-        word-wrap: break-word;
-        max-width: 350px;
+
+        .message , #texts, #ask-title{
+          word-wrap: break-word;
+          max-width: 350px;
         }
+
       }
     }
 
