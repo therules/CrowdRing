@@ -2,12 +2,13 @@ require 'twilio-ruby'
 
 module Crowdring
   class TwilioRequest
-    attr_reader :from, :to
+    attr_reader :from, :to, :message
 
     def initialize(request)
       params = request.POST
       @from = params['From']
       @to = params['To']
+      @message = params['Body'] if params['Body']
     end
 
     def callback?

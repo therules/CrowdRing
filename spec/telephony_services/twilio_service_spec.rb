@@ -22,6 +22,13 @@ describe Crowdring::TwilioRequest do
     r.callback?.should eq(false)
   end
 
+  it 'should extract a message if there is one' do
+    request = double("request")
+    request.stub(:POST) { { 'From' => 'from', 'To' => 'to', 'Body' => 'msg'} }
+    r = Crowdring::TwilioRequest.new(request)
+    r.message.should eq('msg')
+  end
+
 end
 
 
