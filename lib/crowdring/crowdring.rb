@@ -497,7 +497,7 @@ module Crowdring
         redirect to('/')
       else
         flash[:errors] = agg_campaign.errors.full_messages.join('|')
-        redirect to('/aggregate_campaigns/create')
+        redirect to('/aggregate_campaigns/new')
       end
     end
 

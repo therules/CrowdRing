@@ -2,7 +2,7 @@ module Crowdring
   class AggregateCampaign
     include DataMapper::Resource
 
-    property :name, String, required: true, key: true
+    property :name, String, required: true, unique: true, key: true
 
     has n, :campaigns, through: Resource, constraint: :skip
 
