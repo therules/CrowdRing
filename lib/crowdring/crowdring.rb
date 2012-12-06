@@ -127,6 +127,7 @@ module Crowdring
       @campaigns = Campaign.all
       @unsubscribe_numbers = AssignedUnsubscribeVoiceNumber.all
       @unsubscribed_count = Ringer.unsubscribed.count
+      @aggregate_campaigns = AggregateCampaign.all
 
       haml :index
     end
@@ -496,6 +497,25 @@ module Crowdring
       else
         flash[:errors] = agg_campaign.errors.full_messages.join('|')
         redirect to('/aggregate_campaigns/create')
+      end
+    end
+
+    get '/aggregate_campaigns/:name/edit' do
+      @campaigns = Campaign.all
+      @aggregate_campaign = AggregateCampaign.get(params[:name])
+
+      haml :aggregate_campaign_edit
+    end
+
+    post '/aggregate_campaigns/:name/update' do
+      params[:aggregate_campaign][:campaigns] = [] unless params[:aggregate_campaign][:campaigns]
+      agg_campaign = AggregateCampaign.get(params[:name])
+      if agg_campaign.update(params[:aggregate_campaign])
+        flash[:notice] = 'Aggregate campaign updated'
+        redirect to('/')
+      else
+        flash[:errors] = agg_campaign.errors.full_messages.join('|')
+        redirect to("/aggregate_campaigns/#{params[:name]}/edit")
       end
     end
 

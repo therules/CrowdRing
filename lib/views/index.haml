@@ -16,3 +16,11 @@
     %form{action: '/unsubscribe_numbers/new', method: 'get'}
       %button Add Another
     %h3= "Total Unsubscribes: #{@unsubscribed_count}"
+  %h2 Aggregate Campaigns
+  .rounded-box
+    %p Enter the name of a campaign into the Purpose Platform to sync the ringer count
+    -@aggregate_campaigns.each do |agg_camp|
+      .aggregate-campaign-preview
+        ="#{agg_camp.name} has #{agg_camp.ringer_count} ringers from #{agg_camp.campaign_summary}"
+        %form{action: "/aggregate_campaigns/#{agg_camp.name}/edit", method: 'get'}
+          %button{type: 'submit'} edit

@@ -14,5 +14,12 @@ module Crowdring
     def ringer_count
       campaigns.reduce(0) {|sum, c| c.ringers.count + sum}
     end
+
+    def campaign_summary
+      return 'no campaigns' if campaigns.empty?
+      full_summary = campaigns.map(&:title).join(', ')
+      full_summary = full_summary[0..80] + '...' if full_summary.length > 80
+      full_summary
+    end
   end
 end
