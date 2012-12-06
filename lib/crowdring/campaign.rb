@@ -16,6 +16,8 @@ module Crowdring
 
     has n, :voice_numbers, 'AssignedCampaignVoiceNumber', constraint: :destroy
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy
+
+    has n, :aggregate_campaigns, through: Resource
     
 
     validates_with_method :voice_numbers, :at_least_one_assigned_number?
@@ -23,7 +25,7 @@ module Crowdring
     after :create do
       tag
     end
- 
+
     after :destroy do
       tag.destroy
     end

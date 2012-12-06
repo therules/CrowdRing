@@ -42,6 +42,7 @@ require 'crowdring/ring_observer'
 require 'crowdring/assigned_phone_number'
 require 'crowdring/tag'
 require 'crowdring/tag_filter'
+require 'crowdring/aggregate_campaign'
 
 require 'crowdring/constraint'
 require 'crowdring/asks/ask.rb'
