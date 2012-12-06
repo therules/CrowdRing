@@ -417,10 +417,11 @@ module Crowdring
       end
     end
 
-    get '/campaign/:title/count' do
-      @campaign = Campaign.first(:title => params[:title])
-      if @campaign
-        result = {count: @campaign.unique_rings.count}
+    #this should actually be /aggregate_campaign/ but a change is required in the purpose platform for that
+    get '/campaign/:name/count' do
+      aggregate_campaign = AggregateCampaign.get(params[:name])
+      if aggregate_campaign
+        result = {count: aggregate_campaign.ringer_count}
         jsonp result, params[:callback]
       end
     end

@@ -19,7 +19,8 @@ describe Crowdring::Server do
     end
 
     it 'should return unique number of rings for the given campaign' do
-      get "/campaign/#{@c.title}/count"
+      agg = Crowdring::AggregateCampaign.create(name: 'agg', campaigns: [@c])
+      get "/campaign/agg/count"
       last_response.ok?
       last_response.body.should == "(#{{:count => 1}.to_json})"
     end
