@@ -418,7 +418,7 @@ module Crowdring
     end
 
     #this should actually be /aggregate_campaign/ but a change is required in the purpose platform for that
-    get '/campaign/:name/count' do
+    get '/campaign/:name/campaign-member-count' do
       aggregate_campaign = AggregateCampaign.get(params[:name])
       if aggregate_campaign
         result = {count: aggregate_campaign.ringer_count}
