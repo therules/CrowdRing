@@ -1,0 +1,22 @@
+#new-aggregate-campaign.rounded-box
+  -if @campaigns.empty?
+    No campaigns to select from. You can't create an aggregrate like that.
+  -else
+    %h2 New Aggregate Campaign
+    %form{action: '/aggregate_campaigns/create', method: 'post'}
+      .field
+        %h3 Name your campaign:
+        %input{type: 'text', name: 'aggregate_campaign[name]'}
+        .note (this is the name you will enter into the Purpose Platform)
+      .field
+        %h3 Select the campaigns to include
+        -@campaigns.each do |campaign|
+          %label{for: campaign.id}
+            %input{id: campaign.id, type: 'checkbox', name: 'aggregate_campaign[campaigns][]', value: campaign.id}= campaign.title
+            %br
+        .note Select the campaigns you wish you include ringers from
+      %button{type: 'submit'} Create
+  %hr    
+  %form{action: '/', method: 'get'}
+    %button « Back to Home
+

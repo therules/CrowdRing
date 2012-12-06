@@ -7,7 +7,7 @@ module Crowdring
     has n, :campaigns, through: Resource, constraint: :skip
 
     def campaigns=(campaigns)
-      campaigns = campaigns.map {|c| Campaign.get(c)} if campaigns.first.is_a? Fixnum
+      campaigns = campaigns.map {|c| Campaign.get(c)} if campaigns.first.is_a?(Fixnum) || campaigns.first.is_a?(String)
       super campaigns
     end
 

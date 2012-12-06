@@ -482,6 +482,23 @@ module Crowdring
       redirect to("/campaigns##{campaign.id}")
     end
 
+    get '/aggregate_campaigns/new' do
+      @campaigns = Campaign.all
+
+      haml :aggregate_campaign_new
+    end
+
+    post '/aggregate_campaigns/create' do
+      agg_campaign = AggregateCampaign.new(params[:aggregate_campaign])
+      if agg_campaign.save
+        flash[:notice] = 'Aggregate campaign created'
+        redirect to('/')
+      else
+        flash[:errors] = agg_campaign.errors.full_messages.join('|')
+        redirect to('/aggregate_campaigns/create')
+      end
+    end
+
     get '/tags/new' do
       haml :tag_new
     end
