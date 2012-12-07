@@ -3,9 +3,8 @@
 #options
   %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
     %button Destroy Campaign 
-#back-to-home
-  %form{action: "/"}
-    %button «Back to Home
+  %form{action: "/" }
+    %button « Back to Home
 
 #campaign-information
   #tabs
