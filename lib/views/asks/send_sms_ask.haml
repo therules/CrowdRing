@@ -5,5 +5,3 @@
 
 %div="#{ask.recipients.count} recipients"
 =haml :message, locals: {message: ask.message}
-%form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/edit"}
-  %button Edit

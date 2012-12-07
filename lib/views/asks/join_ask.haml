@@ -1,5 +1,3 @@
 %h3= "#{ask.title} - Join ask"
 %div="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
 =haml :message, locals: {message: ask.message}
-%form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/edit"}
-  %button Edit
