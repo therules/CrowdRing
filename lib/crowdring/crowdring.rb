@@ -277,7 +277,8 @@ module Crowdring
     
     get '/campaign/:id/voice_numbers/new' do
       @campaign = Campaign.get(params[:id])
-      @voice_numbers = NumberPool.available_summary
+      country = @campaign.voice_numbers.first.country.name
+      @voice_numbers = NumberPool.available_summary.select {|n| n[:country] == country}
       
       haml :campaign_assign_voice_number        
     end
