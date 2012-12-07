@@ -3,7 +3,8 @@ module Crowdring
     property :prompt, String, length: 250
 
     has n, :voicemails, through: Resource, constraint: :destroy
-
+    validates_presence_of :message
+    
     def handle?(type, ringer)
       type == :voice && super(type, ringer)
     end

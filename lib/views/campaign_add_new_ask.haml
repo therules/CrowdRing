@@ -12,9 +12,6 @@
     %h3 Add messages below to segment your ringers
     #filtered-messages
     %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add Message
-    .field
-      %h3 Message for ringers not covered above
-      %textarea.msg-text-area{name: 'ask[message][default_message]', placeholder: 'This message will be sent to all ringers (for all campaigns) not included in your filters. Leave this blank to ignore those ringers.'}
     #selected-ask-type
     %button{type:'submit'} Create Ask
     .note Creating the ask does not send any texts. You need to launch your ask on the next page.

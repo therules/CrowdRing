@@ -1,5 +1,7 @@
 module Crowdring
   class SendSMSAsk < Ask
+    validates_presence_of :message
+
     def handle?(type, ringer)
       false
     end

@@ -325,14 +325,13 @@ module Crowdring
 
     post '/campaign/:id/asks/create' do
       campaign = Campaign.get(params[:id])
-
+      message = params[:ask][:message]
       ask_type = params[:ask_type]
       unless ask_type
         flash[:errors] = "Ask type can not be empty"
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
       ask_name = Ask.descendants.find{|a| a.typesym == ask_type.to_sym}
-      message = params[:ask][:message]
       if params[:prompt]
         ask = Ask.create(title: params[:ask][:title], type: ask_name, message: message, prompt: params[:prompt])
       else
@@ -370,6 +369,7 @@ module Crowdring
 
     post '/campaign/:id/asks/:ask_id/update' do
       ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
+      params[:ask][:message] ||= nil
       if ask.update(params[:ask]) && ask.message.save 
         flash[:notice] = "#{ask.title} has been updated."
         redirect to("/campaigns##{params[:id]}")

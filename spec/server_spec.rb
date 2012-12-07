@@ -308,7 +308,7 @@ module Crowdring
         @c.asks << new_ask
         @c.save
         
-        params = {'ask' => {'title' => 'Do not open bananas!'}}
+        params = {'ask' => {'title' => 'Do not open bananas!', 'message' => {'default_message' => 'Blah'}}}
         post "/campaign/#{@c.id}/asks/#{new_ask.id}/update", params
 
         new_ask.reload

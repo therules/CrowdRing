@@ -6,10 +6,19 @@ describe Crowdring::Ask do
     @number1 = '+18001111111'
     @number2 = '+18002222222'
     @number3 = '+18003333333'
-    @number3 = '+18004444444'
+    @number4 = '+18004444444'
     @ringer = Crowdring::Ringer.create(phone_number:@number2)
     @ringer2 = Crowdring::Ringer.create(phone_number:@number4)
     @sms_number = @number3 
+
+    @fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
+    @fooservice = double('fooservice', build_response: 'fooResponse',
+        sms?: true,
+        transform_request: @fooresponse,
+        numbers: [@number3],
+        send_sms: nil)
+    Crowdring::CompositeService.instance.reset
+    Crowdring::CompositeService.instance.add('foo', @fooservice) 
   end
 
   describe 'offline ask' do
@@ -47,7 +56,7 @@ describe Crowdring::Ask do
     it 'should record response from ringer' do
       message = Crowdring::Message.new(default_message: 'blah')
       text = Crowdring::Text.new(message: 'BLAH', ringer: @ringer)
-      ask = Crowdring::TextAsk.new(title: 'text ask')
+      ask = Crowdring::TextAsk.new(title: 'text ask', message: message)
 
       ask.trigger_for(@ringer, @sms_number)
       ask.text(@ringer, text, @sms_number)

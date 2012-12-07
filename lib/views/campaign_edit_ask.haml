@@ -8,14 +8,11 @@
       -@ask.message.nondefault_messages.each_with_index do |fm, i|
         =haml :filtered_message_template, locals: {tags: fm.tag_filter.constraints, id: i, message: fm.message_text, ask_type: 'sdf'}
     %button#new-filter-button{type: 'button', onclick: "window.addFilter();"} Add Message
-    -if @ask.class.typesym != :join_ask
-      .field
-        %h3 Message for ringers not covered above
-        %textarea.msg-text-area{name: 'ask[message][default_message]', placeholder: 'This message will be sent to all ringers (for all campaigns) not included in your filters. Leave this blank to ignore those ringers.'}=@ask.message.default_message
-        -if @ask.class.typesym == :voicemail_ask
-          #voice-prompt
-            %h3 What should the ringer hear when they call?
-            %textarea.msg-text-area{name: 'ask[prompt]', placeholder: 'Please leave a message of peace after the beep'}=@ask.prompt
+    
+    -if @ask.class.typesym == :voicemail_ask
+      #voice-prompt
+        %h3 What should the ringer hear when they call?
+        %textarea.msg-text-area{name: 'ask[prompt]', placeholder: 'Please leave a message of peace after the beep'}=@ask.prompt
     %button{type:'submit'} Update Ask
   %form{action: "/campaigns##{@campaign_id}", method: 'get'}
     %button « Back
