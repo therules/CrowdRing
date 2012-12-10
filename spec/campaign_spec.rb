@@ -49,6 +49,22 @@ describe Crowdring::Campaign do
       
       c2.save.should be_false   
     end
+
+    it 'should create a default offline ask upon campaign creation' do
+      c1 = Crowdring::Campaign.create(title: 'test1', voice_numbers: [{phone_number: '18001111111', description: 'foo'}])
+
+      c1.saved?.should be_true
+      c1.asks.first.is_a?(Crowdring::OfflineAsk).should be_true
+    end
+
+    it 'should not allow creation of 2 campaigns with the same name and provide a useful error' do
+      c1 = Crowdring::Campaign.create(title: 'test', voice_numbers: [{phone_number: '18001111111', description: 'foo'}])
+      c2 = Crowdring::Campaign.new(title: 'test', voice_numbers: [{phone_number: '18001111112', description: 'bar'}])
+
+      c1.save.should be_true
+      c2.save.should be_false
+      c2.all_errors.map(&:full_messages).join('|').should match(/title/i)
+    end
   end
 
   describe 'campaign and ringer' do

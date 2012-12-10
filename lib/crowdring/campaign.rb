@@ -22,17 +22,16 @@ module Crowdring
 
     validates_with_method :voice_numbers, :at_least_one_assigned_number?
 
+    before :create do
+      asks << OfflineAsk.create(title: "Offline Ask - #{title}")
+    end
+
     after :create do
       tag
     end
 
     after :destroy do
       tag.destroy
-    end
-
-    def initialize(opts)
-      super opts
-      asks << OfflineAsk.create(title: "Offline Ask - #{title}")
     end
 
     def sms_number=(number)

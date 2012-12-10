@@ -70,6 +70,3 @@ require 'crowdring/patches'
 require 'crowdring/crowdring'
 
 Phoner::Phone.default_country_code = '1'
-
-
-
