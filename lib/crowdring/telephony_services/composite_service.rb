@@ -11,8 +11,8 @@ module Crowdring
       @services = {}
     end
 
-    def add(name, service)
-      @services[name] = service
+    def add(name, service, opts={cache: true})
+      @services[name] = opts[:cache] ? CachingService.new(service) : service
     end
 
     def get(name)

@@ -26,7 +26,7 @@ require 'crowdring/telephony_services/routo_service'
 require 'crowdring/telephony_services/voxeo_service'
 require 'crowdring/telephony_services/netcore_service'
 require 'crowdring/telephony_services/plivo_service'
-
+require 'crowdring/telephony_services/caching_service'
 require 'crowdring/telephony_services/composite_service'
 require 'crowdring/batch_send_sms'
 
