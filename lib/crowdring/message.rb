@@ -65,7 +65,6 @@ module Crowdring
     def non_empty_filters?
       nondefault_messages.each do |m| 
         if m.tag_filter.nil? || m.tag_filter.constraints.empty?
-          p 'empty filter'
           return [false, 'All filtered messages must provide at least one constraint'] 
         end
       end
