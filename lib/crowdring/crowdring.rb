@@ -344,7 +344,7 @@ module Crowdring
         flash[:notice] = "New Ask Add"
         redirect to("/campaigns##{campaign.id}")
       else
-        flash[:errors] = "#{ask.errors.full_messages.join('|')}"
+        flash[:errors] = "#{ask.all_errors.map(&:full_messages).reject(&:empty?).join('|')}"
         redirect to("/campaign/#{campaign.id}/asks/new")
       end
     end

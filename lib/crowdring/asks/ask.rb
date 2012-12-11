@@ -75,5 +75,11 @@ module Crowdring
 
       PriceEstimate.new(smss.compact)
     end
+
+    def all_errors
+      allerrors = [errors]
+      allerrors << message.errors unless message.nil?
+      allerrors.flatten
+    end
   end
 end

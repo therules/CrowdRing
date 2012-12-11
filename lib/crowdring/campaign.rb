@@ -79,6 +79,7 @@ module Crowdring
       allerrors = [errors]
       allerrors << voice_numbers.map(&:errors)
       allerrors << sms_number.errors if sms_number
+      allerrors << asks.map(&:errors)
       allerrors.flatten
     end
 

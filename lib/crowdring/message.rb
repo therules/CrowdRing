@@ -45,11 +45,7 @@ module Crowdring
     end
 
     def nondefault_messages
-      Enumerator.new do |y|
-        prioritized_messages.each do |m|
-          y << m unless m.priority == 100
-        end
-      end
+      prioritized_messages.select{|msg| msg.priority != 100}
     end    
 
     private

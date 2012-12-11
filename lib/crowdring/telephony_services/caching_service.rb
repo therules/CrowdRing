@@ -1,5 +1,5 @@
 module Crowdring
-  class CachingService
+  class CachingService 
 
     def initialize(service, seconds_to_expiry=300)
       @service = service

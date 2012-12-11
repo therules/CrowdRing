@@ -3,6 +3,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe Crowdring::CompositeService do 
 
 	before(:all) do
+		@numbers = ["+18000000000"]
+		@numbers2 = ["+18000000001"]
 		@service = Crowdring::CompositeService.instance
 	end
 
@@ -11,7 +13,7 @@ describe Crowdring::CompositeService do
 	end
 
 	it 'should be able to reset itself' do
-		service1 = double("foo")
+		service1 = double("foo", numbers: @numbers)
 		@service.add("foo", service1)
 		@service.reset
 
@@ -19,23 +21,21 @@ describe Crowdring::CompositeService do
 	end
 
 	it 'should be able to add and get service' do 
-		service1 = double("foo")
+		service1 = double("foo", numbers: @numbers)
 		@service.add("foo", service1)
 		
-		service2 = double("bar")
+		service2 = double("bar", numbers: @numbers2)
 		@service.add("bar", service2)
 	
-		@service.get("foo").should eq(service1)
-		@service.get("bar").should eq(service2)
+		@service.get("foo").should_not be_nil
+		@service.get("bar").should_not be_nil
 	end
 
 	it 'should return all the numbers from the services which support voice' do
 		service1 = double("foo", numbers: ["foo"], voice?: true)
-		service1.should_receive(:numbers).once
 		@service.add("foo", service1)
 
 		service2 = double("bar", numbers: ["bar"], voice?: false)
-		service2.should_not_receive(:numbers)
 		@service.add("bar", service2)
 
 		numbers = @service.voice_numbers
@@ -44,11 +44,9 @@ describe Crowdring::CompositeService do
 
 	it 'should return all the numbers from the services which support sms' do
 		service1 = double("foo", numbers: ["foo"], sms?: true)
-		service1.should_receive(:numbers).once
 		@service.add("foo", service1)
 
 		service2 = double("bar", numbers: ["bar"], sms?: false)
-		service2.should_not_receive(:numbers)
 		@service.add("bar", service2)
 
 		numbers = @service.sms_numbers
