@@ -8,11 +8,7 @@
       %b= pretty_phone_number(@sms_number)
     %hr
     -@number_summary.each do |entry|
-      %h3= pretty_phone_number(entry[:number])
-      %h3= "#{entry[:region][:country]} - #{entry[:region][:region] || 'General'}"
-      %h4 Add a description for the number
-      %input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: entry[:number]}
-      %input.title-input{type: 'text', name: 'campaign[voice_numbers][][description]', placeholder: 'Use this space to describe where the number will be promoted, etc.'}
+      =haml :assign_voice_number, locals: {number: entry}
       %h3 Add a response sms for callers of this number
       %textarea.msg-text-area{name: 'sms_responses[]', placeholder: "Thank you for calling to support us. Call us at #{pretty_phone_number(entry[:number])} to subscribe."}
       %hr        

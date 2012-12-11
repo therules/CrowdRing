@@ -1,0 +1,6 @@
+%h4
+  Add a description for 
+  = pretty_phone_number(number[:number])
+  = "(#{number[:region][:country]} - #{number[:region][:region] || 'General'})"
+%input{type: 'hidden', name: 'campaign[voice_numbers][][phone_number]', value: number[:number]}
+%input.title-input{type: 'text', name: 'campaign[voice_numbers][][description]', placeholder: 'Use this space to describe where the number will be promoted, etc.'}

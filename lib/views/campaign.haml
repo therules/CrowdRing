@@ -26,7 +26,7 @@
           %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
           .goal-cost
             -if @sms_cost
-              One cost to text them all
+              Estimated cost of automatic SMS responses:
               .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
             -else
               ="unable to calculate cost to reach goal."
