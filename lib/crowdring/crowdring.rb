@@ -362,7 +362,7 @@ module Crowdring
     end
 
     get '/campaign/:id/asks/:ask_id/edit' do
-      @campaign_id = params[:id]
+      @campaign = Campaign.get(params[:id])
       @ask = Campaign.get(params[:id]).asks.get(params[:ask_id])
 
       haml :campaign_edit_ask

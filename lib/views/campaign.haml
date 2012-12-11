@@ -65,7 +65,7 @@
         -@campaign.asks.each do |ask|
           %hr
           =haml :ask, locals: {ask: ask, type: ask.class.typesym}
-          -if @campaign.asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != @campaign.asks.first
+          -if @campaign.triggered_ask?(ask)
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
               %button{type:'submit'} Launch
             %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/destroy", method: "post"}

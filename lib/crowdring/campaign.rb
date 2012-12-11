@@ -75,6 +75,10 @@ module Crowdring
       end
     end
 
+    def triggered_ask?(ask)
+      asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != asks.first
+    end
+
     def all_errors
       allerrors = [errors]
       allerrors << voice_numbers.map(&:errors)
