@@ -76,7 +76,7 @@ module Crowdring
     end
 
     def triggered_ask?(ask)
-      asks.select{|n| n.triggered_ask && n.triggered_ask == ask}.empty? && ask != asks.first
+      !(asks.find{|n| n.triggered_ask && n.triggered_ask == ask}.nil? && ask != asks.first)
     end
 
     def all_errors

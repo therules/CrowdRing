@@ -1,8 +1,12 @@
 .rounded-box
-  %h2 Edit Ask
+  -if @campaign.triggered_ask?(@ask)
+    %h2 Edit Auto-response Message
+  -else
+    %h2 Edit Ask
   %form{action: "/campaign/#{@campaign_id}/asks/#{@ask.id}/update", method: 'post'}
-    %h3 Enter a short name for your ask
-    %input.title-input{type: 'text', name: 'ask[title]', value: @ask.title}
+    -unless @campaign.triggered_ask?(@ask)
+      %h3 Enter a short name for your ask
+      %input.title-input{type: 'text', name: 'ask[title]', value: @ask.title}
     %h3 Add messages below to segment your ringers
     #filtered-messages
       -@ask.message.nondefault_messages.each_with_index do |fm, i|
