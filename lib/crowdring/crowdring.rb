@@ -392,7 +392,7 @@ module Crowdring
         flash[:notice] = "#{ask.title} has been updated."
         redirect to("/campaigns##{params[:id]}")
       else
-        flash[:errors] = "#{ask.errors.full_messages.join('|')}"
+        flash[:errors] = "#{ask.all_errors.map(&:full_messages).reject(&:empty?).join('|')}"
         redirect to("/campaign/#{params[:id]}/asks/#{params[:ask_id]}/edit")
       end
     end
