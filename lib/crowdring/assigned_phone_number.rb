@@ -9,18 +9,6 @@ module Crowdring
         property :raw_number, DataMapper::Property::String
         validates_uniqueness_of :phone_number
 
-        after :create do
-          tag
-        end
-
-        after :destroy do
-          tag.destroy
-        end
-
-        def tag
-          Tag.from_str("rang:#{id}")
-        end
-
         def phone_number=(number)
           self.raw_number = number
           super (Phoner::Phone.parse(number) || number).to_s
@@ -53,6 +41,19 @@ module Crowdring
   class AssignedCampaignVoiceNumber < AssignedVoiceNumber
     validates_presence_of :campaign
     validates_length_of :description, max: 64
+    
+    after :create do
+      tag
+    end
+
+    after :destroy do
+      tag.destroy
+    end
+
+    def tag
+      Tag.from_str("rang:#{id}")
+    end
+
 
     def ring(ringer)
       ringer.tag(tag)
