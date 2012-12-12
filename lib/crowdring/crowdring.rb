@@ -77,6 +77,18 @@ module Crowdring
       def pluralize(count, noun)
         "#{count} #{noun}#{count != 1 ? 's' : ''}"
       end
+
+      def http_protected!(credentials)
+        unless http_authorized?(credentials)
+          response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
+          throw(:halt, [401, "Not authorized\n"])
+        end
+      end
+
+      def http_authorized?(credentials)
+        @auth ||=  Rack::Auth::Basic::Request.new(request.env)
+        @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == credentials
+      end
     end
 
     before /^((?!((voice|sms)response)|reports|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
@@ -84,7 +96,12 @@ module Crowdring
     end
 
     before /(voice|sms)response/ do
+      /(voice|sms)response\/(.*)/.match request.fullpath
       Crowdring.statsd.increment "#{$1}_received.count"
+
+      service = $2.partition('?')[0]
+      credentials = CompositeService.instance.credentials_for(service)
+      http_protected! credentials if credentials
     end
 
     def respond(cur_service, request, response_type)

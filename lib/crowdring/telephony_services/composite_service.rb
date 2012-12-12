@@ -9,10 +9,17 @@ module Crowdring
 
     def initialize
       @services = {}
+      @credentials = {}
     end
 
-    def add(name, service, opts={cache: true})
+    def add(name, service, opts={})
+      opts = {cache: true}.merge opts
       @services[name] = opts[:cache] ? CachingService.new(service) : service
+      @credentials[name] = opts[:credentials]
+    end
+
+    def credentials_for(name)
+      @credentials[name]
     end
 
     def get(name)
