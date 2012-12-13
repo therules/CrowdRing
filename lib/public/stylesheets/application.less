@@ -15,6 +15,14 @@
   -moz-border-radius: @radius;
 }
 
+.tab-content(){
+  background-color: white;
+  padding: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+  .rounded-corners;
+}
+
 
 .clearfix {display:block;}
 
@@ -243,11 +251,14 @@ body {
   }
 
   #campaign-information {  
+    #campaign-asks {
+      .tab-content;
+    }
+    #campaign-analytics {
+      .tab-content;
+    }
     #campaign-overview {
-      padding: 20px;
-      background-color: white;
-      overflow: hidden;
-      .rounded-corners;
+      .tab-content;
     
       #progress-wrapper {
         height: 50px;
@@ -286,8 +297,11 @@ body {
           font-size: 18px;
         }
       }
-      #campaign-asks.ui-tabs-panel{
-        background-color: white;
+
+      #asks {
+        float: right;
+        min-width: 40%;
+
         .message , #texts, #ask-title{
           word-wrap: break-word;
           max-width: 350px;
@@ -439,6 +453,7 @@ body {
     li {
       margin-bottom: 1px;
     }
+    padding: 0px;
   }
 
   .ui-tabs-vertical { width: 55em; }

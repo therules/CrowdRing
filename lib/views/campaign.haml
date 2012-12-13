@@ -8,10 +8,10 @@
         %a{href: "#campaign-asks"}
           %span Asks
       %li
-        %a{href: "#basic-chart"}
+        %a{href: "#campaign-analytics"}
           %span Analytics
       %li
-        %a{href: "#export"}
+        %a{href: "#campaign-export"}
           %span Export To CSV
 
     #campaign-overview
@@ -78,7 +78,7 @@
         %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
           %button Add new ask
 
-    #export.form-box
+    #campaign-export.form-box
       %h3 Export to CSV
       %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
         #filter-container
@@ -92,9 +92,10 @@
           %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
         %button#exportbutton Export
 
-    #basic-chart
-      %h3 Statistic Analysis
-      = high_chart("basic-chart", @basic_chart) 
+    #campaign-analytics
+      #basic-chart
+        %h3 Statistic Analysis
+        = high_chart("basic-chart", @basic_chart) 
 #country-options{style: 'display:none' }
   %form
     -if @countries.empty?
