@@ -65,23 +65,20 @@
           %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
             %button Destroy Campaign 
     #campaign-asks
-      .rounded-box
-        %h2= "ASKS"
-        -@campaign.asks.each do |ask|
-          %hr
-          =haml :ask, locals: {ask: ask, type: ask.class.typesym}
-          -unless @campaign.triggered_ask?(ask)
-            %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
-              %button{type:'submit'} Launch
-            %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/destroy", method: "post"}
-              %button{type:'submit'} Remove
-          -if ask.message
-            %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/edit", method: "get"}
-              %button{type:'submit'} Edit
-
+      %h2= "ASKS"
+      -@campaign.asks.each do |ask|
+        =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+        -unless @campaign.triggered_ask?(ask)
+          %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
+            %button{type:'submit'} Launch
+          %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/destroy", method: "post"}
+            %button{type:'submit'} Remove
+        -if ask.message
+          %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/edit", method: "get"}
+            %button{type:'submit'} Edit
         %hr
-        %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
-          %button Add new ask
+      %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
+        %button Add new ask
 
     #campaign-export.form-box
       %h3 Export to CSV
