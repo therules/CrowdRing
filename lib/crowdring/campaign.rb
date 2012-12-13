@@ -10,6 +10,8 @@ module Crowdring
     property :created_at,   DateTime
     property :goal, Integer, default: 777
 
+    property :ringer_count, Integer, default: 0
+
     has n, :rings, constraint: :destroy
 
     has n, :asks, through: Resource, constraint: :destroy
@@ -56,10 +58,12 @@ module Crowdring
     end
 
     def ring(ringer)
-      return unless rings.create(ringer: ringer).saved?
-      ringer.tag(tag)
-      ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
-      ask.respond(ringer, sms_number.raw_number) if ask
+      if rings.create(ringer: ringer).saved?
+        ringer.tag(tag)
+        update! ringer_count: ringer_count + 1
+        ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
+        ask.respond(ringer, sms_number.raw_number) if ask
+      end
     end
 
     def text(ringer, message)

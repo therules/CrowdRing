@@ -6,6 +6,7 @@ module Crowdring
     property :title, String, unique: true, required: true, length: 0..100
     property :type, Discriminator
     property :created_at, DateTime
+    property :prompt, String, length: 250, lazy: false, required: false
 
     belongs_to :message, required: false
     belongs_to :triggered_ask, 'Ask', required: false

@@ -3,6 +3,7 @@
 =haml :price_estimate, locals: {price_estimate: ask.initial_price_estimate(@campaign.ringers, @campaign.sms_number.raw_number)}
 %div="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
 =haml :message, locals: {message: ask.message}
+= ask.prompt
 %h4= "Prompt #{ask.prompt}"
 %h4 Voicemails:
 -ask.voicemails.each do |vm|

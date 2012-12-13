@@ -12,7 +12,7 @@ module Crowdring
     end
 
     def ringer_count
-      campaigns.reduce(0) {|sum, c| c.ringers.count + sum}
+      campaigns.sum :ringer_count
     end
 
     def campaign_summary
