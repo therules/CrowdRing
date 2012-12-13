@@ -17,29 +17,34 @@
     #campaign-overview
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
-        .embedded-url
-          %textarea.msg-text-area.embedded-url{type: 'textarea'} <iframe src=\"http://localhost:5000/campaign/#{@campaign.id}/progress-embed?color=coral\" frameborder=\"0\" scrolling=\"no\" width=\"640px\"></iframe>
-        .goal-data
-          %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
-          .goal-cost
-            -if @sms_cost
-              Estimated cost of automatic SMS responses:
-              .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
-            -else
-              ="unable to calculate cost to reach goal."
-          .counts
-            %h3.unique_count
-              =pluralize(@ringer_count, 'Unique Ringer')
-              ="(#{@campaign.ringers.subscribed.count} subscribed)"
-            %h3.total_count
-              =pluralize(@ring_count, 'Total Ring')
-          #campaign-ringers
-            %h2 Recent Ringers
-            #ringers-numbers
-              %ul.ringers
-                -@ringers.each do |ringer|
-                  %li= ringer.pretty_phone_number
-              .number-fade-out 
+      #embedded-url
+        %h3 Embed progress bar
+        %div
+          %textarea.msg-text-area.embedded-url{type: 'textarea'} <iframe src="http://localhost:5000/campaign/#{@campaign.id}/progress-embed?color=coral" frameborder="0" scrolling="no" width="100%"></iframe>
+
+      .goal-data
+        %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
+        .goal-cost
+          -if @sms_cost
+            Estimated cost of automatic SMS responses:
+            .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
+          -else
+            ="unable to calculate cost to reach goal."
+      .counts
+        %h3.unique_count
+          =pluralize(@ringer_count, 'Unique Ringer')
+          ="(#{@campaign.ringers.subscribed.count} subscribed)"
+        %h3.total_count
+          =pluralize(@ring_count, 'Total Ring')
+
+      #campaign-ringers
+        %h2 Recent Ringers
+        #ringers-numbers
+          %ul.ringers
+            -@ringers.each do |ringer|
+              %li= ringer.pretty_phone_number
+          .number-fade-out
+          
       #campaign-details
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}

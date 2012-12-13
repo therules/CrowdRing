@@ -136,6 +136,7 @@ body {
     background-color: @dark-blue ;
     height: 30px;
     padding:10px;
+
   }
 
   #campaign-selector {
@@ -196,9 +197,6 @@ body {
     }
   }
 
-  .count {
-    display: inline;
-  }
 
   #campaign {
     border-width: 2px;
@@ -263,52 +261,77 @@ body {
       #progress-wrapper {
         height: 50px;
         padding-bottom: 20px;
+      }
 
-        .goal-data {
-          width: 40%;
-          float: right;
-          text-align: right;
-          .edit-goal-link {
-            padding-top: 15px;
-          }
-
-          .goal-cost {
-            padding-top: 15px;
-            padding-right: 10px;
-
-            .total {
-              display: inline;
-              font-size: 25px;
-            }
-          }
+      #embedded-url{
+        width: 50%;
+        margin-right: 20px;
+        float: left;
+        .embedded-url{
+          font-size: 18px;
         }
       }
+
+      .goal-data {
+        width: 40%;
+        float: right;
+        text-align: right;
+
+        .edit-goal-link {
+          padding-top: 15px;
+        }
+
+        .goal-cost {
+          padding-top: 15px;
+          padding-right: 10px;
+
+          .total {
+            display: inline;
+            font-size: 25px;
+          }
+        }
+      }  
+      .counts{
+        width: 40%;
+        float: right;
+        text-align: right;
+      }
+      #campaign-ringers{
+        width: 40%;
+        float: right;
+        text-align: right;
+
+        #ringers-numbers  {
+          height: 235px;
+          overflow: hidden;
+          margin-bottom: 10px;
+          position: relative;
+
+          .number-fade-out{
+            background: -webkit-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+            background-image: -webkit-gradient(linear,left top,left bottom,rgba(255,255,255,0), rgba(255,255,255, 1));
+            background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+            background-image: -ms-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+            background-image: -o-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
+            position: absolute; 
+            bottom: -10px; left: 0;
+            width:  205px;
+            height: 40px;
+          }
+        } 
+      }
+    
       #campaign-details {
         float: left;
         margin-right: 10px;
         word-wrap: break-word; 
 
       }
-      .embedded-url{
-        width: 65%;
-        float: left;
-        
-        .embedded-url{
-          font-size: 18px;
-        }
-      }
-
-      #asks {
-        float: right;
-        min-width: 40%;
-
-        .message , #texts, #ask-title{
+      .message, #texts, #ask-title{
           word-wrap: break-word;
           max-width: 350px;
         }
-
       }
-    }
 
     #message{
       margin: 10px;
@@ -317,24 +340,7 @@ body {
       }
     }
 
-    #ringers-numbers  {
-      height: 235px;
-      overflow: hidden;
-      margin-bottom: 10px;
-      position: relative;
-
-      .number-fade-out{
-        background: -webkit-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-        background-image: -webkit-gradient(linear,left top,left bottom,rgba(255,255,255,0), rgba(255,255,255, 1));
-        background-image: -moz-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-        background-image: -ms-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-        background-image: -o-linear-gradient(top, rgba(255,255,255,0), rgba(255,255,255, 1));
-        position: absolute; 
-        bottom: -10px; left: 0;
-        width:  205px;
-        height: 40px;
-      }
-    }
+    
     .form-box {
       background-color: white;
       padding: 20px;
