@@ -1,17 +1,12 @@
-%h1 Campaign Details
-
-#options
-  %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
-    %button Destroy Campaign 
-  %form{action: "/" }
-    %button « Back to Home
-
 #campaign-information
   #tabs
     %ul
       %li
         %a{href: "#campaign-overview"}
           %span Campaign Details
+      %li
+        %a{href: "#campaign-asks"}
+          %span Asks
       %li
         %a{href: "#basic-chart"}
           %span Analytics
@@ -22,6 +17,8 @@
     #campaign-overview
       #progress-wrapper
         =haml :campaign_progress, locals: {campaign: @campaign}
+        .embedded-url
+          %textarea.msg-text-area.embedded-url{type: 'textarea'} <iframe src=\"http://localhost:5000/campaign/#{@campaign.id}/progress-embed?color=coral\" frameborder=\"0\" scrolling=\"no\" width=\"640px\"></iframe>
         .goal-data
           %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
           .goal-cost
@@ -30,13 +27,19 @@
               .total=sprintf '$%.2f', (@campaign.goal * @sms_cost)
             -else
               ="unable to calculate cost to reach goal."
-      %h1= @campaign.title
-      .counts
-        %h3.unique_count
-          =pluralize(@ringer_count, 'Unique Ringer')
-          ="(#{@campaign.ringers.subscribed.count} subscribed)"
-        %h3.total_count
-          =pluralize(@ring_count, 'Total Ring')
+          .counts
+            %h3.unique_count
+              =pluralize(@ringer_count, 'Unique Ringer')
+              ="(#{@campaign.ringers.subscribed.count} subscribed)"
+            %h3.total_count
+              =pluralize(@ring_count, 'Total Ring')
+          #campaign-ringers
+            %h2 Recent Ringers
+            #ringers-numbers
+              %ul.ringers
+                -@ringers.each do |ringer|
+                  %li= ringer.pretty_phone_number
+              .number-fade-out 
       #campaign-details
         #voice-number
           =haml :voice_numbers, locals:{campaign: @campaign}
@@ -53,14 +56,11 @@
                 %h4 Cost per text message: Unknown.
             -else
               No Text number selected
-        #campaign-ringers
-          %h2 Recent Ringers
-          #ringers-numbers
-            %ul.ringers
-              -@ringers.each do |ringer|
-                %li= ringer.pretty_phone_number
-            .number-fade-out 
-      #asks
+        #options
+          %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
+            %button Destroy Campaign 
+    #campaign-asks
+      .rounded-box
         %h2= "ASKS"
         -@campaign.asks.each do |ask|
           %hr
@@ -95,7 +95,6 @@
     #basic-chart
       %h3 Statistic Analysis
       = high_chart("basic-chart", @basic_chart) 
-
 #country-options{style: 'display:none' }
   %form
     -if @countries.empty?
