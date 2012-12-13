@@ -78,6 +78,14 @@ module Crowdring
         "#{count} #{noun}#{count != 1 ? 's' : ''}"
       end
 
+      def limit_length(string, limit)
+        if string.length > limit
+          string[0..limit-3] + '...'
+        else
+          string
+        end
+      end
+
       def http_protected!(credentials)
         unless http_authorized?(credentials)
           response['WWW-Authenticate'] = %(Basic realm="Restricted Area")

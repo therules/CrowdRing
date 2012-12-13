@@ -39,6 +39,10 @@ module Crowdring
       super number
     end
 
+    def country
+      sms_number.country.name
+    end
+
     def ringers
       rings.all.ringer
     end

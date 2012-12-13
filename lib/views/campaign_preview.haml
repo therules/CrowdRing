@@ -1,17 +1,6 @@
-.campaign-preview
-  %a{href: "/campaigns##{campaign.id}"}
-    %h1=campaign.title
-  %label Voice Numbers
-  -if campaign.voice_numbers.empty?
-    %h2 No Voice Numbers
-  -else
-    -campaign.voice_numbers.each do |voice_number|
-      %h2= voice_number.pretty_phone_number
-  %label SMS Number
-  -if campaign.sms_number
-    %h2= campaign.sms_number.pretty_phone_number
-  -else
-    %h2 No SMS Number
-  %h2=pluralize(campaign.ringers.count, 'Ringer')
+.title
+  %a{href: "/campaigns##{campaign.id}"}=campaign.title
+.country=limit_length(campaign.country, 20)
+.ringer-count=pluralize(campaign.ringers.count, 'Ringer')
 
 
