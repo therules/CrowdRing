@@ -66,8 +66,8 @@
             %button Destroy Campaign 
     #campaign-asks
       %h2= "ASKS"
-      -@campaign.asks.each do |ask|
-        =haml :ask, locals: {ask: ask, type: ask.class.typesym}
+      -@campaign.asks.each_with_index do |ask, index|
+        =haml :ask, locals: {ask: ask, index: index + 1, type: ask.class.typesym}
         -unless @campaign.triggered_ask?(ask)
           %form{action: "/campaign/#{@campaign.id}/asks/#{ask.id}/trigger", method: "post"}
             %button{type:'submit'} Launch

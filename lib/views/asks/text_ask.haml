@@ -1,4 +1,4 @@
-%h3= "#{ask.title} - Request a text message"
+%h3= "#{index} - #{ask.title} - Request a text message"
 ="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
 =haml :message, locals: {message: ask.message}
 #texts
