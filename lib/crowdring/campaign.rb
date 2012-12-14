@@ -58,12 +58,11 @@ module Crowdring
     end
 
     def ring(ringer)
-      if rings.create(ringer: ringer).saved?
-        ringer.tag(tag)
-        update! ringer_count: ringer_count + 1
-        ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
-        ask.respond(ringer, sms_number.raw_number) if ask
-      end
+      update! ringer_count: ringer_count + 1 unless ringers.include?(ringer)
+      return unless rings.create(ringer: ringer).saved?
+      ringer.tag(tag)
+      ask = asks.reverse.find {|ask| ask.handle?(:voice, ringer) }
+      ask.respond(ringer, sms_number.raw_number) if ask
     end
 
     def text(ringer, message)
