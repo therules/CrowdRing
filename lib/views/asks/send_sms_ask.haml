@@ -1,4 +1,4 @@
 #ask-title
-  %h3= "#{index} - #{ask.title} - Send a text message"
-%div="#{ask.recipients.count} recipients"
-=haml :message, locals: {message: ask.message}
+  %h3= "#{index} - #{ask.title} - Send a text message has ""#{ask.recipients.count} recipients"
+#ask-information
+  =haml :message, locals: {message: ask.message}

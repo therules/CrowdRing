@@ -203,7 +203,7 @@ body {
     padding-left: 3px;
     margin-top: 3px;
 
-    li {
+      li {
       color: #FFA849;
     }
   }
@@ -251,6 +251,51 @@ body {
   #campaign-information {  
     #campaign-asks {
       .tab-content;
+
+      #ask-information{
+        margin-left: 10px;
+
+        #message{
+          margin-left: 30px;
+          vertical-align: baseline;
+          font-weight: bold;
+
+          table{
+            tbody{
+              font-weight: 550;
+              color: #669;
+              padding: 9px 8px 0;
+              margin-left: 100px; 
+
+              .constrains{
+                border-bottom : 2px solid #6678B1;
+              }
+              .msg-text{
+                padding-left: 80px;
+                border-bottom : 2px solid #6678B1;
+             }
+             li{
+                font-weight: 550;
+                color: #669;
+                padding: 9px 8px 0;
+                margin-left: 100px;
+              }
+           }
+            thead{
+              font-weight: bolder;
+              font-size: 16px;
+              font-weight: normal;
+              text-align: center;
+
+              color: #039;
+              padding: 10px 8px;
+              border-bottom: 2px solid #6678B1;
+              }
+            }
+          }
+        }
+      }
+
     }
 
     #campaign-analytics {
@@ -331,14 +376,6 @@ body {
         word-wrap: break-word; 
       }
     }
-
-    #message{
-      margin: 10px;
-      li{
-        color: @dark-blue;
-      }
-    }
-
     
     .form-box {
       background-color: white;
@@ -391,6 +428,7 @@ body {
     margin-bottom: 10px;
     background-color: #F0F0F0;
     box-shadow: 0px 0px 5px #888888 inset;
+    vertical-align: bottom;
     .rounded-corners;
   }
   .iframe-text-area {
@@ -403,6 +441,7 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     background-color: #F0F0F0;
+    vertical-align: bottom;
     box-shadow: 0px 0px 5px #888888 inset;
     .rounded-corners;
   }

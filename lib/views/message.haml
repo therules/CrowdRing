@@ -1,15 +1,15 @@
+%h4 Messages
 #message
-  %h3 Messages
-  #messages 
-    -message.nondefault_messages.each do |fm|
-      %label If:
-      .message
-        -fm.tag_filter.constraints.each do |constraint|
-          %li= constraint.to_readable
-      %label Then:
-      .message
-        = "\"#{fm.message_text}\""
-    -if message.default_message && !message.default_message.empty?
-      %label Default:
-      .message
-        = "\"#{message.default_message}\""
+  %table
+    %thead
+      %tr
+        %th{width: "400px"} Message Constraints
+        %th{width: "200px"} Message Text
+
+    %tbody
+      - message.nondefault_messages.each do |fm|
+        %tr
+          %td.constrains
+            - fm.tag_filter.constraints.each do |constraint|
+              %li= constraint.to_readable
+          %td.msg-text= fm.message_text

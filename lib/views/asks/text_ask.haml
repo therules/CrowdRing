@@ -1,6 +1,7 @@
-%h3= "#{index} - #{ask.title} - Request a text message"
-="#{ask.recipients.count} recipients / #{ask.respondents.count} respondents"
-=haml :message, locals: {message: ask.message}
-#texts
-  -ask.texts.each do |t|
-    %li= t.message
+%h3= "#{index} - #{ask.title} - Request a text message has " "#{ask.recipients.count} recipients and #{ask.respondents.count} respondents"
+#ask-information
+  =haml :message, locals: {message: ask.message}
+  %h4 Received Messages
+  #texts
+    -ask.texts.each do |t|
+      %li= t.message
