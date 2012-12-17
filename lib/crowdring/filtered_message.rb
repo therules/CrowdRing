@@ -13,7 +13,7 @@ module Crowdring
     end
 
     def accept?(ringer, sms_number)
-      tag_filter.accept?(ringer) && ringer.subscribed? && is_local?(ringer.phone_number, sms_number)
+      tag_filter.accept?(ringer) && ringer.subscribed? && local?(ringer.phone_number, sms_number)
     end
 
     def send_message(params)
@@ -27,7 +27,7 @@ module Crowdring
       end
     end
 
-    def is_local?(phone_number, sms_number)
+    def local?(phone_number, sms_number)
       ringer_number = Phoner::Phone.parse phone_number
       sms_number = Phoner::Phone.parse sms_number
       ringer_number.country_code == sms_number.country_code

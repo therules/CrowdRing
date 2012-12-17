@@ -20,7 +20,7 @@
       #embedded-url
         %h3 Embed progress bar
         %div
-          %textarea.iframe-text-area.embedded-url{type: 'textarea'} <iframe src="https://#{ENV['SERVER_NAME']}/campaign/#{@campaign.id}/progress-embed?color=coral" frameborder="0" scrolling="no" width="100%"></iframe>
+          %textarea.iframe-text-area.embedded-url{type: 'textarea'} <iframe src="#{ENV['SERVER_NAME']}/campaign/#{@campaign.id}/progress-embed?color=coral" frameborder="0" scrolling="no" width="100%"></iframe>
 
       .goal-data
         %a.edit-goal-link{href: "/campaign/#{@campaign.id}/edit-goal"}= "edit goal: #{@campaign.goal}"
