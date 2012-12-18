@@ -79,11 +79,7 @@ module Crowdring
       end
 
       def limit_length(string, limit)
-        if string.length > limit
-          string[0..limit-3] + '...'
-        else
-          string
-        end
+        string.length > limit ? string[0..limit-3] + '...' : string
       end
 
       def http_protected!(credentials)
@@ -193,7 +189,7 @@ module Crowdring
         flash[:errors] = "Failed to remove number|" + unsubscribe_number.errors.full_messages.join('|')
       end
 
-      redirect to('/')
+      redirect to("/")
     end
 
     get '/campaigns' do
@@ -215,7 +211,7 @@ module Crowdring
         @goal = Integer(params[:campaign][:goal])
       rescue ArgumentError
         flash[:errors] = "Must set a valid goal"
-        redirect to('campaign/new')
+        redirect to("campaign/new")
       end
 
       unless params[:campaign][:regions]
@@ -544,21 +540,6 @@ module Crowdring
       else
         flash[:errors] = agg_campaign.errors.full_messages.join('|')
         redirect to("/aggregate_campaigns/#{params[:name]}/edit")
-      end
-    end
-
-    get '/tags/new' do
-      haml :tag_new
-    end
-
-    post '/tags/create' do
-      tag = Tag.from_str(params[:type] + ':' + params[:value])
-      if tag.saved?
-        flash[:notice] = "#{tag} tag created"
-        redirect to('/')
-      else
-        flash[:errors] = tag.errors.full_messages.join('|')
-        redirect to('/tags/new')
       end
     end
 
