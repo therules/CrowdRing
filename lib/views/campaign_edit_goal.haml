@@ -1,10 +1,11 @@
 .rounded-box
   %h1="Edit goal for #{@campaign.title}"
 
-  %form{action: "/campaign/#{@campaign.id}/edit-goal", method: 'post'}
+  %form{action: "/campaign/#{@campaign.id}/goal/update", method: 'post'}
     .field
       %h3 Set a goal for your campaign:
       %p This is the number of people you expect to ring all of your numbers
       %input.goal-input{type: 'text', name: 'goal', value: @goal}
     %button{type: 'submit'} Update Goal
+
     

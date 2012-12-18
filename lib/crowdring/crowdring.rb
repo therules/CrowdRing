@@ -82,6 +82,22 @@ module Crowdring
         string.length > limit ? string[0..limit-3] + '...' : string
       end
 
+      def valid_goal(string)
+        begin
+          string = string.sub! /\A0+/,''
+          number = Integer(string)
+          if number < 0 || number >= 9999999999
+            flash[:errors] = "Goal must be smaller than one milliard and greater than 0."
+            return false
+          end
+        rescue ArgumentError
+          flash[:errors] = "Must set a valid goal"
+          return false
+        end
+        return number
+      end
+
+
       def http_protected!(credentials)
         unless http_authorized?(credentials)
           response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -207,13 +223,10 @@ module Crowdring
     get '/campaign/new/configure' do
       @title = params[:campaign][:title]
 
-      begin
-        @goal = Integer(params[:campaign][:goal])
-      rescue ArgumentError
-        flash[:errors] = "Must set a valid goal"
+      unless @goal = valid_goal(params[:campaign][:goal])
         redirect to("campaign/new")
       end
-
+      p @goal
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
         redirect to('campaign/new')
@@ -460,8 +473,12 @@ module Crowdring
       end
     end
 
-    post '/campaign/:id/edit-goal' do
+    post '/campaign/:id/goal/update' do
       campaign = Campaign.get(params[:id])
+      unless goal  = valid_goal(params[:goal])
+        redirect to("campaign/#{params[:id]}/edit-goal")
+      end
+
       if campaign.update(goal: params[:goal])
         flash[:notice] = "Campaign goal updated"
         redirect to("/campaigns##{params[:id]}")
