@@ -82,21 +82,13 @@ module Crowdring
         string.length > limit ? string[0..limit-3] + '...' : string
       end
 
-      def valid_goal(string)
-        begin
-          string = string.sub! /\A0+/,''
-          number = Integer(string)
-          if number < 0 || number >= 9999999999
-            flash[:errors] = "Goal must be smaller than one milliard and greater than 0."
-            return false
-          end
-        rescue ArgumentError
-          flash[:errors] = "Must set a valid goal"
-          return false
-        end
-        return number
-      end
 
+      def find_number(loc)
+        country, region = loc.split('|')
+        res = {country: country}
+        res[:region] = region if region
+        number = NumberPool.find_number(res)
+      end
 
       def http_protected!(credentials)
         unless http_authorized?(credentials)
@@ -181,11 +173,8 @@ module Crowdring
         flash[:errors] = 'Please select a region'
         redirect to('/unsubscribe_numbers/new')
       end
-
-      country, region = params[:region].split('|')
-      res = {country: country}
-      res[:region] = region if region
-      number = NumberPool.find_number(res)
+      
+      number = find_number(params[:region])
 
       unsubscribe_number = AssignedUnsubscribeVoiceNumber.new(phone_number: number)
       if unsubscribe_number.save
@@ -222,11 +211,7 @@ module Crowdring
 
     get '/campaign/new/configure' do
       @title = params[:campaign][:title]
-
-      unless @goal = valid_goal(params[:campaign][:goal])
-        redirect to("campaign/new")
-      end
-      p @goal
+      
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
         redirect to('campaign/new')
@@ -323,11 +308,7 @@ module Crowdring
         redirect to("/campaign/#{params[:id]}/voice_numbers/new")
       end
 
-      country, region = params[:region].split('|')
-      res = {country: country}
-      res[:region] = region if region
-      number = NumberPool.find_number(res)
-
+      number = find_number(params[:region])
       campaign = Campaign.get(params[:id])
       campaign.voice_numbers.new(phone_number: number, description: params[:description])
       if campaign.save
@@ -475,11 +456,9 @@ module Crowdring
 
     post '/campaign/:id/goal/update' do
       campaign = Campaign.get(params[:id])
-      unless goal  = valid_goal(params[:goal])
-        redirect to("campaign/#{params[:id]}/edit-goal")
-      end
-
-      if campaign.update(goal: params[:goal])
+      campaign.goal = params[:goal]
+      if campaign.valid?
+        campaign.save
         flash[:notice] = "Campaign goal updated"
         redirect to("/campaigns##{params[:id]}")
       else

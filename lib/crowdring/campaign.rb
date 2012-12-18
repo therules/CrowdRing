@@ -23,6 +23,7 @@ module Crowdring
     
 
     validates_with_method :voice_numbers, :at_least_one_assigned_number?
+    validates_with_method :goal, :valid_range?
 
     before :create do
       asks << OfflineAsk.create(title: "Offline Ask - #{title}")
@@ -99,6 +100,10 @@ module Crowdring
     end
 
     private
+
+    def valid_range?
+      (0...9999999999).include?(goal)
+    end
 
     def at_least_one_assigned_number?
       if @voice_numbers && !@voice_numbers.empty?
