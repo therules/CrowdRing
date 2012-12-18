@@ -80,11 +80,11 @@
       %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
         %button Add new ask
 
-    #campaign-export.form-box
+    #campaign-export
       %h3 Export to CSV
       %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
         #filter-container
-          #export-filter.filter-buttons
+          #export-filter
             %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
             %label.all-label{for: 'all2'}= "All #{@ringer_count}"
             %input#country2{type: 'radio', name: 'filter', value: 'country:'}
@@ -92,7 +92,8 @@
         #filter-options{style: 'display:none'}
         -@all_fields.each do |field|
           %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
-        %button#exportbutton Export
+        %hr  
+        %button Export
 
     #campaign-analytics
       #basic-chart

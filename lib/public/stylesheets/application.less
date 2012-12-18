@@ -37,6 +37,37 @@
   height: 0;
 }
 
+header {
+    padding: 4px;
+    font-family: @body-font;
+    border-bottom: 1px solid #eee;
+    height: 100px;
+    position: relative;
+
+    img {
+      display: inline-block;
+      height: 100%;
+      vertical-align: bottom;
+    }
+
+    h1 {
+      display: inline-block;
+      margin: 0 0 0 8px;
+      vertical-align: middle;
+      font-size: 70px;
+      color: @h1-color;
+    }
+
+    #user-header {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      a {
+        color: @h1-color;
+      }
+    }
+  }
+
 body {
   font-family: @body-font;
   background: @background-dark;
@@ -95,36 +126,7 @@ body {
     float: right;
   }
 
-  header {
-    padding: 4px;
-    font-family: @body-font;
-    border-bottom: 1px solid #eee;
-    height: 100px;
-    position: relative;
-
-    img {
-      display: inline-block;
-      height: 100%;
-      vertical-align: bottom;
-    }
-
-    h1 {
-      display: inline-block;
-      margin: 0 0 0 8px;
-      vertical-align: middle;
-      font-size: 70px;
-      color: @h1-color;
-    }
-
-    #user-header {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      a {
-        color: @h1-color;
-      }
-    }
-  }
+  
 
   .unsubscribe-number {
     form {
@@ -145,7 +147,7 @@ body {
       display:inline;
       margin-right: 10px;
     }
-    min-width: 250px;
+    min-width: 300px;
     float:left;
     margin: 0 10px 0 10px;
     padding: 5px;
@@ -233,15 +235,6 @@ body {
     display: inline-block;
   }
 
-
-  #sms-number {
-    margin-top: 40px;
-  }
-
-  #selected-regions {
-    margin: 10px;
-  }
-
   .aggregate-campaign-preview {
     form {
       display: inline;
@@ -300,6 +293,7 @@ body {
     label{
       color: @dark-blue;
     }
+
     #campaign-analytics {
       .tab-content;
     }
@@ -378,48 +372,16 @@ body {
         word-wrap: break-word; 
       }
     }
-    
-    .form-box {
-      background-color: white;
-      padding: 20px;
-      .rounded-corners;
 
-      button {
-        float: right;
-      }
-
-      form {
-        margin-left: 8px;
-      }
-
-      #filter-container {
-        display: table;
-        width: 100%;
-      }
-
-      #filter-options {
-        width: 90%;
-        margin: 0px auto;
-        padding: 5px 10px;
-        background-color: #F0F0F0;
-        box-shadow: 0px 0px 5px #888888 inset;
-        border-bottom-left-radius: 5px;
-        border-bottom-right-radius: 5px;
-      }
-
-      .filter-buttons {
-        display: table-row;
-      }
-
-      label {
-        color: @dark-blue;
-        display: table-cell;
+    #campaign-export{
+      .tab-content;
+      label{
+        min-width: 50%;
       }
     }
   }
-  label{
-    color: @dark-blue;
-  }
+
+  
   .msg-text-area {
     margin-top: 5px;
     width: 100%;
