@@ -231,7 +231,8 @@ module Crowdring
       numbers = NumberPool.find_numbers(regions)
       @number_summary = numbers.zip(regions).map {|number, region| {number: number, region: region}}
       @sms_number = NumberPool.find_number(regions.first, :sms) || NumberPool.find_number({country: regions.first[:country]}, :sms)
-
+      @goal = params[:campaign][:goal].to_i
+      
       case params[:init_ask]
       when 'missed_call'
         haml :campaign_new_missed_call
