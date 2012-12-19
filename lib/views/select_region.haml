@@ -1,0 +1,5 @@
+.field
+  %select{name: 'region'}
+    %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
+    -@voice_numbers.each_with_index do |n, i|
+      %option{value: "#{n[:country]}|#{n[:region]}"}= "#{n[:country]} - #{n[:region] || 'General'}"

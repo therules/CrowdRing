@@ -17,10 +17,8 @@
       .field
         %h3 Select a region for each voice number
         #selected-regions
-        %select.region-select
-          %option{value:"", selected: 'selected', disabled:"disabled"} Select a region
-          -@voice_numbers.each_with_index do |n, i|
-            %option= "#{n[:country]} - #{n[:region] || 'General'}"
+        .region-select
+          =haml :select_region
       .field
         %h3 Select the initial ask
         %div

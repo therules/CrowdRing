@@ -9,7 +9,7 @@ removeOutsideCountry = (country, select) ->
       numRemoved += 1
 
 $ ->
-  $('select.region-select').change (evt) ->
+  $('select').change (evt) ->
     index = $('option:selected', this).index() - 1
     region = window.numbers[index]
     $('#selected-regions').append("#{$(this).val()}<br>")
