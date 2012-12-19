@@ -110,7 +110,6 @@ module Crowdring
     before /(voice|sms)response/ do
       /(voice|sms)response\/(.*)/.match request.fullpath
       Crowdring.statsd.increment "#{$1}_received.count"
-
       service = $2.partition('?')[0]
       credentials = CompositeService.instance.credentials_for(service)
       http_protected! credentials if credentials
@@ -277,7 +276,6 @@ module Crowdring
     post '/campaign/create/double_opt_in' do
       campaign = Campaign.new(params[:campaign])
       if campaign.save
-        message = params[:sms_response]
         filtered_messages = params[:sms_responses].zip(campaign.voice_numbers).map do |msg, number|
           FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
         end

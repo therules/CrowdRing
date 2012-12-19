@@ -48,34 +48,17 @@ describe Crowdring::Message do
     intro_response.send_message(from: @number, to: @ringer)
   end
 
-  it 'should send the first matched message to a ringer' do
+  it 'should send the first matched message to a ringer'  do
     pittsburgh = Crowdring::Tag.from_str('area code:412')
     chicago = Crowdring::Tag.from_str('area code:312')
-    fm = Crowdring::TagFilter.create(constraints: [pittsburgh.to_s])
-    fm2 = Crowdring::TagFilter.create(constraints: [chicago.to_s])
+    fm = Crowdring::FilteredMessage.new(constraints: [Crowdring::HasConstraint.create(tag: pittsburgh)], message_text: 'pittsburgh')
+    fm2 = Crowdring::FilteredMessage.new(constraints: [Crowdring::HasNotConstraint.create(tag: chicago)], message_text: 'chicago')
 
-    intro_response = Crowdring::Message.create(default_message:'default')
-    intro_response.add_message(fm2, 'chicago')
-    intro_response.add_message(fm, 'pittsburgh')
-
+    intro_response = Crowdring::Message.create(filtered_messages: [fm, fm2])
+    
     @ringer.stub(:tags) { [pittsburgh] }
     @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'pittsburgh')
 
     intro_response.send_message(from: @number, to: @ringer)
   end
-
-  it 'should send the default message if no filters match' do
-    pittsburgh = Crowdring::Tag.from_str('area code:412')
-    chicago = Crowdring::Tag.from_str('area code:312')
-    fm2 = Crowdring::TagFilter.create(constraints: [chicago.to_s])
-
-    intro_response = Crowdring::Message.create(default_message:'default')
-    intro_response.add_message(fm2, 'chicago')
-
-    @ringer.stub(:tags) { [pittsburgh] }
-    @fooservice.should_receive(:send_sms).once.with(from: @number, to: @number2, msg: 'default')
-
-    intro_response.send_message(from: @number, to: @ringer)
-  end
-
 end

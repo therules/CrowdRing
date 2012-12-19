@@ -57,7 +57,7 @@ describe Crowdring::FilteredMessage do
     fm.send_message(from: @number, to: ringer).should be_false
   end
 
-  it 'should not send sms to a ringer who has international phone number' ,focus: true do
+  it 'should not send sms to a ringer who has international phone number' do
     tag_filter = Crowdring::TagFilter.create(constraints: ['area code: 312'])
     chicago = Crowdring::Tag.from_str('area code:312')
 

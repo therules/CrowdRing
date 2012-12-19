@@ -66,7 +66,7 @@ module Crowdring
     end
 
     describe 'campaign fetching' do
-      it 'should successfully fetch a campaign at campaign/id' , focus: true do
+      it 'should successfully fetch a campaign at campaign/id' do
         CompositeService.instance.add('foo', LoggingService.new(@numbers))
         c = Campaign.create(title: 'title', voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
         get "/campaign/#{c.id}"
@@ -315,7 +315,7 @@ module Crowdring
         new_ask.title.should eq('Do not open bananas!')
       end
 
-      it 'should be able to edit ask message' , focus: true do
+      it 'should be able to edit ask message'  do
         message = Crowdring::Message.create(default_message: 'Blah')
         new_ask = Crowdring::SendSMSAsk.create(title: 'Do you like pre-open bananas?', message: message)
         @c.asks << new_ask
