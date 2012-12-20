@@ -44,5 +44,6 @@ module Crowdring
     add_field 'area_code', 'Area Code'
     add_field 'country_abbreviation', 'Country Abbreviation'
     add_field 'country_name', 'Country'
+    add_field 'campaign_support', 'Joined Campaign'
   end
 end

@@ -20,5 +20,8 @@ module Crowdring
       ringer.phone_number
     end
 
+    def campaign_support
+      campaign.title
+    end
   end
 end

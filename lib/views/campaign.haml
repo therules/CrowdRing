@@ -91,7 +91,8 @@
             %label{for: 'country2'} Country
         #filter-options{style: 'display:none'}
         -@all_fields.each do |field|
-          %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
+          %li
+            %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
         %hr  
         %button Export
 
