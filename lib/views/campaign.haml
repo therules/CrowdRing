@@ -85,7 +85,6 @@
       %form{name: 'export', action: "/csv", method: 'get'}
         =haml :export_csv
         %input{type: 'hidden', name:'option', value: "#{@campaign.id}"}
-        %button{type:'submit'} Export
 
     #campaign-analytics
       #basic-chart
