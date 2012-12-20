@@ -24,9 +24,11 @@
   %h3= "Total Unsubscribes: #{@unsubscribed_count}"
 %h2 Aggregate Campaigns
 .rounded-box
-  %p Use these names in the Purpose Platform to sync the ringer count
+  
   -@aggregate_campaigns.each do |agg_camp|
     =haml :aggregate_campaign_preview, locals: {aggregate_campaign: agg_camp}
+  .note Use these names in the Purpose Platform to sync the ringer count
+  .note Please put "https://campaign.crowdring.org" as Crowdring URL in Purpose Platform.
   %form{action: '/aggregate_campaigns/new', method: 'get'}
     %hr
     %button New Aggregate Campaign
