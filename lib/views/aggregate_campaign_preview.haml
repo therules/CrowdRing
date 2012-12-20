@@ -3,3 +3,6 @@
   ="has #{aggregate_campaign.ringer_count} ringers from #{aggregate_campaign.campaign_summary}"
   %form{action: "/aggregate_campaigns/#{aggregate_campaign.name}/edit", method: 'get'}
     %button{type: 'submit'} edit
+
+  %form{action: "/aggregate_campaigns/#{aggregate_campaign.name}/destroy", method: 'post'}
+    %button{type: 'submit'} delete

@@ -13,7 +13,7 @@ module Crowdring
     helpers Sinatra::Jsonp
     register Sinatra::SinatraAuthentication
     enable :sessions
-    use Rack::Flash
+    use Rack::Flash, sweep: true
     set :logging, true
     set :root, File.dirname(__FILE__) + '/..'
     set :sinatra_authentication_view_path, settings.views + "/auth/"
@@ -520,6 +520,16 @@ module Crowdring
       @aggregate_campaign = AggregateCampaign.get(params[:name])
 
       haml :aggregate_campaign_edit
+    end
+
+    post '/aggregate_campaigns/:name/destroy' do
+      agg_campaign = AggregateCampaign.get(params[:name])
+      if agg_campaign.destroy
+        flash[:notice] = "Aggregate campaign #{params[:name]} has been removed"
+      else
+        flash[:errors] = "Failed to remove aggregate campaign #{params[:name]}."
+      end
+      redirect to('/')
     end
 
     post '/aggregate_campaigns/:name/update' do

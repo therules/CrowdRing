@@ -5,12 +5,13 @@
       %h3 Sorry, no voice numbers currently available.
     -else 
       .field
+        %label Description (Please less than 50 characters):
+        %input.title-input{type: 'text', name: 'description', placeholder: 'Billboard, Radio, ...'}
+      .field
         %label Please select a region for the new voice number.
         =haml :select_region
-      .field
-        %label Description (Please less than 50 characters):
-        %input{type: 'text', name: 'description', placeholder: 'Billboard, Radio, ...'}
-      %button{type: 'submit'} Assign
+
+    %button.assign-button{type: 'submit'} Assign
   %hr
   %form{action: "/campaigns##{@campaign.id}", method: 'get'}
-    %button « Back
+    %button « Back to campaign page
