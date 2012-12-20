@@ -155,37 +155,6 @@ module Crowdring
       end
     end
 
-    describe 'message broadcasting' do
-      before(:each) do
-        @sent_to = []
-        @campaign = Campaign.create(title: @number, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number)
-        fooresponse = double('fooresponse', callback?: false, from: @number2, to: @number)
-        fooservice = double('fooservice', build_response: 'fooResponse',
-            sms?: true,
-            transform_request: fooresponse,
-            numbers: [@number])
-        fooservice.stub(:broadcast) {|_,_,to_nums| @sent_to.concat to_nums}
-        Server.service_handler.add('foo', fooservice)
-      end
-
-
-      it 'should broadcast a message to all ringers of a campaign' do
-        r1 = Crowdring::Ringer.create(phone_number: @number2)
-        r2 = Crowdring::Ringer.create(phone_number: @number3)
-        @campaign.voice_numbers.first.ring(r1)
-        @campaign.voice_numbers.first.ring(r2)
-        
-        post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
-        @sent_to.should include(@number2)
-        @sent_to.should include(@number3)
-      end
-
-      it 'should redirect to the campaign page after broadcasting' do
-        post "/campaign/#{@campaign.id}/broadcast", {message: 'message', filter: 'all'}
-        last_response.should be_redirect
-        last_response.location.should match("campaigns##{Regexp.quote(@campaign.id.to_s)}$")
-      end
-    end
 
     describe 'campaign exporting' do
       before(:each) do

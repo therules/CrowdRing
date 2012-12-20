@@ -1,8 +1,10 @@
-#new-campaign
-  %form{action: '/campaign/new', method: 'get'}
-    %button New Campaign
-  %form{action: '/export_csv', method:'get'}
-    %button Export all supporters
+#options
+  #new-campaign
+    %form{action: '/campaign/new', method: 'get'}
+      %button New Campaign
+  #export-csv
+    %form{action: '/export_csv', method:'get'}
+      %button Export all supporters
 %h2 Campaigns
 .campaign-previews
   -if @campaigns.empty?

@@ -500,23 +500,6 @@ module Crowdring
       end
     end
 
-    post '/campaign/:id/broadcast' do
-      campaign = Campaign.get(params[:id])
-      from = params[:from] || campaign.sms_number.raw_number
-      message = params[:message]
-      unless message
-        flash[:errors] = "Ask needs a prompt to launch"
-        redirect to("/campaigns##{campaign.id}")
-      end
-
-      rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).rings)
-      to = rings.map(&:ringer).map(&:phone_number)
-
-      Server.service_handler.broadcast(from, message, to)
-
-      flash[:notice] = "Message broadcast"
-      redirect to("/campaigns##{campaign.id}")
-    end
 
     get '/aggregate_campaigns/new' do
       @campaigns = Campaign.all
