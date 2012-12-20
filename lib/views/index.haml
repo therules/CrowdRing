@@ -19,6 +19,7 @@
   -@unsubscribe_numbers.each do |n|
     = haml :unsubscribe_number, locals: {number: n}
   %form{action: '/unsubscribe_numbers/new', method: 'get'}
+    %hr
     %button Add Another
   %h3= "Total Unsubscribes: #{@unsubscribed_count}"
 %h2 Aggregate Campaigns
@@ -27,4 +28,5 @@
   -@aggregate_campaigns.each do |agg_camp|
     =haml :aggregate_campaign_preview, locals: {aggregate_campaign: agg_camp}
   %form{action: '/aggregate_campaigns/new', method: 'get'}
+    %hr
     %button New Aggregate Campaign

@@ -11,5 +11,6 @@
         %label Description (Please less than 50 characters):
         %input{type: 'text', name: 'description', placeholder: 'Billboard, Radio, ...'}
       %button{type: 'submit'} Assign
+  %hr
   %form{action: "/campaigns##{@campaign.id}", method: 'get'}
     %button « Back
