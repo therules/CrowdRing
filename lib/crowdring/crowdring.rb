@@ -156,6 +156,7 @@ module Crowdring
       @unsubscribe_numbers = AssignedUnsubscribeVoiceNumber.all
       @unsubscribed_count = Ringer.unsubscribed.count
       @aggregate_campaigns = AggregateCampaign.all
+      @all_fields = CsvField.all_fields
 
       haml :index
     end
@@ -422,9 +423,9 @@ module Crowdring
         @ring_count = @campaign.rings.count
         @ringer_count = @campaign.ringers.count
         @countries = @campaign.ringers.map(&:country).uniq
-        @all_fields = CsvField.all_fields
         @basic_chart = HighChartsBuilder.basic_stats(@campaign)
         @sms_cost = SMSPrices.price_for(CompositeService.instance.service_for(:sms, @campaign.sms_number.raw_number), @campaign.sms_number)
+        @all_fields = CsvField.all_fields
 
         haml :campaign, layout: !request.xhr?
       else
@@ -473,9 +474,15 @@ module Crowdring
       haml :campaign_progress_embedded, layout: false
     end
 
+    get '/export_csv' do
+      @all_fields = CsvField.all_fields
+      haml :campaign_export_csv
+    end
+    
     get '/campaign/:id/csv' do
-      attachment("#{params[:id]}.csv")
-      rings = Filter.create(params[:filter]).filter(Campaign.get(params[:id]).unique_rings)
+      campaign = Campaign.get(params[:id])
+      attachment("#{campaign.title}-#{Time.now}.csv")
+      rings = campaign.unique_rings
       fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
         csv << fields.map {|f| f.display_name }
@@ -483,6 +490,15 @@ module Crowdring
       end
     end
 
+    get '/csv' do
+      attachment("All-#{Time.now}.csv")
+      rings = Ring.all 
+      fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
+      CSV.generate do |csv|
+        csv << fields.map {|f| f.display_name }
+        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) } }
+      end
+    end
 
     post '/campaign/:id/broadcast' do
       campaign = Campaign.get(params[:id])

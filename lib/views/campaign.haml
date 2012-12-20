@@ -83,18 +83,8 @@
     #campaign-export
       %h3 Export to CSV
       %form{name: 'export', action: "/campaign/#{@campaign.id}/csv", method: 'get'}
-        #filter-container
-          #export-filter
-            %input#all2{type: 'radio', name: 'filter', value: 'all', checked: 'checked'}
-            %label.all-label{for: 'all2'}= "All #{@ringer_count}"
-            %input#country2{type: 'radio', name: 'filter', value: 'country:'}
-            %label{for: 'country2'} Country
-        #filter-options{style: 'display:none'}
-        -@all_fields.each do |field|
-          %li
-            %input{type: 'checkbox', name: "fields[#{field.id}]", value: 'yes', checked:field.default? && 'checked'}= field.display_name
-        %hr  
-        %button Export
+        =haml :export_csv
+        %button{type:'submit'} Export
 
     #campaign-analytics
       #basic-chart
