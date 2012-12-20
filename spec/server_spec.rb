@@ -162,7 +162,7 @@ module Crowdring
       end
 
       it 'should return a csv file' do
-        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: {phone_number: 'yes', created_at: 'yes'}}
+        get "/csv", {filter: 'all', fields: {phone_number: 'yes', created_at: 'yes'}, option:'all'}
         last_response.header['Content-Disposition'].should match('attachment')
         last_response.header['Content-Disposition'].should match('\.csv')
       end
@@ -183,7 +183,7 @@ module Crowdring
         @campaign.voice_numbers.first.ring(r2)
         
         fields = {phone_number: 'yes', created_at: 'yes'}
-        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
+        get "/csv", {filter: 'all', fields: fields, option: "#{@campaign.id}"}
         verify_csv(last_response.body, @campaign.unique_rings, fields.keys)
       end
  
@@ -194,7 +194,7 @@ module Crowdring
         @campaign.voice_numbers.first.ring(r2)
          
         fields = {country_code: 'yes'}
-        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
+        get "/csv", {filter: 'all', fields: fields, option: "#{@campaign.id}"}
         verify_csv(last_response.body, @campaign.ringers, fields.keys)
       end
 
@@ -205,7 +205,7 @@ module Crowdring
         @campaign.voice_numbers.first.ring(r2)
         
         fields = {area_code: 'yes'}
-        get "/campaign/#{@campaign.id}/csv", {filter: 'all', fields: fields}
+        get "/csv", {filter: 'all', fields: fields, option: "#{@campaign.id}"}
         verify_csv(last_response.body, @campaign.ringers, fields.keys)
       end
     end

@@ -479,20 +479,17 @@ module Crowdring
       haml :campaign_export_csv
     end
     
-    get '/campaign/:id/csv' do
-      campaign = Campaign.get(params[:id])
-      attachment("#{campaign.title}-#{Time.now}.csv")
-      rings = campaign.unique_rings
-      fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
-      CSV.generate do |csv|
-        csv << fields.map {|f| f.display_name }
-        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) } }
-      end
-    end
-
     get '/csv' do
-      attachment("All-#{Time.now}.csv")
-      rings = Ring.all 
+      option = params['option']
+      case option
+      when 'all'
+        rings = Ring.all
+        attachment("All-#{Time.now}.csv")
+      else
+        campaign = Campaign.get(option)
+        attachment("#{campaign.title}-#{Time.now}.csv")
+        rings = campaign.unique_rings
+      end
       fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
         csv << fields.map {|f| f.display_name }
