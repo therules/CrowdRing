@@ -46,8 +46,6 @@ module Crowdring
           number = Phoner::Phone.parse(raw_number) || ShortCode.parse(raw_number)
 
           country = number.country.name
-          p 'HERE IS THE NUMBER'
-          p number
           regions = Regions.strs_for(number).join(', ')
           key = country + regions
 
