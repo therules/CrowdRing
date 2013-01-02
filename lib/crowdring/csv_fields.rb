@@ -15,6 +15,7 @@ module Crowdring
     end
 
     class << self
+      
       def add_field(id, display_name, opts={})
         field = CsvField.new(id, display_name)
         @fields << field
@@ -45,5 +46,6 @@ module Crowdring
     add_field 'country_abbreviation', 'Country Abbreviation'
     add_field 'country_name', 'Country'
     add_field 'campaign_support', 'Joined Campaign'
+    add_field 'email', 'Email'
   end
 end

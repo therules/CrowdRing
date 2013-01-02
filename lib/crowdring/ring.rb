@@ -23,5 +23,9 @@ module Crowdring
     def campaign_support
       campaign.title
     end
+
+    def email
+      ringer.email
+    end
   end
 end
