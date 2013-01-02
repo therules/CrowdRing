@@ -27,7 +27,6 @@ module Crowdring
         used_voice_numbers = AssignedVoiceNumber.all.map(&:raw_number)
         
         avail_voice_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
-        p avail_voice_numbers
         @voice_numbers = avail_voice_numbers
 
         used_sms_numbers = AssignedSMSNumber.all.map(&:raw_number)
@@ -47,6 +46,8 @@ module Crowdring
           number = Phoner::Phone.parse(raw_number) || ShortCode.parse(raw_number)
 
           country = number.country.name
+          p 'HERE IS THE NUMBER'
+          p number
           regions = Regions.strs_for(number).join(', ')
           key = country + regions
 
