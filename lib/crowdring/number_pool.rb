@@ -25,7 +25,9 @@ module Crowdring
 
       def initialize
         used_voice_numbers = AssignedVoiceNumber.all.map(&:raw_number)
+        
         avail_voice_numbers = CompositeService.instance.voice_numbers - used_voice_numbers
+        p avail_voice_numbers
         @voice_numbers = avail_voice_numbers
 
         used_sms_numbers = AssignedSMSNumber.all.map(&:raw_number)
