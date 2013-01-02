@@ -106,11 +106,7 @@ module Crowdring
     end
 
     def at_least_one_assigned_number?
-      if @voice_numbers && !@voice_numbers.empty?
-        true
-      else
-        [false, 'Must assign at least one number']
-      end
+      @voice_numbers && !@voice_numbers.empty? ? true : [false, 'Must assign at least one number']
     end
   end
 end

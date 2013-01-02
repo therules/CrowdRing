@@ -83,12 +83,23 @@ module Crowdring
       end
 
 
-      def find_number(loc)
+      def find_number(loc, type=:voice)
         country, region = loc.split('|')
         res = {country: country}
         res[:region] = region if region
-        number = NumberPool.find_number(res)
+        number = NumberPool.find_single_number(res, type)
       end
+
+
+      def get_regions(loc)
+        res = loc.map do |str|
+          country, region = str.split('|')
+          res = {country: country}
+          res[:region] = region if region
+          res
+        end
+      end
+
 
       def http_protected!(credentials)
         unless http_authorized?(credentials)
@@ -211,7 +222,6 @@ module Crowdring
 
     get '/campaign/new/configure' do
       @title = params[:campaign][:title]
-      
       unless params[:campaign][:regions]
         flash[:errors] = "Must select at least one region"
         redirect to('campaign/new')
@@ -222,15 +232,10 @@ module Crowdring
         redirect to('campaign/new')
       end
 
-      regions = params[:campaign][:regions].map do |str|
-        country, region = str.split('|')
-        res = {country: country}
-        res[:region] = region if region
-        res
-      end
+      regions = get_regions(params[:campaign][:regions])
       numbers = NumberPool.find_numbers(regions)
       @number_summary = numbers.zip(regions).map {|number, region| {number: number, region: region}}
-      @sms_number = NumberPool.find_number(regions.first, :sms) || NumberPool.find_number({country: regions.first[:country]}, :sms)
+      @sms_number = NumberPool.find_single_number(regions.first, :sms) || NumberPool.find_single_number({country: regions.first[:country]}, :sms)
       @goal = params[:campaign][:goal].to_i
       
       case params[:init_ask]

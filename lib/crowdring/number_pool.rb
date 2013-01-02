@@ -6,7 +6,7 @@ module Crowdring
       NumPool.new.summary(type)
     end
 
-    def find_number(opts, type=:voice)
+    def find_single_number(opts, type=:voice)
       NumPool.new.find_number(opts, type)
     end
 
@@ -15,7 +15,7 @@ module Crowdring
     end
 
     def available_voice_with_sms
-      available_summary(:voice).reject {|n| find_number({country: n[:country]}, :sms).nil? }
+      available_summary(:voice).reject {|n| find_single_number({country: n[:country]}, :sms).nil? }
     end
 
     private

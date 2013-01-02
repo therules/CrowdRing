@@ -5,7 +5,6 @@ module Crowdring
 
     def region_hash
       return @@region_hash unless @@region_hash.nil?
-
       data_file = File.join(File.dirname(__FILE__), '../..', 'data', 'regions.yml')
       @@region_hash = YAML.load(File.read(data_file))
       @@region_hash
@@ -17,12 +16,7 @@ module Crowdring
 
     def strs_for(number)
       regions = region_hash[number.country.name.downcase]
-      if regions && number.respond_to?(:area_code)
-        regions[number.area_code.to_i] || []
-      else
-        []
-      end
+      regions && number.respond_to?(:area_code) ? regions[number.area_code.to_i] : []
     end
-
   end
 end
