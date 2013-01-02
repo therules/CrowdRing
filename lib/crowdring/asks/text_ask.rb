@@ -7,6 +7,11 @@ module Crowdring
     end
 
     def text(ringer, text, sms_number)
+      email = find_email(text.message)
+      if email
+        ringer.email = email.to_s 
+        ringer.save
+      end
       texts << text
       self.save
 
@@ -19,6 +24,11 @@ module Crowdring
 
     def self.readable_name
       'Recieve a text message'
+    end
+
+    def find_email(message)
+      pattern = Regexp.new(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
+      email = pattern.match(message)
     end
   end
 end

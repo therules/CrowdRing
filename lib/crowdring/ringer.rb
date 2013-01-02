@@ -15,6 +15,7 @@ module Crowdring
     property :phone_number, String, unique: true
     property :created_at,   DateTime
     property :subscribed,  Boolean, default: true
+    property :email, String, required: false
 
     has n, :ringer_taggings, constraint: :destroy
     has n, :tags, through: :ringer_taggings, constraint: :skip

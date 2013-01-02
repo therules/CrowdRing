@@ -64,5 +64,16 @@ describe Crowdring::Ask do
       ask.texts.count.should eq(1)
       ask.texts.first.should eq(text)
     end
+
+    it 'should extract email from text message' do
+      message = Crowdring::Message.new(default_message: 'blah')
+      text = Crowdring::Text.new(message: 'BLAH@gmail.com, thanks', ringer: @ringer)
+      ask = Crowdring::TextAsk.new(title: 'text ask', message: message)
+
+      ask.trigger_for(@ringer, @sms_number)
+      ask.text(@ringer, text, @sms_number)
+      @ringer.email.should eq('BLAH@gmail.com')
+    end
+
   end
 end
