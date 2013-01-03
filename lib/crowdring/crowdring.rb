@@ -82,22 +82,20 @@ module Crowdring
         string.length > limit ? string[0..limit-3] + '...' : string
       end
 
-
-      def find_number(loc, type=:voice)
-        country, region = loc.split('|')
+      def get_region(str)
+        country, region = str.split('|')
         res = {country: country}
         res[:region] = region if region
-        number = NumberPool.find_single_number(res, type)
+        res
       end
 
-
       def get_regions(loc)
-        res = loc.map do |str|
-          country, region = str.split('|')
-          res = {country: country}
-          res[:region] = region if region
-          res
-        end
+        loc.map {|str| get_region(str)}
+      end
+
+      def find_number(loc, type=:voice)
+        res = get_region(loc)
+        NumberPool.find_single_number(res, type)
       end
 
 
@@ -186,8 +184,8 @@ module Crowdring
       end
       
       number = find_number(params[:region])
-
       unsubscribe_number = AssignedUnsubscribeVoiceNumber.new(phone_number: number)
+
       if unsubscribe_number.save
         flash[:notice] = "Unsubscribe number assigned"
         redirect to("/")
