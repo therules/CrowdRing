@@ -5,14 +5,12 @@ module Crowdring
 
     property :id, Serial
     property :created_at, DateTime
-    property :message, String, length: 160
+    property :message, Text, lazy: false
 
     belongs_to :ringer
 
     def phone_number
       ringer.phone_number
     end
-
-
   end
 end

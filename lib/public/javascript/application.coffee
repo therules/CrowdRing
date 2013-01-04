@@ -26,10 +26,7 @@ setupBroadcastTextArea = ->
       $('#broadcastbutton').attr('disabled', 'disabled')
     else
       $('#broadcastbutton').removeAttr('disabled'))
-  $('#broadcast-text-area').charCount({
-    allowed: character_limit,
-    warning: 20,
-  })
+  
 
 setupTabs = ->
   $( "#tabs" ).tabs()
@@ -109,10 +106,7 @@ newFilterMessage = ->
 
   fillTags(newDiv, id)
   $('.counter', newDiv).remove()
-  $('.msg-text-area', newDiv).charCount({
-    allowed: 160,
-    warning: 20,
-  })
+  
 
 
 fillTags = (div, id) ->
@@ -145,11 +139,7 @@ $ ->
   $("select.campaign-select").change (evt) ->
     document.location.hash = $(this).val()
 
-  $('.msg-text-area').charCount({
-    allowed: 160,
-    warning: 20,
-  })
-
+  
   $('#filtered-messages .filtered-message-template').each (index) -> fillTags($(this), index)
   
   window.removeTag = (btn) -> removeTag(btn)

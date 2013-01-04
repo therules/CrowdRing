@@ -3,7 +3,7 @@ module Crowdring
     include DataMapper::Resource
 
     property :id,       Serial
-    property :message_text,  String, required: true, length: 255
+    property :message_text,  Text, lazy: false, required: true
     property :priority, Integer
 
     has 1, :tag_filter, through: Resource, constraint: :destroy
