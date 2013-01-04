@@ -19,10 +19,10 @@ module Crowdring
 
     def initialize(username, password)
       @config = {
-      :host => '127.0.0.1',
+      :host => '0.0.0.0',
       :port => 6000,
-      :system_id => username,
-      :password => password,
+      :system_id => 'hugo',
+      :password => 'ggoohu',
       :system_type => '', 
       :interface_version => 52,
       :source_ton  => 0,
@@ -33,8 +33,27 @@ module Crowdring
       :destination_address_range => '',
       :enquire_link_delay_secs => 10
     }
+      EventMachine.run do
+        @@tx = EventMachine.connect(
+          @config[:host],
+          @config[:port],
+          Smpp::Transceiver,
+          @config, 
+          self
+          )
 
-    
+        @redis = EM::Hiredis.connect
+        
+        pop_message = lambda do 
+          @redis.loop  'message:send:queue' do |message|
+            if message
+              message = Yajl::Parser.parse(message, check_utl8: true)
+              p "message has been sent to #{message.to}"
+            end
+            EM.next_tick &pop_message
+          end
+        end
+      end
     end
 
     def numbers
@@ -46,19 +65,8 @@ module Crowdring
     end
 
     def send_sms(params)
-      EventMachine::run do
-        @@tx = EventMachine::connect(
-          @config[:host],
-          @config[:port],
-          Smpp::Transceiver,
-          @config, 
-          self
-          )
-        @@mt_id += 1
-        @@tx.send_mt(@@mt_id, params[:from], params[:to], params[:msg])
-        p params
-      end
-      EventMachine::stop
+      @redis.rpush 'message:send:queue', params
+      p params
     end
   end
 end

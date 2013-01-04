@@ -18,6 +18,7 @@ require 'logger'
 require 'eventmachine'
 require 'smpp'
 require 'eventmachine'
+require 'em-hiredis'
 
 require 'crowdring/time_service'
 require 'crowdring/telephony_services/telephony_service'

@@ -35,3 +35,4 @@ gem 'ruby-smpp'
 gem "eventmachine"
 gem "ruby-smpp"
 gem "eventmachine"
+gem 'em-hiredis'
