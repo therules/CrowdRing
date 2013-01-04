@@ -48,7 +48,8 @@ module Crowdring
           @redis.loop  'message:send:queue' do |message|
             if message
               message = Yajl::Parser.parse(message, check_utl8: true)
-              p "message has been sent to #{message.to}"
+              @@tx.send_mt(message[:from], message[:to], message[:msg])
+              p "#{message}"
             end
             EM.next_tick &pop_message
           end
