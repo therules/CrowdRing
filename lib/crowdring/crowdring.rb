@@ -29,6 +29,7 @@ module Crowdring
       register Sinatra::Reloader
       service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+555130793000','+18003333333', '+18004444444', '+18002222222', '+919102764633','+27114891922'], output: true))
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
+      service_handler.add('smpp', CitessentialsService.new('hugo', 'ggoohu'))
     end
 
     configure :production do

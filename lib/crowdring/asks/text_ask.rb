@@ -26,9 +26,12 @@ module Crowdring
       'Recieve a text message'
     end
 
+    private
+
     def find_email(message)
       pattern = Regexp.new(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}\b/i)
       email = pattern.match(message)
     end
+    
   end
 end

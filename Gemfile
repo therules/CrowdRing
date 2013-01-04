@@ -31,3 +31,7 @@ gem 'lazy_high_charts'
 gem 'statsd-ruby', require: 'statsd'
 gem 'racksh'
 gem 'sinatra-jsonp'
+gem 'ruby-smpp'
+gem "eventmachine"
+gem "ruby-smpp"
+gem "eventmachine"
