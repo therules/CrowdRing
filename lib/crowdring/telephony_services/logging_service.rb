@@ -67,7 +67,8 @@ module Crowdring
 
   class SMSLoggingService < TelephonyService
     supports :sms
-
+    request_handler LoggingRequest
+    
     def initialize(numbers, opts={})
       @numbers = numbers
       @do_output = opts[:output]
