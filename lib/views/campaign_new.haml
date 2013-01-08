@@ -27,12 +27,8 @@
         %div
           %input{type: 'radio', name:'init_ask', id: 'sms_back', value: 'sms_back'}
           %label{for: 'sms_back'} Missed call with SMS back
-        %div
-          %input{type: 'radio', name:'init_ask', id: 'double_opt_in', value: 'double_opt_in'}
-          %label{for: 'double_opt_in'} Double opt in
       %hr
       %button{type: 'submit'} Start creating campaign
-    
 #original-filtered-message-template-container{style: 'display:none'}
   =haml :filtered_message_template 
 

@@ -242,8 +242,6 @@ module Crowdring
         haml :campaign_new_missed_call
       when 'sms_back'
         haml :campaign_new_sms_back
-      when 'double_opt_in'
-        haml :campaign_new_double_opt_in
       end
     end
 
@@ -268,26 +266,6 @@ module Crowdring
         send_sms_ask = SendSMSAsk.create(title: "Send SMS back - #{campaign.title}", message: message)
         campaign.asks.first.triggered_ask = send_sms_ask
         campaign.asks << send_sms_ask
-        if campaign.save
-          flash[:notice] = "Campaign created"
-          redirect to("/campaigns##{campaign.id}")
-        else
-          flash[:errors] = campaign.all_errors.map(&:full_messages).flatten.join('|')
-          redirect to('/campaign/new')
-        end
-      end
-    end
-
-    post '/campaign/create/double_opt_in' do
-      campaign = Campaign.new(params[:campaign])
-      if campaign.save
-        filtered_messages = params[:sms_responses].zip(campaign.voice_numbers).map do |msg, number|
-          FilteredMessage.new(constraints: [HasConstraint.create(tag: number.tag)], message_text: msg)
-        end
-        message = Message.create(filtered_messages: filtered_messages)
-        join_ask = JoinAsk.create(title: "Join - #{campaign.title}", message: message)
-        campaign.asks.first.triggered_ask = join_ask
-        campaign.asks << join_ask
         if campaign.save
           flash[:notice] = "Campaign created"
           redirect to("/campaigns##{campaign.id}")

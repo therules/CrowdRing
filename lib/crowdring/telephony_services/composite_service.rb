@@ -42,7 +42,6 @@ module Crowdring
       service_name = service_for(:sms, params[:from])
       service = @services[service_name]
       service.send_sms(params)
-      p params
     end
 
     def broadcast(from, msg, to_numbers)

@@ -17,7 +17,6 @@ module Crowdring
     end
 
     def send_message(params)
-      p params
       if accept?(params[:to], params[:from])
         CompositeService.instance.send_sms(
           from: params[:from], to: params[:to].phone_number, 
