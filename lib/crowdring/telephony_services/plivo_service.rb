@@ -27,15 +27,17 @@ module Crowdring
       response + commands.map do |c|
         case c[:cmd]
         when :reject
-          build_ivr
+          '<Hangup schdule="30">'
+        when :ivr
+          '<Hangup>' + build_ivr(c[:auto_text])
         when :record
           "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}' callbackUrl='#{c[:voicemail].plivo_callback}'/>"
         end
       end.join('') + '</Response>'
     end
 
-    def build_ivr
-      response = %{<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>Please enter your number</Speak></GetDigits>}
+    def build_ivr(ivr_text)
+      response = %{<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>#{ivr_text}</Speak></GetDigits>}
     end 
 
     def numbers
@@ -44,3 +46,5 @@ module Crowdring
   end
 
 end
+
+# "GET /campaign/result?Digits=111&Direction=inbound&From=12125420421&CallerName=12125420421&BillRate=0.00900&To=13122815301&CallUUID=828bc1ac-59c8-11e2-84e3-791bc7030761&Event=Redirect HTTP/1.1" 302 - 0.0011

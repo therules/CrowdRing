@@ -86,13 +86,13 @@
 
     #campaign-ivr
       %h2="Interactive voice responses"
-      %form{action: '/campaign/#{@campaign.id}/ivrs/new', method: 'get'}
+      %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
         .field
-          .label{for: 'auto_text'} Text to be read
-          %input.title-input{id: 'auto_text', type:'text', size: 50, name: 'auto_text'}
+          .label{for: 'auto_text'} Text to be read:
+          %input.title-input{id: 'auto_text', type:'text', size: 50, name: 'ivr[auto_text]'}
         .field
           #key-options
-          %button{type:'button', onclick: "windown.addKeyOptions();"} Add new key option
+          %button{type:'button', onclick: "window.addKeyOption();"} Add new key option
         %button{type: 'submit'}Add a new IVR
         .note
           IVR is only for campaigns in Brasil and Africa.
@@ -115,7 +115,8 @@
     -@countries.each do |country|
       %label{for: "check#{country.char_3_code}"}
         %input{id: "check#{country.char_3_code}", type: 'checkbox', name: 'country', value: "#{country.char_3_code}"}= "#{country.name} [#{country.char_3_code}]"
-        
+#original-ivr-key-option-template-container{style: 'display:none' }
+  =haml :campaign_ivr_key_option_template
 
 
 

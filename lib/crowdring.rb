@@ -31,7 +31,7 @@ require 'crowdring/telephony_services/composite_service'
 require 'crowdring/batch_send_sms'
 
 require 'crowdring/filter'
-
+require 'crowdring/ivr'
 require 'crowdring/phone_number_fields'
 require 'crowdring/campaign'
 require 'crowdring/ringer'

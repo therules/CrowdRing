@@ -1,0 +1,12 @@
+-id ||= nil
+-key_id = id.nil? ? 'KEY_ID' : "key_#{id}"
+-option_id = id.nil? ? 'OPTION_ID' : "option_#{id}"
+-option_name = id.nil? ? 'OPTION' : "ivr[#{id}][option]"
+-key_name = id.nil? ? 'KEY' : "ivr[#{id}][key]"
+-option ||= ''
+.ivr-key-option-template
+  ="Key" 
+  %input{type: 'text',  name: key_name, placeholder: '1234567890#*'}
+  %input{type: 'text', name: option_name}
+    =option
+  %button#remove-key-option{type:'button', onclick: "window.removeKeyOption($(this));"} Remove

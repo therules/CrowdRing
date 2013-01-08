@@ -28,7 +28,7 @@ module Crowdring
     configure :development do
       register Sinatra::Reloader
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
-      service_handler.add('plivo', PlivoService.new(ENV["PLIVO_AUTH_ID"], ENV["PLIVO_AUTH_TOKEN"]))
+      service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
     end
 
     configure :production do
@@ -127,9 +127,6 @@ module Crowdring
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       res = cur_service.build_response(request.to, response || [{cmd: :reject}])
-
-      p "HERE"
-      p res
       res
     end
 
@@ -391,6 +388,10 @@ module Crowdring
       ringers = ask.potential_recipients(Ringer.subscribed)
       ask.trigger(ringers, campaign.sms_number.raw_number)
       redirect to("/campaigns##{campaign.id}")
+    end
+
+    post '/campaign/:id/ivrs/create' do
+      p params
     end
 
 
