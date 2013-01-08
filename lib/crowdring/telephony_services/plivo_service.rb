@@ -35,7 +35,7 @@ module Crowdring
     end
 
     def build_ivr
-      response = '<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>Please enter your number</Speak></GetDigits>'
+      response = %{<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>Please enter your number</Speak></GetDigits>}
     end 
 
     def numbers
