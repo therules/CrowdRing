@@ -126,7 +126,6 @@ module Crowdring
 
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
-      p response
       cur_service.build_response(request.to, response || [{cmd: :reject}])
     end
 

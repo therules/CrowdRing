@@ -36,9 +36,9 @@ module Crowdring
     end
 
    def build_ivr
-    response = %q{<?xml version="1.0" encoding="UTF-8"?><Response>
+    response = %q{
       <GetDigits action="/campaign/result", method="GET">
-      <Speak>Please enter your number</Speak></GetDigits></Response>}
+      <Speak>Please enter your number</Speak></GetDigits>}
    end 
 
     def numbers
