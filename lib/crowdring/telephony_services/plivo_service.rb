@@ -36,7 +36,7 @@ module Crowdring
 
    def build_ivr
     response = %q{
-      <GetDigits action="/campaign/result", method="GET">
+      <GetDigits action="/campaign/result" method="GET">
       <Speak>Please enter your number</Speak></GetDigits>}
    end 
 
