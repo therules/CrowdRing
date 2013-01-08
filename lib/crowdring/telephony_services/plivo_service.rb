@@ -27,7 +27,6 @@ module Crowdring
       response + commands.map do |c|
         case c[:cmd]
         when :reject
-          p build_ivr
           build_ivr
         when :record
           "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}' callbackUrl='#{c[:voicemail].plivo_callback}'/>"
