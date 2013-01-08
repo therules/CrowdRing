@@ -17,6 +17,7 @@ module Crowdring
     end
 
     def send_message(params)
+      p params
       if accept?(params[:to], params[:from])
         CompositeService.instance.send_sms(
           from: params[:from], to: params[:to].phone_number, 
@@ -28,9 +29,10 @@ module Crowdring
     end
 
     def local?(phone_number, sms_number)
-      ringer_number = Phoner::Phone.parse phone_number
-      sms_number = Phoner::Phone.parse sms_number
-      ringer_number.country_code == sms_number.country_code
+      ringer_number = Phoner::Phone.parse(phone_number)
+      sms_number = ShortCode.shortcode?(sms_number) ? ShortCode.new : Phoner::Phone.parse(sms_number)
+      ringer_number.country == sms_number.country
     end
+
   end
 end

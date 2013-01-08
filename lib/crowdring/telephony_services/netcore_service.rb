@@ -41,13 +41,5 @@ module Crowdring
       request_params = { feedid: @feedid, password: @password, text: message, username: @from, to: to}
       URI.encode_www_form(request_params)
     end
-
-    def send_request(uri)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      request = Net::HTTP::Get.new(uri.request_uri)
-      http.request(request)
-    end
   end
 end

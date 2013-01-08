@@ -1,7 +1,11 @@
 module Crowdring
   class ShortCode
     def self.parse(number)
-      return ShortCode.new if number == ENV['ROUTO_NUMBER']
+      ShortCode.new if shortcode?(number) 
+    end
+
+    def self.shortcode?(number)
+      number == ENV['ROUTO_NUMBER']
     end
 
     def country

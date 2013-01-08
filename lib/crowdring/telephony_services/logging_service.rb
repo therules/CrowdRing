@@ -63,6 +63,8 @@ module Crowdring
     def numbers
       @numbers
     end
+
+    
   end
 
   class SMSLoggingService < TelephonyService
@@ -74,7 +76,7 @@ module Crowdring
     end
 
     def build_response(from, commands)
-      @last_response = "Reponse: From: #{from}, Commands: #{commands}"
+      @last_response = "Response: From: #{from}, Commands: #{commands}"
       p @last_response if @do_output
       @last_response
     end
