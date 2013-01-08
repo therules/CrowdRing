@@ -34,9 +34,9 @@ module Crowdring
       end.join('') + '</Response>'
     end
 
-   def build_ivr
-    response = '<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>Please enter your number</Speak></GetDigits>'
-   end 
+    def build_ivr
+      response = '<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>Please enter your number</Speak></GetDigits>'
+    end 
 
     def numbers
       @rest_api.get_numbers[1]['objects'].map {|o| o['number']}
