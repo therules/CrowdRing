@@ -27,12 +27,19 @@ module Crowdring
       response + commands.map do |c|
         case c[:cmd]
         when :reject
-          '<Hangup reason="busy">'
+          p build_ivr
+          build_ivr
         when :record
           "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}' callbackUrl='#{c[:voicemail].plivo_callback}'/>"
         end
       end.join('') + '</Response>'
     end
+
+   def build_ivr
+    response = %q{<?xml version="1.0" encoding="UTF-8"?><Response>
+      <GetDigits action="/campaign/result", method="GET">
+      <Speak>Please enter your number</Speak></GetDigits></Response>}
+   end 
 
     def numbers
       @rest_api.get_numbers[1]['objects'].map {|o| o['number']}

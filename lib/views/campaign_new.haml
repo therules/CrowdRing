@@ -20,13 +20,14 @@
         .region-select
           =haml :select_region
       .field
-        %h3 Select the initial ask
+        %h3 Select the Missed Call option
         %div
           %input{type: 'radio', name:'init_ask', id: 'missed_call', value: 'missed_call', checked: 'checked'} 
           %label{for: 'missed_call'} Missed call only (FREE)
         %div
-          %input{type: 'radio', name:'init_ask', id: 'sms_back', value: 'sms_back'}
+          %input{type: 'radio'}  
           %label{for: 'sms_back'} Missed call with SMS back
+
       %hr
       %button{type: 'submit'} Start creating campaign
 #original-filtered-message-template-container{style: 'display:none'}

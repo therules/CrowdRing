@@ -8,6 +8,9 @@
         %a{href: "#campaign-asks"}
           %span Asks
       %li
+        %a{href: "#campaign-ivr"}
+          %span IVRs 
+      %li
         %a{href: "#campaign-analytics"}
           %span Analytics
       %li
@@ -79,6 +82,21 @@
         %hr
       %form{action: "/campaign/#{@campaign.id}/asks/new", method: 'get'}
         %button Add new ask
+
+
+    #campaign-ivr
+      %h2="Interactive voice responses"
+      %form{action: '/campaign/#{@campaign.id}/ivrs/new', method: 'get'}
+        .field
+          .label{for: 'auto_text'} Text to be read
+          %input.title-input{id: 'auto_text', type:'text', size: 50, name: 'auto_text'}
+        .field
+          #key-options
+          %button{type:'button', onclick: "windown.addKeyOptions();"} Add new key option
+        %button{type: 'submit'}Add a new IVR
+        .note
+          IVR is only for campaigns in Brasil and Africa.
+
 
     #campaign-export
       %h3 Export to CSV

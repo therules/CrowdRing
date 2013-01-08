@@ -27,9 +27,8 @@ module Crowdring
 
     configure :development do
       register Sinatra::Reloader
-      service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+555130793000','+18003333333', '+18004444444', '+18002222222', '+919102764633','+27114891922'], output: true))
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
-      service_handler.add('routo', RoutoService.new(ENV["ROUTO_USERNAME"], ENV["ROUTO_PASSWORD"], ENV["ROUTO_NUMBER"]))
+      service_handler.add('plivo', PlivoService.new(ENV["PLIVO_AUTH_ID"], ENV["PLIVO_AUTH_TOKEN"]))
     end
 
     configure :production do
@@ -127,6 +126,7 @@ module Crowdring
 
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
+      p response
       cur_service.build_response(request.to, response || [{cmd: :reject}])
     end
 
@@ -159,6 +159,10 @@ module Crowdring
 
     get '/reports/netcore' do
       process_request('netcore', request, :voice)
+    end
+
+    get '/campaign/result' do
+      p "THANKS I GOT YOU"
     end
 
     get '/' do
