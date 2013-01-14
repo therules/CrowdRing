@@ -55,7 +55,14 @@ module Crowdring
     end
 
     def build_response(from, commands)
-      @last_response = "Reponse: From: #{from}, Commands: #{commands}"
+      @last_response ||= commands.map do |c|
+        case c[:cmd]
+          when :ivr
+          @last_response = c[:text].read_text 
+          else
+          @last_response = "Reponse: From: #{from}, Commands: #{commands}"
+       end
+     end
       p @last_response if @do_output
       @last_response
     end

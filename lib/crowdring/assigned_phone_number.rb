@@ -11,11 +11,11 @@ module Crowdring
 
         def phone_number=(number)
           self.raw_number = number
-          super (Phoner::Phone.parse(number) || number).to_s
+          super (Phonie::Phone.parse(number) || number).to_s
         end
 
         def self.from(number)
-          norm_number = Phoner::Phone.parse(number).to_s
+          norm_number = Phonie::Phone.parse(number).to_s
           self.first(phone_number: norm_number)
         end
       end
@@ -95,9 +95,19 @@ module Crowdring
       case number
       when AssignedVoiceNumber
         number.ring(ringer)
+        [{cmd: :ivr, text: ivr(number)}] if ivr?(number)
       when AssignedSMSNumber
         number.text(ringer, request.message)
       end
+    end
+
+    def self.ivr?(number)
+      number.class == Crowdring::AssignedCampaignVoiceNumber && !number.campaign.ivrs.empty? 
+    end
+
+    def self.ivr(number)
+      campaign = number.campaign
+      campaign.ivrs.last
     end
   end
 end

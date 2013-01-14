@@ -35,11 +35,11 @@ module Crowdring
     end
 
     def phone_number=(number)
-      super Phoner::Phone.parse(number).to_s
+      super Phonie::Phone.parse(number).to_s
     end
 
     def self.from(number)
-      norm_number = Phoner::Phone.parse(number).to_s
+      norm_number = Phonie::Phone.parse(number).to_s
       self.first(phone_number: norm_number) || self.create(phone_number: norm_number)
     end
 

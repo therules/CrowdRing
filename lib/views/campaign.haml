@@ -86,6 +86,11 @@
 
     #campaign-ivr
       %h2="Interactive voice responses"
+      -if @campaign.ivrs
+        -@campaign.ivrs.each do |ivr|
+          = "#{ivr.read_text} is #{ivr.activated}"
+          
+
       %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
         .field
           .label{for: 'auto_text'} Text to be read:

@@ -14,15 +14,15 @@ describe 'filters' do
   end
 
   it 'should return the elements matching the given country code' do
-    numOne = double('US', country: Phoner::Country.find_by_country_code('US'))
-    numTwo = double('IN', country: Phoner::Country.find_by_country_code('IN'))
+    numOne = double('US', country: Phonie::Country.find_by_country_code('US'))
+    numTwo = double('IN', country: Phonie::Country.find_by_country_code('IN'))
     filter = Crowdring::Filter.create("country:US")
     filter.filter([numOne, numTwo]).should eq([numOne])
   end
 
   it 'should accept multiple country codes separated by bars' do
-    numOne = double('US', country: Phoner::Country.find_by_country_code('US'))
-    numTwo = double('IN', country: Phoner::Country.find_by_country_code('IN'))
+    numOne = double('US', country: Phonie::Country.find_by_country_code('US'))
+    numTwo = double('IN', country: Phonie::Country.find_by_country_code('IN'))
     filter = Crowdring::Filter.create("country:US|IN")
     filter.filter([numOne, numTwo]).should eq([numOne, numTwo])
   end

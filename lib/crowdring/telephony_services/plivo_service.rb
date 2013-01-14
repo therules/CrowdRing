@@ -27,7 +27,7 @@ module Crowdring
       response + commands.map do |c|
         case c[:cmd]
         when :reject
-          '<Hangup schdule="30">'
+          '<Hangup reason="busy">'
         when :ivr
           '<Hangup>' + build_ivr(c[:auto_text])
         when :record

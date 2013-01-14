@@ -63,7 +63,7 @@ module Crowdring
     private
 
     def supports_number(service, number)
-      service.numbers.include? number || service.number.include?(Phoner::Phone.parse(number).to_s)
+      service.numbers.include? number || service.number.include?(Phonie::Phone.parse(number).to_s)
     end
   end
 end

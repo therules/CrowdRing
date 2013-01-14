@@ -127,7 +127,6 @@ module Crowdring
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       res = cur_service.build_response(request.to, response || [{cmd: :reject}])
-      res
     end
 
     def process_request(service_name, request, response_type)
@@ -391,7 +390,18 @@ module Crowdring
     end
 
     post '/campaign/:id/ivrs/create' do
-      p params
+      ivr = params[:ivr]
+      if ivr[:keyoption].empty?
+        flash[:errors] = "Ivr must have at least one option"
+        redirect to ("/campaigns##{campaign.id}")
+      end
+
+      campaign = Campaign.get(params[:id])
+      new_ivr = Ivr.create(ivr)
+      campaign.ivrs.last.deactivate unless campaign.ivrs.empty?
+      campaign.ivrs << new_ivr
+      campaign.save
+      redirect to ("/campaigns##{campaign.id}")
     end
 
 

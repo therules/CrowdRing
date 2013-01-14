@@ -1,14 +1,14 @@
 module Crowdring
   module PhoneNumberFields
     def pretty_phone_number
-      return phone_number unless Phoner::Phone.valid? phone_number
-      number = Phoner::Phone.parse phone_number
-      Phoner::Phone.n1_length = (country_code == '91') ? 4 : 3
+      return phone_number unless Phonie::Phone.valid? phone_number
+      number = Phonie::Phone.parse phone_number
+      Phonie::Phone.n1_length = (country_code == '91') ? 4 : 3
       number.format "+%c (%a) %f-%l" + " [" + country.char_3_code + "]"
     end
 
     def country_code
-      Phoner::Phone.parse(phone_number).country_code
+      Phonie::Phone.parse(phone_number).country_code
     end
 
     def country_abbreviation
@@ -20,7 +20,7 @@ module Crowdring
     end
 
     def area_code
-      Phoner::Phone.parse(phone_number).area_code
+      Phonie::Phone.parse(phone_number).area_code
     end
 
     def country
@@ -29,7 +29,7 @@ module Crowdring
     end
 
     def number
-      Phoner::Phone.parse phone_number
+      Phonie::Phone.parse phone_number
     end
 
     module_function
@@ -45,7 +45,7 @@ module Crowdring
     end
 
     def valid_phone_number?
-      if Phoner::Phone.valid? @phone_number
+      if Phonie::Phone.valid? @phone_number
         true
       else
         [false, 'Phone number does not appear to be valid']

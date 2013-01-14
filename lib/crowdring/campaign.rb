@@ -6,7 +6,6 @@ module Crowdring
     property :title,        String, required: true, length: 0..64, unique: true,
       messages: { presence: 'Non-empty title required',
                   length: 'Title must be fewer than 64 letters in length' }
-    property :most_recent_broadcast, DateTime
     property :created_at,   DateTime
     property :goal, Integer, default: 777
 
@@ -15,6 +14,7 @@ module Crowdring
     has n, :rings, constraint: :destroy
 
     has n, :asks, through: Resource, constraint: :destroy
+    has n, :ivrs, through: Resource, constraint: :destroy
 
     has n, :voice_numbers, 'AssignedCampaignVoiceNumber', constraint: :destroy
     has 1, :sms_number, 'AssignedSMSNumber', constraint: :destroy

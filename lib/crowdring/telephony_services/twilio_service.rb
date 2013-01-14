@@ -1,4 +1,3 @@
-require 'twilio-ruby'
 
 module Crowdring
   class TwilioRequest

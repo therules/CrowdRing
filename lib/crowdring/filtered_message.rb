@@ -28,8 +28,8 @@ module Crowdring
     end
 
     def local?(phone_number, sms_number)
-      ringer_number = Phoner::Phone.parse(phone_number)
-      sms_number = ShortCode.shortcode?(sms_number) ? ShortCode.new : Phoner::Phone.parse(sms_number)
+      ringer_number = Phonie::Phone.parse(phone_number)
+      sms_number = ShortCode.shortcode?(sms_number) ? ShortCode.new : Phonie::Phone.parse(sms_number)
       ringer_number.country == sms_number.country
     end
 
