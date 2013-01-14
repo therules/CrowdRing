@@ -29,13 +29,12 @@ module Crowdring
         when :reject
           response.addHangup(reason: 'busy')
         when :ivr
-          here
           response.addHangup(reason: 'busy')
-          dial = response.addDial(callerId: from)
-          dial.addNumber(c[:to])
-          digit = response.addGetDigits(action: '/', method: 'GET', redirect: false)
-          digit.addSpeak("#{c[:text]}")
-          response.addSpeak('No input received')
+          # dial = response.addDial(callerId: from)
+          # dial.addNumber(c[:to])
+          # digit = response.addGetDigits(action: '/', method: 'GET', redirect: false)
+          # digit.addSpeak("#{c[:text]}")
+          # response.addSpeak('No input received')
         when :record
           response.addSpeak("#{c[:promt]}")
           response.addRecord(action: "#{c[:voicemail].plivo_callback}", callbackUrl: "#{c[:voicemail].plivo_callback}")
