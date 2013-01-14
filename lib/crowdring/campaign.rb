@@ -83,6 +83,8 @@ module Crowdring
       end
     end
 
+    
+
     def triggered_ask?(ask)
       !(asks.find{|n| n.triggered_ask && n.triggered_ask == ask}.nil? && ask != asks.first)
     end

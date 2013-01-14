@@ -42,7 +42,7 @@ describe Crowdring::PlivoService do
 
   it 'should build a reject response with reason busy' do
     response = @service.build_response('from', [{cmd: :reject}])
-    response.should match('<Hangup reason="busy">')
+    response.should match("<Response><Hangup reason='busy'/>")
   end
 
   it 'should be able to record a voicemail' do

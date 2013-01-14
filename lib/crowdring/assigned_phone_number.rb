@@ -95,7 +95,7 @@ module Crowdring
       case number
       when AssignedVoiceNumber
         number.ring(ringer)
-        [{cmd: :ivr, to: ringer.phone_number, text: ivr(number)}] if ivr?(number)
+        [{cmd: :ivr, to: ringer.phone_number, text: "#{ivr(number).read_text}", campaign_id: "#{number.campaign.id}"}] if ivr?(number)
       when AssignedSMSNumber
         number.text(ringer, request.message)
       end

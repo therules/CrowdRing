@@ -29,19 +29,20 @@ module Crowdring
         when :reject
           response.addHangup(reason: 'busy')
         when :ivr
-          here
+          c_id = c[:campaign_id]
+          params = {to: "#{format_number(c[:to])}", from: "#{from}", 
+                    answer_url: "#{ENV['SERVER_NAME']}/ivrs/plivo_hangup", 
+                    answer_method: 'GET',
+                    hangup_url: "#{ENV['SERVER_NAME']}/ivrs/#{c_id}/trigger",
+                    hangup_method: 'POST'}
+          res = @rest_api.make_call(params)
           response.addHangup(reason: 'busy')
-          dial = response.addDial(callerId: from)
-          dial.addNumber(c[:to])
-          digit = response.addGetDigits(action: '/', method: 'GET', redirect: false)
-          digit.addSpeak("#{c[:text]}")
-          response.addSpeak('No input received')
         when :record
-          response.addSpeak("#{c[:promt]}")
+          response.addSpeak("#{c[:prompt]}")
           response.addRecord(action: "#{c[:voicemail].plivo_callback}", callbackUrl: "#{c[:voicemail].plivo_callback}")
         end
       end
-      response
+      response.to_xml()
     end
 
 
@@ -49,7 +50,5 @@ module Crowdring
       @rest_api.get_numbers[1]['objects'].map {|o| o['number']}
     end
   end
-
 end
 
-# "GET /campaign/result?Digits=111&Direction=inbound&From=12125420421&CallerName=12125420421&BillRate=0.00900&To=13122815301&CallUUID=828bc1ac-59c8-11e2-84e3-791bc7030761&Event=Redirect HTTP/1.1" 302 - 0.0011

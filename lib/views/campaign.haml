@@ -88,7 +88,11 @@
       %h2="Interactive voice responses"
       -if @campaign.ivrs
         -@campaign.ivrs.each do |ivr|
-          = "#{ivr.read_text} is #{ivr.activated}"
+          .field
+            = "#{ivr.read_text} is activated"
+          .field
+            - ivr.key_options.each do |k|
+              = k.ringer_count
           
 
       %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
