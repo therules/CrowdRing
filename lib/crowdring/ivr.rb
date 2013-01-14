@@ -5,6 +5,7 @@ module Crowdring
     property :id, Serial
     property :press, String, required: true
     property :for, String, required: true
+    property :ringer_cound, Integer, required: false, default: 0
 
     belongs_to :ivr, required: true
   end

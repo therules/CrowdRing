@@ -23,22 +23,26 @@ module Crowdring
     end
 
     def build_response(from, commands)
-      response = '<?xml version="1.0" encoding="UTF-8"?><Response>'
-      response + commands.map do |c|
+      response = Plivo::Response.new
+      commands.map do |c|
         case c[:cmd]
         when :reject
-          '<Hangup reason="busy">'
+          response.addHangup(reason: 'busy')
         when :ivr
-          '<Hangup>' + build_ivr(c[:auto_text])
+          response.addHangup(reason: 'busy')
+          dial = response.addDial(callerId: from)
+          dial.addNumber(c[:to])
+          digit = response.addGetDigits(action: '/', method: 'GET', redirect: false)
+          digit.addSpeak("#{c[:text]}")
+          response.addSpeak('No input received')
         when :record
-          "<Speak>#{c[:prompt]}</Speak><Record action='#{c[:voicemail].plivo_callback}' callbackUrl='#{c[:voicemail].plivo_callback}'/>"
+          response.addSpeak("#{c[:promt]}")
+          response.addRecord(action: "#{c[:voicemail].plivo_callback}", callbackUrl: "#{c[:voicemail].plivo_callback}")
         end
-      end.join('') + '</Response>'
+      end
+      response
     end
 
-    def build_ivr(ivr_text)
-      response = %{<GetDigits action="#{ENV['SERVER_NAME']}/campaign/result" method="GET"><Speak>#{ivr_text}</Speak></GetDigits>}
-    end 
 
     def numbers
       @rest_api.get_numbers[1]['objects'].map {|o| o['number']}
