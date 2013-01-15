@@ -29,6 +29,8 @@ module Crowdring
         when :reject
           response.addHangup(reason: 'busy')
         when :ivr
+          params = {to: "#{c[:to]}", from: from, answer_url: '/campaign/plivo_hangup', answer_method: 'GET', hangup_url: '/campaign/result', hangup_method: 'GET'}
+          @rest_api.make_call(params)
           response.addHangup(reason: 'busy')
           # dial = response.addDial(callerId: from)
           # dial.addNumber(c[:to])
