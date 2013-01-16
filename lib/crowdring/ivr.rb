@@ -57,7 +57,7 @@ module Crowdring
     end
 
     def valid_keys
-      key_options.map(&:press)
+      key_options.each {|k| k.press.to_i}
     end
 
     def set_read_text
