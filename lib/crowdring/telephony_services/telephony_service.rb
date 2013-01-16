@@ -25,5 +25,8 @@ module Crowdring
       http.request(request)
     end
 
+    def format_number(num)
+      num[0] == '+' ? num[1..-1]: num
+    end
   end
 end

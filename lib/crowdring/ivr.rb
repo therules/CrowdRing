@@ -5,9 +5,14 @@ module Crowdring
     property :id, Serial
     property :press, String, required: true
     property :for, String, required: true
-    property :ringer_cound, Integer, required: false, default: 0
+    property :ringer_count, Integer, required: false, default: 0
 
     belongs_to :ivr, required: true
+
+    def increment
+      update! ringer_count: ringer_count + 1
+    end
+    
   end
 
   class Ivr
@@ -45,6 +50,10 @@ module Crowdring
 
     def auto_text=(auto_text)
       @auto_text = auto_text
+    end
+
+    def valid_keys
+      key_options.map(&:press)
     end
 
     def set_read_text

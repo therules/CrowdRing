@@ -112,7 +112,7 @@ module Crowdring
       end
     end
 
-    before /^((?!((voice|sms)response)|reports|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
+    before /^((?!((voice|sms)response)|reports|ivrs|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
       login_required unless settings.environment == :test
     end
 
@@ -566,6 +566,44 @@ module Crowdring
       voicemail.update(filename: params[:RecordUrl])
     end
 
+    get '/ivrs/plivo_hangup' do
+      response = Plivo::Response.new
+      response.addHangup(reason: 'busy')
+      response.to_xml()
+    end
+
+    post '/ivrs/:id/trigger' do
+      p "here #{params}"
+      parameters = {to: params[:To], 
+                    from: params[:From], 
+                    answer_url: "#{ENV['SERVER_NAME']}/ivrs/#{params[:id]}/play",
+                  }
+      res = Plivo::RestAPI.new("#{ENV['PLIVO_AUTH_ID']}", "#{ENV['PLIVO_AUTH_TOKEN']}").make_call(parameters)
+    end
+
+    post '/ivrs/:id/play' do
+      p "PLAY #{params}"
+      campaign = Campaign.get(params[:id])
+      ivr = campaign.ivrs.last
+
+      response = Plivo::Response.new
+      digit = response.addGetDigits(action: "#{ENV['SERVER_NAME']}/ivrs/#{params[:id]}/collect_digit", 
+                                    method: 'POST', 
+                                    validDigits:"#{ivr.valid_keys}", 
+                                    invalidDigitsSound: true)
+      digit.addSpeak("#{campaign.ivrs.last.read_text}")
+      response.addSpeak('Thank you very much!')
+      response.addHangup(reason: 'busy')
+      p response.to_xml()
+    end
+
+    post "/ivrs/:id/collect_digit" do 
+      campaign = Campaign.get(params[:id])
+      digit = params[:Digits]
+      key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
+      key_option.increment
+    end
+
     not_found do
       haml :not_found
     end
@@ -573,3 +611,6 @@ module Crowdring
     run! if app_file == $0
   end
 end
+# {"Digits"=>"1", "Direction"=>"outbound", "From"=>"15672440068", "ALegUUID"=>"a67e0ec2-5f71-11e2-ac81-639fa425b3c0", "BillRate"=>"0.01300", "To"=>"12125420421", "CallUUID"=>"a67e0ec2-5f71-11e2-ac81-639fa425b3c0", "ALegRequestUUID"=>"a67da66c-5f71-11e2-807d-00259027060c", "RequestUUID"=>"a67da66c-5f71-11e2-807d-00259027060c", "CallStatus"=>"in-progress", "Event"=>"GetDigitsAction", "splat"=>[], "captures"=>["8"], "id"=>"8"}
+# 2013-01-16T00:14:32+00:00 app[web.1]: 54.241.48.16 - - [15/Jan/2013 19:14:32] "PO
+# "here {\"Direction\"=>\"outbound\", \"BillDuration\"=>\"60\", \"From\"=>\"15672440068\", \"Duration\"=>\"1\", \"ALegUUID\"=>\"e693c5be-5f68-11e2-8620-639fa425b3c0\", \"HangupCause\"=>\"NORMAL_CLEARING\", \"BillRate\"=>\"0.01300\", \"To\"=>\"12125420421\", \"CallUUID\"=>\"e693c5be-5f68-11e2-8620-639fa425b3c0\", \"ALegRequestUUID\"=>\"e693609c-5f68-11e2-807d-00259027060c\", \"RequestUUID\"=>\"e693609c-5f68-11e2-807d-00259027060c\", \"CallStatus\"=>\"completed\", \"Event\"=>\"Hangup\"}"

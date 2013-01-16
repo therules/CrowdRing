@@ -88,7 +88,6 @@
       %h2="Interactive voice responses"
       -if @campaign.ivrs
         -@campaign.ivrs.each do |ivr|
-          = "#{ivr.read_text} is #{ivr.activated}"
           .field
             = "#{ivr.read_text} is activated"
           .field
