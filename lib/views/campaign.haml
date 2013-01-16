@@ -89,11 +89,12 @@
       -if @campaign.ivrs
         -@campaign.ivrs.each do |ivr|
           .field
-            = "#{ivr.read_text} is activated"
+            - status = ivr.activated ? "activated" : "not activated"
+            = "#{ivr.read_text} is #{status}"
           .field
-            - ivr.key_options.each do |k|
-              = k.ringer_count
-          
+            - ivr.key_options.each_with_index do |k , i|
+              .li
+                = k.to_s
 
       %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
         .field

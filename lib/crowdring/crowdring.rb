@@ -573,7 +573,6 @@ module Crowdring
     end
 
     post '/ivrs/:id/trigger' do
-      p "here #{params}"
       parameters = {to: params[:To], 
                     from: params[:From], 
                     answer_url: "#{ENV['SERVER_NAME']}/ivrs/#{params[:id]}/play",
@@ -582,7 +581,6 @@ module Crowdring
     end
 
     post '/ivrs/:id/play' do
-      p "PLAY #{params}"
       campaign = Campaign.get(params[:id])
       ivr = campaign.ivrs.last
 

@@ -6,11 +6,14 @@ module Crowdring
     property :press, String, required: true
     property :for, String, required: true
     property :ringer_count, Integer, required: false, default: 0
-
     belongs_to :ivr, required: true
 
     def increment
       update! ringer_count: ringer_count + 1
+    end
+
+    def to_s
+      "Press #{press} for #{for} has #{ringer_count}"
     end
     
   end
