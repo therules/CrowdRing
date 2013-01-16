@@ -598,7 +598,8 @@ module Crowdring
     post "/ivrs/:id/collect_digit" do 
       campaign = Campaign.get(params[:id])
       digit = params[:Digits]
-      key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
+      p digit
+      p key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
       key_option.increment
     end
 
