@@ -12,4 +12,8 @@
 
       - chart = Gchart.bar(:title => "Ivr survey result",theme: :thirty7signals, data:ivr.key_options.map(&:ringer_count), labels: ivr.key_options.map(&:press), :line_colors => 'e0440e',:axis_with_labels => ['x', 'y'])
       %img(src="#{chart_url}")
+    -if ivr.activated
+      %form{action:"/campaign/#{@campaign.id}/ivrs/disable", method:'post'}
+        %button Disable
+
     %hr

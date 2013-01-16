@@ -603,6 +603,13 @@ module Crowdring
       key_option.increment
     end
 
+    post '/campaign/:id/ivrs/disable' do
+      campaign = Campaign.get(params[:id])
+      ivr = campaign.ivrs.last
+      ivr.deactivate
+      redirect to("/campaigns##{params[:id]}")
+    end
+
     not_found do
       haml :not_found
     end

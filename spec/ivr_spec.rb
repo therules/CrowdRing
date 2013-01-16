@@ -36,8 +36,21 @@ describe Crowdring::Ivr do
     campaign = Crowdring::Campaign.create(title: 'c3', voice_numbers: [{phone_number: '+18003333333', description: "c3 num"}], sms_number: '+18003333333')
     campaign.ivrs << ivr
     campaign.save
+
     params = {Digits: '1', id: 1}
     post '/ivrs/1/collect_digit', params
     campaign.ivrs.last.key_options.first.ringer_count.should eq(1)
+  end
+
+  it 'should be able to disable ivr' do
+    params = {auto_text:"foo", keyoption: {"1" => {press:"1", for: "bar"}, "2" => {press:'2', for: 'foo'}}}
+    ivr = Crowdring::Ivr.create(params)
+    campaign = Crowdring::Campaign.create(title: 'c3', voice_numbers: [{phone_number: '+18003333333', description: "c3 num"}], sms_number: '+18003333333')
+    campaign.ivrs << ivr
+    campaign.save
+   
+    post "/campaign/#{campaign.id}/ivrs/disable"
+    ivr.reload
+    ivr.activated.should be_false
   end
 end
