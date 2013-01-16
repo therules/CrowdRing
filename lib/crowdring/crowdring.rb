@@ -587,7 +587,6 @@ module Crowdring
       response = Plivo::Response.new
       digit = response.addGetDigits(action: "#{ENV['SERVER_NAME']}/ivrs/#{params[:id]}/collect_digit", 
                                     method: 'POST', 
-                                    validDigits:"#{ivr.valid_keys}", 
                                     invalidDigitsSound: true)
       digit.addSpeak("#{campaign.ivrs.last.read_text}")
       response.addSpeak('Thank you very much!')
@@ -596,6 +595,7 @@ module Crowdring
     end
 
     post "/ivrs/:id/collect_digit" do 
+      p params
       campaign = Campaign.get(params[:id])
       digit = params[:Digits]
       p digit
