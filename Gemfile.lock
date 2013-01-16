@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/mattetti/googlecharts.git
+  revision: 8a0afd24a489fcb6195e395634a89b6657a4b2b1
+  specs:
+    googlecharts (1.6.8)
+
+GIT
   remote: git://github.com/michelson/lazy_high_charts.git
   revision: e43d60bff31874e54c490c60312b50d09914e9bf
   specs:
@@ -32,7 +38,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.8)
-    backports (2.6.5)
+    backports (2.6.7)
     bcrypt-ruby (3.0.1)
     builder (3.0.4)
     capybara (2.0.2)
@@ -44,7 +50,6 @@ GEM
       xpath (~> 1.0.0)
     childprocess (0.3.6)
       ffi (~> 1.0, >= 1.0.6)
-    cookiejar (0.3.0)
     daemons (1.1.9)
     data_objects (0.10.11)
       addressable (~> 2.1)
@@ -97,14 +102,6 @@ GEM
       dm-core (~> 1.2.0)
     do_postgres (0.10.11)
       data_objects (= 0.10.11)
-    em-http-request (1.0.3)
-      addressable (>= 2.2.3)
-      cookiejar
-      em-socksify
-      eventmachine (>= 1.0.0.beta.4)
-      http_parser.rb (>= 0.5.3)
-    em-socksify (0.2.1)
-      eventmachine (>= 1.0.0.beta.4)
     em-websocket (0.3.8)
       addressable (>= 2.1.1)
       eventmachine (>= 0.12.9)
@@ -120,7 +117,6 @@ GEM
     hash-deep-merge (0.1.1)
     hashie (1.2.0)
     hike (1.2.1)
-    http_parser.rb (0.5.3)
     i18n (0.6.1)
     journey (1.0.4)
     json (1.7.6)
@@ -131,7 +127,7 @@ GEM
       addressable
       websocket
     mime-types (1.19)
-    multi_json (1.5.0)
+    multi_json (1.3.7)
     nexmo (1.0.0)
     nokogiri (1.5.6)
     plivo (0.2.15)
@@ -141,10 +137,9 @@ GEM
     pusher (0.11.2)
       multi_json (~> 1.0)
       signature (~> 0.1.6)
-    pusher-fake (0.4.0)
-      em-http-request (= 1.0.3)
+    pusher-fake (0.2.0)
       em-websocket (= 0.3.8)
-      multi_json (= 1.5.0)
+      multi_json (~> 1.3.7)
       thin (= 1.5.0)
     rack (1.4.4)
     rack-cache (1.2)
@@ -210,8 +205,8 @@ GEM
       rack-test
       sinatra (~> 1.3.0)
       tilt (~> 1.3)
-    sinatra-jsonp (0.3.2)
-      json_pure (~> 1.4)
+    sinatra-jsonp (0.4.1)
+      multi_json (~> 1.3.7)
       sinatra (~> 1.0)
     sinbook (0.1.9)
       yajl-ruby
@@ -260,6 +255,7 @@ DEPENDENCIES
   facets
   fakeweb
   foreman
+  googlecharts!
   haml
   lazy_high_charts!
   nexmo

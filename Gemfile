@@ -33,3 +33,4 @@ gem 'racksh'
 gem 'sinatra-jsonp'
 gem "actionpack", "~> 3.2.11"
 gem "will_paginate"
+gem "googlecharts", git: 'git://github.com/mattetti/googlecharts.git'

@@ -13,7 +13,7 @@ module Crowdring
     end
 
     def to_s
-      "Press #{press} for #{for} has #{ringer_count}"
+      "Press #{press} for #{self.for} has #{ringer_count}"
     end
     
   end
@@ -24,9 +24,10 @@ module Crowdring
     property :id, Serial
     property :activated, Boolean, default: true
     property :read_text, Text, lazy: false
+    property :question, Text, lazy: false
 
     has n,  :key_options, "KeyOption", through: Resource, constraint: :destroy
-    
+
     before :create do 
       set_read_text
     end
@@ -64,6 +65,8 @@ module Crowdring
          [option_hash.keys, option_hash.values].transpose
       end.join(' ')
       self.read_text = @auto_text + ' ' + text_to_read
+      self.question = @auto_text
+      true
     end
   end
 end

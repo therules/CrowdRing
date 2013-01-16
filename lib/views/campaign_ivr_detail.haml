@@ -1,0 +1,15 @@
+-@campaign.ivrs.reverse.each do |ivr|
+  #ivr-title
+  - status = ivr.activated ? "Active" : "Not active"
+  %h3 #{status}: "#{ivr.question}"
+  #ivr-info
+    #ivr-detail
+      - ivr.key_options.each_with_index do |k , i|
+        .li
+          = k.to_s
+    #ivr-chart
+      - chart_url = Gchart.bar(data: ivr.key_options.map(&:ringer_count), theme: :thirty7signals, labels: ivr.key_options.map(&:press), bg: 'efefef', axis_with_label: 'y')
+
+      - chart = Gchart.bar(:title => "Ivr survey result",theme: :thirty7signals, data:ivr.key_options.map(&:ringer_count), labels: ivr.key_options.map(&:press), :line_colors => 'e0440e',:axis_with_labels => ['x', 'y'])
+      %img(src="#{chart_url}")
+    %hr

@@ -19,6 +19,8 @@ require 'action_view'
 require 'lazy_high_charts'
 require 'twilio-ruby'
 
+require 'googlecharts'
+
 require 'crowdring/telephony_services/telephony_service'
 require 'crowdring/telephony_services/twilio_service'
 require 'crowdring/telephony_services/kookoo_service'

@@ -66,7 +66,8 @@
               No Text number selected
         #options
           %form{action: "/campaign/#{@campaign.id}/destroy", method: 'post', onsubmit: "return confirm('Really destroy #{@campaign.title}?');"}
-            %button Destroy Campaign 
+            %button Destroy Campaign
+
     #campaign-asks
       %h2= "ASKS"
       -@campaign.asks.each_with_index do |ask, index|
@@ -87,14 +88,8 @@
     #campaign-ivr
       %h2="Interactive voice responses"
       -if @campaign.ivrs
-        -@campaign.ivrs.each do |ivr|
-          .field
-            - status = ivr.activated ? "activated" : "not activated"
-            = "#{ivr.read_text} is #{status}"
-          .field
-            - ivr.key_options.each_with_index do |k , i|
-              .li
-                = k.to_s
+        =haml :campaign_ivr_detail
+
 
       %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
         .field
@@ -117,7 +112,8 @@
     #campaign-analytics
       #basic-chart
         %h3 Statistic Analysis
-        = high_chart("basic-chart", @basic_chart) 
+        = high_chart("basic-chart", @basic_chart)
+
 #country-options{style: 'display:none' }
   %form
     -if @countries.empty?
