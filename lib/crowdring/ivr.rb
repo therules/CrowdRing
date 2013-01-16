@@ -58,8 +58,7 @@ module Crowdring
 
     def set_read_text
       text_to_read = @keyoption.map do |option_hash|
-        k, v = option_hash.keys.first, option_hash.values.first
-          k.to_s + ' ' + v.to_s
+         [option_hash.keys, option_hash.values].transpose
       end.join(' ')
       self.read_text = @auto_text + ' ' + text_to_read
     end

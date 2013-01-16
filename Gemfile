@@ -32,3 +32,4 @@ gem 'statsd-ruby', require: 'statsd'
 gem 'racksh'
 gem 'sinatra-jsonp'
 gem "actionpack", "~> 3.2.11"
+gem "will_paginate"
