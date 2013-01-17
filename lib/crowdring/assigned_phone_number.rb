@@ -102,7 +102,8 @@ module Crowdring
     end
 
     def self.ivr?(number)
-      number.class == Crowdring::AssignedCampaignVoiceNumber && !number.campaign.ivrs.empty? 
+      campaign = number.campaign
+      number.class == Crowdring::AssignedCampaignVoiceNumber && !campaign.ivrs.empty? && campaign.ivrs.last.activated
     end
 
     def self.ivr(number)
