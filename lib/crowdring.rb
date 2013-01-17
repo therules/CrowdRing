@@ -18,9 +18,9 @@ require 'crowdring/time_service'
 require 'action_view'
 require 'lazy_high_charts'
 require 'twilio-ruby'
-
+require "sinatra/json"
+require "sinatra/jsonp"
 require 'googlecharts'
-
 require 'crowdring/telephony_services/telephony_service'
 require 'crowdring/telephony_services/twilio_service'
 require 'crowdring/telephony_services/kookoo_service'

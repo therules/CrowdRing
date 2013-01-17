@@ -1,6 +1,3 @@
-require "sinatra/json"
-require "sinatra/jsonp"
-
 module Crowdring
   def self.statsd
     @statsd ||= Statsd.new(ENV['STATSD_HOST'] || "http://localhost").tap do |s|
@@ -391,16 +388,21 @@ module Crowdring
 
     post '/campaign/:id/ivrs/create' do
       ivr = params[:ivr]
-      if ivr[:keyoption].empty?
+      if ivr[:key_options].empty?
         flash[:errors] = "Ivr must have at least one option"
         redirect to ("/campaigns##{campaign.id}")
       end
 
       campaign = Campaign.get(params[:id])
-      new_ivr = Ivr.create(ivr)
-      campaign.ivrs.last.deactivate unless campaign.ivrs.empty?
-      campaign.ivrs << new_ivr
-      campaign.save
+      new_ivr = Ivr.new(ivr)
+      if new_ivr.save
+        campaign.ivrs.last.deactivate unless campaign.ivrs.empty?
+        campaign.ivrs << new_ivr
+        campaign.save
+        flash[:notice] = "New Ivr has been created successfully"
+      else
+        flash[:error] = new_ivr.errors.full_messages
+      end
       redirect to ("/campaigns##{campaign.id}")
     end
 
@@ -598,9 +600,19 @@ module Crowdring
       p params
       campaign = Campaign.get(params[:id])
       digit = params[:Digits]
-      p digit
-      p key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
+      key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
       key_option.increment
+    end
+
+    post '/campaign/:id/ivrs/:ivr_id/destroy' do
+      campaign = Campaign.get(params[:id])
+      ivr = campaign.ivrs.get(params[:ivr_id])
+      if campaign.ivrs.delete(ivr) && campaign.save && ivr.destroy
+        flash[:notice] = "#{ivr.question} has been deleted successfully"
+      else
+        flash[:error] = "#{ivr.question} has not been delete successfully"
+      end
+      redirect to ("/campaigns##{params[:id]}")
     end
 
     post '/campaign/:id/ivrs/disable' do

@@ -1,6 +1,6 @@
 -id ||= nil
--option_name = id.nil? ? 'OPTION' : "ivr[#{id}][for]"
--key_name = id.nil? ? 'KEY' : "ivr[#{id}][press]"
+-option_name = id.nil? ? 'OPTION' : "ivr[key_options][#{id}][for]"
+-key_name = id.nil? ? 'KEY' : "ivr[key_options][#{id}][press]"
 -option ||= ''
 .ivr-key-option-template
   ="Key" 

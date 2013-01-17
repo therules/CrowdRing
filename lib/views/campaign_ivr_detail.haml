@@ -15,5 +15,6 @@
     -if ivr.activated
       %form{action:"/campaign/#{@campaign.id}/ivrs/disable", method:'post'}
         %button Disable
-
+    %form{action:"/campaign/#{@campaign.id}/ivrs/#{ivr.id}/destroy", method:'post'}
+      %button Remove
     %hr

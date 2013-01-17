@@ -93,15 +93,14 @@
 
       %form{action: "/campaign/#{@campaign.id}/ivrs/create", method: 'post'}
         .field
-          .label{for: 'auto_text'} Text to be read:
-          %input.title-input{id: 'auto_text', type:'text', size: 50, name: 'ivr[auto_text]'}
+          .label{for: 'question'} Text to be read:
+          %input.title-input{id: 'question', type:'text', size: 50, name: 'ivr[question]'}
         .field
           #key-options
           %button{type:'button', onclick: "window.addKeyOption();"} Add new key option
         %button{type: 'submit'}Add a new IVR
         .note
           IVR is only for campaigns in Brasil and Africa.
-
 
     #campaign-export
       %h3 Export to CSV

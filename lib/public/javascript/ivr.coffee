@@ -1,8 +1,8 @@
 newKeyOption = ->
   id = $('.ivr-key-option-template').length
   newDiv = $('#original-ivr-key-option-template-container div:first-child').clone()
-  $('input[name="KEY"]', newDiv).attr('name', "ivr[keyoption][#{id}][press]")
-  $('input[name="OPTION"]', newDiv).attr('name', "ivr[keyoption][#{id}][for]")
+  $('input[name="KEY"]', newDiv).attr('name', "ivr[key_options][#{id}][press]")
+  $('input[name="OPTION"]', newDiv).attr('name', "ivr[key_options][#{id}][for]")
   $('#key-options').append(newDiv)
 
   $('#remove-key-option', newDiv).click ->

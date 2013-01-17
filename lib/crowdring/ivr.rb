@@ -6,7 +6,8 @@ module Crowdring
     property :press, String, required: true
     property :for, String, required: true
     property :ringer_count, Integer, required: false, default: 0
-    belongs_to :ivr, required: true
+
+    validates_with_method :press, :valid_keys?
 
     def increment
       update! ringer_count: ringer_count + 1
@@ -15,7 +16,16 @@ module Crowdring
     def to_s
       "Press #{press} for #{self.for} has #{ringer_count}"
     end
-    
+
+    private
+
+    def valid_keys?
+      key_pool.include?(press) ? true : [false, "Invalid press key"]
+    end
+
+    def key_pool
+      (0..9).to_a.map{|a| a.to_s} << "*" << "#" << "+"
+    end
   end
 
   class Ivr
@@ -28,32 +38,23 @@ module Crowdring
 
     has n,  :key_options, "KeyOption", through: Resource, constraint: :destroy
 
+    validates_presence_of :key_options
+
     before :create do 
       set_read_text
-    end
-
-    after :create do 
-      set_key_option
     end
 
     def deactivate
       update(activated: false)
     end
 
-    def set_key_option
-      @keyoption.each do |ko| 
-        a = KeyOption.create(press: ko[:press], for: ko[:for], ivr_id: @id)
-        self.key_options << a
+    def key_options=(keyoption)
+      return super key_options unless keyoption.is_a? Hash
+      keyoption = keyoption.values
+      keyoption.each do |ko|
+        new_ivr =  KeyOption.create(press: ko["press"], for: ko["for"])
+        key_options << new_ivr if new_ivr.save
       end
-      save
-    end
-
-    def keyoption=(keyoption)
-      @keyoption = keyoption.values
-    end
-
-    def auto_text=(auto_text)
-      @auto_text = auto_text
     end
 
     def valid_keys
@@ -61,11 +62,10 @@ module Crowdring
     end
 
     def set_read_text
-      text_to_read = @keyoption.map do |option_hash|
-         [option_hash.keys, option_hash.values].transpose
+      text_to_read = key_options.map do |option|
+        "press #{option.press} for #{option.for}"
       end.join(' ')
-      self.read_text = @auto_text + ' ' + text_to_read
-      self.question = @auto_text
+      self.read_text = @question + ' ' + text_to_read
       true
     end
   end
