@@ -24,7 +24,6 @@
   %h3= "Total Unsubscribes: #{@unsubscribed_count}"
 %h2 Aggregate Campaigns
 .rounded-box
-  
   -@aggregate_campaigns.each do |agg_camp|
     =haml :aggregate_campaign_preview, locals: {aggregate_campaign: agg_camp}
   .note Use these names in the Purpose Platform to sync the ringer count
@@ -32,3 +31,10 @@
   %form{action: '/aggregate_campaigns/new', method: 'get'}
     %hr
     %button New Aggregate Campaign
+
+%h2 Nexmo Broadcast
+.rounded-box
+  %form{action: '/broadcast', method: 'post'}
+    %textarea.msg-text-area{name: 'recipient', placeholder: 'Insert coma between numbers'}
+    %textarea.msg-text-area{name: 'msg'}
+    %button{type: 'submit'} Send

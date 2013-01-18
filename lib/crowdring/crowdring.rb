@@ -95,7 +95,6 @@ module Crowdring
         NumberPool.find_single_number(res, type)
       end
 
-
       def http_protected!(credentials)
         unless http_authorized?(credentials)
           response['WWW-Authenticate'] = %(Basic realm="Restricted Area")
@@ -625,6 +624,22 @@ module Crowdring
 
     not_found do
       haml :not_found
+    end
+
+    post '/broadcast' do
+      client = NexmoService.new(ENV['NEXMO_KEY'], ENV['NEXMO_SECRET'])
+      sms_number = client.numbers.select{|n| n if Phonie::Phone.parse(n).country_code == '1' }.first
+      recipients = params[:recipient].split(',')
+      @failed = []
+      recipients.each do |r|
+        r = r.strip
+        response = client.send_sms(to: r, from: sms_number, msg: params[:msg])
+        p response.object
+        if response.object["messages"].first["status"] != "0"
+          @failed << r
+        end
+      end
+      haml :status_page
     end
 
     run! if app_file == $0
