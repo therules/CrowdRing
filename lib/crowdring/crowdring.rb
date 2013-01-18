@@ -482,6 +482,7 @@ module Crowdring
     end
     
     get '/csv' do
+      p params
       option = params['option']
       case option
       when 'all'
@@ -494,8 +495,9 @@ module Crowdring
       end
       fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
-        csv << fields.map {|f| f.display_name }
-        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) } }
+        csv << fields.map {|f| f.display_name}
+        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) if Ring.method_defined?(f.id.to_s)}}
+        csv << fields.map{|f| campaign.send(f.id)  if Campaign.method_defined?(f.id.to_s)}
       end
     end
 
@@ -583,7 +585,6 @@ module Crowdring
     end
 
     post '/ivrs/:id/play' do
-      campaign = Campaign.get(params[:id])
       ivr = campaign.ivrs.last
 
       response = Plivo::Response.new
