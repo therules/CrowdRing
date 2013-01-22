@@ -29,7 +29,15 @@ setupBroadcastTextArea = ->
   
 
 setupTabs = ->
-  $( "#tabs" ).tabs()
+  $( "#tabs" ).tabs
+    show: (event, ui) ->
+      effect: "blind"
+      selected_tab = $("#tabs").tabs("option","active")
+      $.cookie("activated", selected_tab)
+    active: $.cookie('activated')
+      
+
+
 
 setupFilters = (buttons) ->
   $(buttons).buttonset()
