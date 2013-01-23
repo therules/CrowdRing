@@ -17,7 +17,7 @@ module Crowdring
 
   class KooKooService < TelephonyService
     supports :voice, :sms
-    request_handler(KooKooRequest) {|inst| [inst.numbers.first]}
+    request_handler KooKooRequest
 
     def initialize(api_key)
       @api_key = api_key
@@ -45,6 +45,7 @@ module Crowdring
     end
 
     def send_sms(params)
+      p "HERE"
       uri = URI('http://www.kookoo.in/outbound/outbound_sms.php')
       params = { message: params[:msg], phone_no: params[:to], api_key: @api_key }
       uri.query = URI.encode_www_form(params)
