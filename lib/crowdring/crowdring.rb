@@ -109,7 +109,7 @@ module Crowdring
       end
     end
 
-    before /^((?!((voice|sms)response)|reports|ivrs|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
+    before /^((?!((voice|sms)response)|kookoo|reports|ivrs|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
       login_required unless settings.environment == :test
     end
 
@@ -622,6 +622,10 @@ module Crowdring
       ivr = campaign.ivrs.last
       ivr.deactivate
       redirect to("/campaigns##{params[:id]}")
+    end
+
+    get '/kookoo' do
+      haml :kookoo
     end
 
     not_found do
