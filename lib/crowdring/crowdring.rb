@@ -25,7 +25,7 @@ module Crowdring
     configure :development do
       register Sinatra::Reloader
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
-      service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
+      service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+18002222222', '+27114891911'], output: true))
     end
 
     configure :production do
@@ -123,6 +123,7 @@ module Crowdring
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       res = cur_service.build_response(request.to, response || [{cmd: :reject}])
+      p res
     end
 
     def process_request(service_name, request, response_type)

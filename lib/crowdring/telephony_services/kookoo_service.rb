@@ -19,9 +19,9 @@ module Crowdring
     supports :voice
     request_handler(KooKooRequest) {|inst| [inst.numbers.first]}
 
-    def initialize(api_key, number)
+    def initialize(api_key)
       @api_key = api_key
-      @number = number
+      @number = ['+914039411020']
     end
 
     def build_response(from, commands)
@@ -39,7 +39,7 @@ module Crowdring
     end
 
     def numbers
-      [@number]
+      @number
     end
 
     def send_sms(params)
