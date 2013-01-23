@@ -28,13 +28,14 @@ module Crowdring
       response = ''
       builder = Builder::XmlMarkup.new(indent: 2, target:response)
       builder.instruct! :xml
-      builder.response do |r|
+      builder.build_responsese do |r|
         commands.each do |c|
           case c[:cmd]
           when :sendsms
             r.sendsms c[:msg], to: c[:to]
+            r.hangup{}
           when :reject
-            r.hangup
+            r.hangup{}
           end
         end
       end

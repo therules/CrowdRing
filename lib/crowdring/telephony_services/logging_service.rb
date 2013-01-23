@@ -63,8 +63,10 @@ module Crowdring
           case c[:cmd]
           when :sendsms
             r.sendsms c[:msg], to: c[:to]
+            r.hangup{}
           when :reject
             r.playtext "I love kookoo"
+            r.hangup{}
           end
         end
       end
