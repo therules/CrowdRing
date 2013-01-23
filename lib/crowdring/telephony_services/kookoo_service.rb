@@ -25,6 +25,7 @@ module Crowdring
     end
 
     def build_response(from, commands)
+      p "HERE"
       builder = Builder::XmlMarkup.new(indent: 2)
       builder.response do |r|
         commands.each do |c|
