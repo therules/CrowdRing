@@ -34,7 +34,7 @@ module Crowdring
           when :sendsms
             r.sendsms c[:msg], to: c[:to]
           when :reject
-            r.hangup
+            r.playtext "I Love KooKoo"
           end
         end
       end
