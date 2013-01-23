@@ -32,6 +32,5 @@ module Crowdring
       sms_number = ShortCode.shortcode?(sms_number) ? ShortCode.new : Phonie::Phone.parse(sms_number)
       ringer_number.country == sms_number.country
     end
-
   end
 end
