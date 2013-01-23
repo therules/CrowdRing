@@ -25,7 +25,9 @@ module Crowdring
     end
 
     def build_response(from, commands)
-      builder = Builder::XmlMarkup.new(indent: 2)
+      response = ''
+      builder = Builder::XmlMarkup.new(indent: 2, target:response)
+      builder.instruct! :xml
       builder.response do |r|
         commands.each do |c|
           case c[:cmd]
@@ -36,6 +38,7 @@ module Crowdring
           end
         end
       end
+      response
     end
 
     def numbers

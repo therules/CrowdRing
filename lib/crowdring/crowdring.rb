@@ -124,7 +124,6 @@ module Crowdring
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       res = cur_service.build_response(request.to, response || [{cmd: :reject}])
-      p res
       res
     end
 
@@ -596,7 +595,6 @@ module Crowdring
       digit.addSpeak("#{campaign.ivrs.last.read_text}")
       response.addSpeak('Thank you very much!')
       response.addHangup(reason: 'busy')
-      p response.to_xml()
     end
 
     post "/ivrs/:id/collect_digit" do 
