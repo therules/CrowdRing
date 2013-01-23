@@ -31,9 +31,6 @@ module Crowdring
       builder.response do |r|
         commands.each do |c|
           case c[:cmd]
-          when :sendsms
-            r.sendsms c[:msg], to: c[:to]
-            r.hangup{}
           when :reject
             r.hangup{}
           end
@@ -41,6 +38,7 @@ module Crowdring
       end
       response
     end
+
 
     def numbers
       @number
@@ -50,7 +48,9 @@ module Crowdring
       uri = URI('http://www.kookoo.in/outbound/outbound_sms.php')
       params = { message: params[:msg], phone_no: params[:to], api_key: @api_key }
       uri.query = URI.encode_www_form(params)
+      p uri.query
       res = Net::HTTP.get_response(uri)
+      p res.body
     end
   end
 end
