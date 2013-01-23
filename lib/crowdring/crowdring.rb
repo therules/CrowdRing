@@ -385,6 +385,7 @@ module Crowdring
       ask = campaign.asks.get(params[:ask_id])
       ringers = ask.potential_recipients(Ringer.subscribed)
       ask.trigger(ringers, campaign.sms_number.raw_number)
+      p ringers
       redirect to("/campaigns##{campaign.id}")
     end
 

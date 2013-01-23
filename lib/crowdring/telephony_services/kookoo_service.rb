@@ -5,8 +5,8 @@ module Crowdring
   class KooKooRequest
     attr_reader :from, :to
 
-    def initialize(request, to)
-      @to = to
+    def initialize(request)
+      @to = request.GET['called_number']
       @from = request.GET['cid']
     end
 
@@ -33,6 +33,10 @@ module Crowdring
           case c[:cmd]
           when :reject
             r.hangup{}
+          when :ivr
+            p c
+            r.hangup{}
+            r.dial{"#{format_number(c[:to])}"}
           end
         end
       end
