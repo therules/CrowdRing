@@ -27,11 +27,13 @@ group :development do
 end
 
 group :test do
-
+  gem 'dm-rspec'
+  gem 'factory_girl'
   gem 'rspec'
   gem 'fakeweb'
   gem 'pusher-fake'
   gem 'capybara'
+  gem 'shoulda-matchers'
 end
 
 gem 'resque'

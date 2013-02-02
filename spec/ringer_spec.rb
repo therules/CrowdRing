@@ -1,65 +1,28 @@
-require File.dirname(__FILE__) + '/spec_helper'
-
 describe Crowdring::Ringer do
+  let(:ringer){ create(:ringer) }
+
   before(:each) do
     DataMapper.auto_migrate!
-    @number1 = '+18001111111'
-    @number2 = '+18002222222'
-    @number3 = '+18003333333'
   end
 
-  it 'should not create two ringers with the same phone number' do
-    Crowdring::Ringer.create(phone_number: @number1).saved?.should be_true
-    Crowdring::Ringer.create(phone_number: @number1).saved?.should be_false
+  it { should validate_presence_of :phone_number}
+  it { should have_many(:tags)}
+  it { should have_many(:ringer_taggings)}
+  it { should have_many(:rings)}
+  it { should validate_uniqueness_of :phone_number}
+
+  context "Invalid ringer phone_number" do
+    let(:invalid){ build(:invalid_ringer) }
+    it { invalid.should_not be_valid}
   end
 
-  it 'should not create a ringer with an invalid phone number' do
-    Crowdring::Ringer.create(phone_number: 'invalid!').saved?.should be_false
+  context "New ringer has tag of area code" do
+    let(:area_code){ build(:area_code)}
+    let(:country){ build(:country)}
+
+    subject{ Crowdring::Ringer.create(phone_number: '+12121111111')}
+
+    its(:tags){should include area_code}
+    its(:tags){should include country}
   end
-
-  it 'should destroy all relevant memberships when destroying a ringer' do
-    campaign = Crowdring::Campaign.create(title: 'campaign')
-    campaign.voice_numbers = [{phone_number: @number1, description: 'num1'}]
-    campaign.sms_number = @number2
-    campaign.save
-
-    ringer = Crowdring::Ringer.create(phone_number: @number1)
-
-    campaign.voice_numbers.first.ring(ringer)
-    ringer.destroy
-
-    Crowdring::Ringer.all.count.should eq(0)
-    Crowdring::Ring.all.count.should eq(0)
-    Crowdring::Campaign.all.count.should eq(1)
-  end
-
-  it 'should be tagged with the ringers area code upon creation' do
-    ringer = Crowdring::Ringer.create(phone_number: @number1)
-
-    ringer.tags.should include(Crowdring::Tag.from_str('area code:800'))
-  end
-
-  it 'should be tagged with the ringers country name upon creation' do
-    ringer = Crowdring::Ringer.create(phone_number: @number1)
-
-    ringer.tags.should include(Crowdring::Tag.from_str('country:united states'))
-  end
-
-  it 'should interpret numbers with and without a + sign as being the same' do
-    r1 = Crowdring::Ringer.from('+18001111111')
-    r2 = Crowdring::Ringer.from('18001111111')
-
-    Crowdring::Ringer.count.should eq(1)
-    r2.should eq(r1)
-  end
-
-  it 'should assume a number without a country code is a US number' do
-    r1 = Crowdring::Ringer.from('+18001111111')
-    r2 = Crowdring::Ringer.from('8001111111')
-
-    Crowdring::Ringer.count.should eq(1)
-    r2.should eq(r1)
-  end
-
-
 end

@@ -4,3 +4,4 @@ logfile
 dump.rdb
 UTF-8
 log_file.log
+lib/public/javascript/jquery-cookie

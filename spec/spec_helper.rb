@@ -3,6 +3,14 @@ require 'rack/test'
 require 'pusher-fake'
 require 'fakeweb'
 
+require 'factory_girl'
+require 'dm-rspec'
+require 'factories'
+
+RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+  config.include(DataMapper::Matchers)
+end
 
 ENV['RACK_ENV'] ||= 'test'
 ENV['PUSHER_APP_ID'] = 'app_id'

@@ -21,6 +21,7 @@ require 'twilio-ruby'
 require "sinatra/json"
 require "sinatra/jsonp"
 require 'googlecharts'
+
 require 'crowdring/telephony_services/telephony_service'
 require 'crowdring/telephony_services/twilio_service'
 require 'crowdring/telephony_services/kookoo_service'
@@ -35,7 +36,6 @@ require 'crowdring/telephony_services/caching_service'
 require 'crowdring/telephony_services/composite_service'
 require 'crowdring/batch_send_sms'
 
-require 'crowdring/filter'
 require 'crowdring/ivr'
 require 'crowdring/phone_number_fields'
 require 'crowdring/campaign'
