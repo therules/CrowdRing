@@ -5,8 +5,8 @@ module Crowdring
   class KooKooRequest
     attr_reader :from, :to
 
-    def initialize(request, to)
-      @to = to
+    def initialize(request)
+      @to = request.GET['called_number']
       @from = request.GET['cid']
     end
 
@@ -17,26 +17,32 @@ module Crowdring
 
   class KooKooService < TelephonyService
     supports :voice, :sms
-    request_handler(KooKooRequest) {|inst| [inst.numbers.first]}
+    request_handler KooKooRequest
 
     def initialize(api_key)
       @api_key = api_key
-      @number = ['+914039411020']
+      @number = ['+911130715351']
     end
 
     def build_response(from, commands)
-      builder = Builder::XmlMarkup.new(indent: 2)
+      response = ''
+      builder = Builder::XmlMarkup.new(indent: 2, target:response)
+      builder.instruct! :xml
       builder.response do |r|
         commands.each do |c|
           case c[:cmd]
-          when :sendsms
-            r.sendsms c[:msg], to: c[:to]
           when :reject
-            r.hangup
+            r.hangup{}
+          when :ivr
+            p c
+            r.hangup{}
+            r.dial{"#{format_number(c[:to])}"}
           end
         end
       end
+      response
     end
+
 
     def numbers
       @number

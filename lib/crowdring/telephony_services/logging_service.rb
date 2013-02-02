@@ -55,16 +55,22 @@ module Crowdring
     end
 
     def build_response(from, commands)
-      @last_response ||= commands.map do |c|
-        case c[:cmd]
-          when :ivr
-          @last_response = c[:text].read_text 
-          else
-          @last_response = "Reponse: From: #{from}, Commands: #{commands}"
-       end
-     end
-      p @last_response if @do_output
-      @last_response
+      response = ""
+      builder = Builder::XmlMarkup.new(indent: 2, target: response)
+      builder.instruct! :xml
+      builder.response do |r|
+        commands.each do |c|
+          case c[:cmd]
+          when :sendsms
+            r.sendsms c[:msg], to: c[:to]
+            r.hangup{}
+          when :reject
+            r.playtext "I love kookoo"
+            r.hangup{}
+          end
+        end
+      end
+      p response if @do_output
     end
 
     def numbers

@@ -13,7 +13,7 @@ module Crowdring
     end
 
     def accept?(ringer, sms_number)
-      tag_filter.accept?(ringer) && ringer.subscribed? && local?(ringer.phone_number, sms_number)
+      tag_filter.accept?(ringer) && ringer.subscribed?
     end
 
     def send_message(params)

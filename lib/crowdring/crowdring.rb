@@ -109,7 +109,7 @@ module Crowdring
       end
     end
 
-    before /^((?!((voice|sms)response)|reports|ivrs|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
+    before /^((?!((voice|sms)response)|kookoo|reports|ivrs|login|resetpassword|voicemails|progress-embed|campaign\-member\-count).)*$/ do
       login_required unless settings.environment == :test
     end
 
@@ -594,11 +594,9 @@ module Crowdring
       digit.addSpeak("#{campaign.ivrs.last.read_text}")
       response.addSpeak('Thank you very much!')
       response.addHangup(reason: 'busy')
-      p response.to_xml()
     end
 
     post "/ivrs/:id/collect_digit" do 
-      p params
       campaign = Campaign.get(params[:id])
       digit = params[:Digits]
       key_option = campaign.ivrs.last.key_options.all(press: digit.to_s).first
@@ -621,6 +619,10 @@ module Crowdring
       ivr = campaign.ivrs.last
       ivr.deactivate
       redirect to("/campaigns##{params[:id]}")
+    end
+
+    get '/kookoo' do
+      haml :kookoo
     end
 
     not_found do

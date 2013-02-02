@@ -4,35 +4,29 @@ describe Crowdring::KooKooRequest do
   it 'should extract the from parameter' do
     request = double("request")
     request.stub(:GET) { {'cid' => 'from'}}
-    r = Crowdring::KooKooRequest.new(request, 'to')
+    r = Crowdring::KooKooRequest.new(request)
     r.from.should eq('from')
   end
 
-  it 'should extract the to parameter' do
-    request = double("request")
-    request.stub(:GET) { {'cid' => 'from'}}
-    r = Crowdring::KooKooRequest.new(request, 'to')
-    r.to.should eq('to')
-  end
 
   it 'should not be a callback' do
     request = double("request")
     request.stub(:GET) { {'cid' => 'from'}}
-    r = Crowdring::KooKooRequest.new(request, 'to')
+    r = Crowdring::KooKooRequest.new(request)
     r.callback?.should eq(false)
   end
 end
 
 describe Crowdring::KooKooService do
   before(:each) do
-    @service = Crowdring::KooKooService.new('api_key', 'number')
+    @service = Crowdring::KooKooService.new('api_key')
   end   
 
   it 'should support voice' do
     @service.voice?.should be_true
   end
   it 'should not support sms' do
-    @service.sms?.should be_false
+    @service.sms?.should be_true
   end
   
   it 'should transform a http request' do
@@ -41,26 +35,11 @@ describe Crowdring::KooKooService do
 
   it 'should build a reject response' do
     response = @service.build_response('from', [{cmd: :reject}])
-    response.should eq(Builder::XmlMarkup.new(indent: 2).response { |r| r.hangup })
-  end
+    response.should include('<hangup>')  end
 
-  it 'should build a send sms response' do
-    response = @service.build_response('from', [{cmd: :sendsms, to: 'to', msg: 'msg'}])
-    response.should eq(Builder::XmlMarkup.new(indent: 2).response { |r| r.sendsms 'msg', to: 'to'})
-  end
-
-  it 'should build a response for a series of commands' do
-    cmds = [{cmd: :sendsms, to: 'to', msg: 'msg'},
-            {cmd: :reject}]
-    response = @service.build_response('from', cmds)
-    response.should eq(Builder::XmlMarkup.new(indent: 2).response do |r|
-      r.sendsms 'msg', to: 'to'
-      r.hangup
-    end)
-  end
 
   it 'should return a list of the available numbers' do
-    @service.numbers.should eq(['number'])
+    @service.numbers.count.should eq(1)
   end
 
   it 'should GET the right uri on send_msg' do
