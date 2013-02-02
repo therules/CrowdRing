@@ -83,10 +83,6 @@ module Crowdring
       end
     end
 
-    def get_sms_number
-      sms_number.phone_number
-    end
-
     def triggered_ask?(ask)
       !(asks.find{|n| n.triggered_ask && n.triggered_ask == ask}.nil? && ask != asks.first)
     end

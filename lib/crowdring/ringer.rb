@@ -40,7 +40,6 @@ module Crowdring
 
     def self.from(number)
       norm_number = Phonie::Phone.parse(number).to_s
-      p norm_number
       self.first(phone_number: norm_number) || self.create(phone_number: norm_number)
     end
 

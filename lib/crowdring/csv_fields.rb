@@ -47,6 +47,5 @@ module Crowdring
     add_field 'country_name', 'Country'
     add_field 'campaign_support', 'Joined Campaign'
     add_field 'email', 'Email'
-    add_field 'get_sms_number', 'SMS Number'
   end
 end

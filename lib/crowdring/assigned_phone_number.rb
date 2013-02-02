@@ -90,7 +90,6 @@ module Crowdring
     def self.handle(type, request)
       number = from(type, request.to)
       ringer = Ringer.from(request.from)
-      p ringer
       ringer.subscribe
 
       case number

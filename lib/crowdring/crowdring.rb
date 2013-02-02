@@ -124,7 +124,6 @@ module Crowdring
     def respond(cur_service, request, response_type)
       response = AssignedPhoneNumber.handle(response_type, request)
       res = cur_service.build_response(request.to, response || [{cmd: :reject}])
-      p res
     end
 
     def process_request(service_name, request, response_type)
@@ -483,7 +482,6 @@ module Crowdring
     end
     
     get '/csv' do
-      p params
       option = params['option']
       case option
       when 'all'
@@ -497,8 +495,9 @@ module Crowdring
       fields = params.key?('fields') ? params[:fields].keys.map {|id| CsvField.from_id id } : CsvField.default_fields
       CSV.generate do |csv|
         csv << fields.map {|f| f.display_name}
-        rings.each {|ring| csv << fields.map {|f| ring.send(f.id) if Ring.method_defined?(f.id.to_s)}}
-        csv << fields.map{|f| campaign.send(f.id)  if Campaign.method_defined?(f.id.to_s)}
+        unless rings.empty? || campaign.nil?
+          rings.each {|ring| csv << fields.map {|f| ring.send(f.id) if Ring.method_defined?(f.id.to_s)}}
+        end
       end
     end
 

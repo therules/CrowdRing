@@ -156,13 +156,13 @@ module Crowdring
     end
 
 
-    describe 'campaign exporting' do
+    context 'campaign exporting' do
       before(:each) do
         @campaign = Campaign.create(title: @number, voice_numbers: [{phone_number: @number, description: 'desc'}], sms_number: @number2)
       end
 
       it 'should return a csv file' do
-        get "/csv", {filter: 'all', fields: {phone_number: 'yes', created_at: 'yes'}, option:'all'}
+        get "/csv", {fields: {phone_number: 'yes', created_at: 'yes'}, option:'all'}
         last_response.header['Content-Disposition'].should match('attachment')
         last_response.header['Content-Disposition'].should match('\.csv')
       end
@@ -183,7 +183,7 @@ module Crowdring
         @campaign.voice_numbers.first.ring(r2)
         
         fields = {phone_number: 'yes', created_at: 'yes'}
-        get "/csv", {filter: 'all', fields: fields, option: "#{@campaign.id}"}
+        get "/csv", {fields: fields, option: "#{@campaign.id}"}
         verify_csv(last_response.body, @campaign.unique_rings, fields.keys)
       end
  
