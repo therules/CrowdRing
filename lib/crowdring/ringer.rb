@@ -65,7 +65,7 @@ module Crowdring
     def unsubscribe
       update(subscribed: false)
     end
-    
+
     def subscribe
       update(subscribed: true)
     end

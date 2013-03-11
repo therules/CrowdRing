@@ -1,5 +1,6 @@
 ##crowdring
 ==============
++ Authored by: Nathan Herzing and Willa Wang of ThoughtWorks. Lead: Manu Kabahizi. CopyLeft: The Rules
 
 + Crowdring, originally from https://github.com/mbelinsky/Crowdring
 
