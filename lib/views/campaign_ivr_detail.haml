@@ -8,8 +8,7 @@
         .li
           = k.to_s
     #ivr-chart
-      - chart_url = Gchart.bar(data: ivr.key_options.map(&:ringer_count), theme: :thirty7signals, labels: ivr.key_options.map(&:press), bg: 'efefef', axis_with_label: 'y')
-
+      - chart_url = Gchart.bar(data: ivr.key_options.map(&:ringer_count), theme: :thirty7signals, labels: ivr.key_options.map(&:press), bg: 'efefef', axis_with_label: 'y', use_ssl: true)
       - chart = Gchart.bar(:title => "Ivr survey result",theme: :thirty7signals, data:ivr.key_options.map(&:ringer_count), labels: ivr.key_options.map(&:press), :line_colors => 'e0440e',:axis_with_labels => ['x', 'y'])
       %img(src="#{chart_url}")
     -if ivr.activated

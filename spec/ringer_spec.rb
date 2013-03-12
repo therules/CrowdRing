@@ -22,7 +22,7 @@ describe Crowdring::Ringer do
 
     subject{ Crowdring::Ringer.create(phone_number: '+12121111111')}
 
-    its(:tags){should include area_code}
-    its(:tags){should include country}
+    its(:tags){ should include area_code }
+    its(:tags){ should include country }
   end
 end

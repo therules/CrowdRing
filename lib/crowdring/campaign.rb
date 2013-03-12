@@ -21,7 +21,7 @@ module Crowdring
 
     has n, :aggregate_campaigns, through: Resource, constraint: :skip
     
-
+    validates_presence_of :goal
     validates_with_method :voice_numbers, :at_least_one_assigned_number?
     validates_with_method :goal, :valid_range?
 

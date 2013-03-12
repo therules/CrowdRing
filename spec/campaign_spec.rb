@@ -1,7 +1,14 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
 describe Crowdring::Campaign do
-
+  let(:campaign) { create(:campaign) }
+  it { should validate_presence_of :goal }
+  it { should have_many :rings }
+  it { should have_many :asks }
+  it { should have_many :ivrs }
+  it { should have_many :aggregate_campaigns }
+  it { should have_many :voice_numbers }
+  it { should have_one :sms_number }
   def app
     Crowdring::Server
   end

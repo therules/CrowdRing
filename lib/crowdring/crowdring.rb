@@ -26,7 +26,6 @@ module Crowdring
       register Sinatra::Reloader
       service_handler.add('sms_logger', SMSLoggingService.new(['+18001111111', '+18002222222', '+919102764622', '+27114891911'], output: true))
       service_handler.add('voice_logger', VoiceLoggingService.new(['+18001111111', '+18002222222', '+27114891911'], output: true))
-      service_handler.add('kookoo', KooKooService.new(ENV["KOOKOO_API_KEY"]))
     end
 
     configure :production do
