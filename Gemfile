@@ -18,13 +18,11 @@ gem 'facets'
 
 gem 'phonie', git: 'git://github.com/wmoxam/phonie.git'
 
-group :development do
-  gem 'tropo-webapi-ruby'
-  gem 'tropo-provisioning'
-  gem 'nexmo'
-  gem 'plivo'
-  gem 'twilio-ruby'
-end
+gem 'tropo-webapi-ruby'
+gem 'tropo-provisioning'
+gem 'nexmo'
+gem 'plivo'
+gem 'twilio-ruby'
 
 group :test do
   gem 'dm-rspec'
