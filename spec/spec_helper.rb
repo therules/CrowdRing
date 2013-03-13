@@ -9,7 +9,8 @@ require 'factories'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
-  config.include(DataMapper::Matchers)
+  config.include DataMapper::Matchers
+  config.order = 'random'
 end
 
 ENV['RACK_ENV'] ||= 'test'
