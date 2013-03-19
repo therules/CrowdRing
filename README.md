@@ -8,7 +8,7 @@
   
   + Install Redis
   
-      + download redit from [Here](http://redis.io/)
+      + download redis from [Here](http://redis.io/)
 
       + run `tar xvf redis.version.tar`
 
