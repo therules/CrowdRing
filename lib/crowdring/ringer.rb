@@ -23,7 +23,7 @@ module Crowdring
     has n, :rings, constraint: :destroy
     
     validates_presence_of :phone_number
-    validates_with_method :phone_number, :valid_phone_number?
+    # validates_with_method :phone_number, :valid_phone_number?
 
     after :create, :add_tags
 
