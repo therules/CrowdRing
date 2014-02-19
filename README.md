@@ -44,5 +44,3 @@
 + Supported Services
   
   + Plivo, Twilio, Tropo, KooKoo, Voxeo, Nexmo, Routo, Netcore.
-
-+ For more info, visit http://crowdring.org
