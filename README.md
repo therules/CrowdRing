@@ -1,6 +1,6 @@
 ##crowdring
 ==============
-+ Authored by: Nathan Herzing and Willa Wang of ThoughtWorks. Lead: Manu Kabahizi. CopyLeft: The Rules
++ Authored by: Nathan Herzing and Willa Wang. Lead: Manu Kabahizi. CopyLeft: The Rules
 
 + Crowdring, originally from https://github.com/mbelinsky/Crowdring
 
@@ -22,15 +22,17 @@
       
       + defaults to PostgreSQL ie. postgres://localhost/crowdring_#{ENVIRONMENT}
 
+      + create database `crowdring_development`, `crowdring_test`, `crowdring_production` locally.
+
 + To Install. 
 
-  + `git clone git@github.com:nherzing/crowdring.git`
+  + `git clone git@github.com:therules/CrowdRing.git`
 
   + `cd crowdring`
 
-  + `bundle install`
+  + `bundle`
   
-  + `rake db:reset` 
+  + `rake db:migrate`
   
 
 + To Run
