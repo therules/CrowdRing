@@ -8,7 +8,7 @@ gem 'sinatra-authentication'
 gem 'rack-ssl'
 gem 'foreman'
 gem 'datamapper'
-gem 'dm-postgres-adapter'
+gem 'dm-postgres-adapter',:require => true
 gem 'dm-observer'
 
 gem 'pusher'

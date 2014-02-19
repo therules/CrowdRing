@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift 'lib'
-
+require 'rake'
 require 'resque/tasks'
 
 task :environment, :env do |cmd, args|
@@ -9,24 +9,19 @@ end
 
 
 namespace :db do 
+  desc "Create database, env symbol are in [development, test, production]."
   task :migrate, :env do |cmd, args|
     env = args[:env] || "development"
     Rake::Task['environment'].invoke(env)
 
-    database_url = ENV["DATABASE_URL"] || "postgres://localhost/crowdring_#{env}"
-    DataMapper.setup(:default, database_url)
-    DataMapper.finalize
-    DataMapper.auto_upgrade!
+    DataMapper.repository.auto_migrate!
   end
 
-  task :reset, :env do |cmd, args|
+  task :update, :env do |cmd, args|
     env = args[:env] || "development"
     Rake::Task['environment'].invoke(env)
 
-    database_url = ENV["DATABASE_URL"] || "postgres://localhost/crowdring_#{env}"
-    DataMapper.setup(:default, database_url)
-    DataMapper.finalize
-    DataMapper.auto_migrate!
+    DataMapper.repository.auto_upgrade!
 
     User.set(
       email: ENV["ADMIN_EMAIL"] || 'frodo@crowdring.org',
